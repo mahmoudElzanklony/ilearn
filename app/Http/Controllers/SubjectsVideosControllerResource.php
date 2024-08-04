@@ -52,7 +52,9 @@ class SubjectsVideosControllerResource extends Controller
         // delete old video
         if(array_key_exists('video',$data) && $data['video'] != null && array_key_exists('id',$data)){
             $video = subjects_videos::query()->find($data['id']);
-            unlink(public_path('videos/'.$video->video));
+            if(file_exists(public_path('videos/'.$video->video))) {
+                unlink(public_path('videos/' . $video->video));
+            }
         }
 
 
