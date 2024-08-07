@@ -15,4 +15,10 @@ class subjects_videos extends Model
     {
         return $this->belongsTo(subjects::class,'subject_id');
     }
+
+
+    public function image()
+    {
+        return $this->morphOne(images::class,'imageable');
+    }
 }

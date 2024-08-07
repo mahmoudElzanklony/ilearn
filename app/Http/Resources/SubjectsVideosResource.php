@@ -20,6 +20,7 @@ class SubjectsVideosResource extends JsonResource
           'subject_id'=>$this->subject_id,
           'user'=>UserResource::make($this->whenLoaded('user')),
           'subject'=>SubjectsResource::make($this->whenLoaded('subject')),
+          'image'=>ImageResource::make($this->whenLoaded('image')),
           'video'=>'videos/'.$this->video,
           'name'=>$this->name,
           'created_at'=>$this->created_at->format('Y-h-m ')

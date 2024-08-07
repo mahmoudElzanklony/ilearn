@@ -43,11 +43,13 @@ class SubjectsVideosControllerResource extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function save($data)
+    public function save($data,$image)
     {
         DB::beginTransaction();
         // prepare data to be created or updated
         $data['user_id'] = auth()->id();
+
+
 
         // delete old video
         if(array_key_exists('video',$data) && $data['video'] != null && array_key_exists('id',$data)){
@@ -67,8 +69,16 @@ class SubjectsVideosControllerResource extends Controller
         $subject = subjects_videos::query()->updateOrCreate([
             'id'=>$data['id'] ?? null
         ],$data);
+
+        // check if there is any image related to this category and save it
+        if(!(array_key_exists('id',$data)) || (array_key_exists('id',$data) && $image != null)){
+            $this->check_upload_image($image,'subjects',$subject->id,'subjects');
+        }
+
+
         // Load the category with the associated image
         $subject->load('subject');
+        $subject->load('image');
 
         DB::commit();
         // return response
@@ -77,7 +87,7 @@ class SubjectsVideosControllerResource extends Controller
 
     public function store(subjectsVideoFormRequest $request)
     {
-        return $this->save($request->validated());
+        return $this->save($request->validated(),request()->file('image'));
     }
 
     /**
@@ -97,7 +107,7 @@ class SubjectsVideosControllerResource extends Controller
     {
         $data = $request->validated();
         $data['id'] = $id;
-        return $this->save($data);
+        return $this->save($data,request()->file('image'));
     }
 
     /**
