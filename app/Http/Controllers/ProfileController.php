@@ -22,6 +22,6 @@ class ProfileController extends Controller
 
 
         $user->update($data);
-        return Messages::success(__('messages.updated_successfully'),UserResource::make(auth()->user()));
+        return Messages::success(__('messages.updated_successfully'),UserResource::make($user));
     }
 }
