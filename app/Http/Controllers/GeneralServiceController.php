@@ -18,7 +18,7 @@ class GeneralServiceController extends Controller
         try{
             $model =  '\\App\\Models\\'.$table;
             $model = new $model();
-            $model->where('id',$id)->delete();
+            $model->whereIn('id',$id)->delete();
             return Messages::success([trans('messages.deleted_successfully')]);
         }catch (\Exception $e){
             DB::table($table)->delete($id);
