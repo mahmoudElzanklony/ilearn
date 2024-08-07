@@ -24,7 +24,7 @@ class userFormRequest extends FormRequest
         if(request()->filled('id')) {
             return [
                 'username' => 'filled',
-                'phone' => 'filled|unique:users,phone,'. auth()->id(),
+                'phone' => 'filled|unique:users,phone,'. request('id'),
                 'password' => 'filled',
                 'type' => 'filled',
                 'ip'=>'nullable',
