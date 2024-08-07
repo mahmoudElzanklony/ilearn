@@ -72,7 +72,7 @@ class SubjectsVideosControllerResource extends Controller
 
         // check if there is any image related to this category and save it
         if(!(array_key_exists('id',$data)) || (array_key_exists('id',$data) && $image != null)){
-            $this->check_upload_image($image,'subjects',$subject->id,'subjects');
+            $this->check_upload_image($image,'subjects',$subject->id,'subjects_videos');
         }
 
 
