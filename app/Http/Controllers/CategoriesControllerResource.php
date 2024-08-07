@@ -28,7 +28,7 @@ class CategoriesControllerResource extends Controller
     }
     public function index()
     {
-        $data = categories::query()->orderBy('id','DESC')->get();
+        $data = categories::query()->orderBy('id','DESC')->paginate(10);
         return CategoryResource::collection($data);
     }
 
