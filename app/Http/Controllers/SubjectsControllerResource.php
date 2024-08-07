@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Actions\CheckForUploadImage;
+use App\Filters\EndDateFilter;
+use App\Filters\NameFilter;
+use App\Filters\StartDateFilter;
 use App\Http\Requests\categoriesFormRequest;
 use App\Http\Requests\subjectsFormRequest;
 use App\Http\Resources\CategoryResource;
@@ -19,6 +22,7 @@ use App\Services\FormRequestHandleInputs;
 use App\Services\Messages;
 use Illuminate\Http\Request;
 use App\Http\Traits\upload_image;
+use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\DB;
 
 class SubjectsControllerResource extends Controller
@@ -35,8 +39,19 @@ class SubjectsControllerResource extends Controller
     {
         $data = subjects::query()
             ->with(['image','category'])
-            ->orderBy('id','DESC')->paginate(request('limit') ?? 10);
-        return SubjectsResource::collection($data);
+            ->orderBy('id','DESC');
+
+
+        $output = app(Pipeline::class)
+            ->send($data)
+            ->through([
+                StartDateFilter::class,
+                EndDateFilter::class,
+                NameFilter::class,
+            ])
+            ->thenReturn()
+            ->paginate(request('limit') ?? 10);
+        return SubjectsResource::collection($output);
     }
 
     /**

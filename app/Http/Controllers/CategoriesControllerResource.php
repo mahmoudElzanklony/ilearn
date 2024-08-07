@@ -3,6 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Actions\CheckForUploadImage;
+use App\Filters\EndDateFilter;
+use App\Filters\NameFilter;
+use App\Filters\StartDateFilter;
+use App\Filters\UserIdFilter;
+use App\Filters\VideoIdFilter;
 use App\Http\Requests\categoriesFormRequest;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\PropertyHeadingResource;
@@ -14,6 +19,7 @@ use App\Services\FormRequestHandleInputs;
 use App\Services\Messages;
 use Illuminate\Http\Request;
 use App\Http\Traits\upload_image;
+use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\DB;
 
 class CategoriesControllerResource extends Controller
@@ -28,8 +34,20 @@ class CategoriesControllerResource extends Controller
     }
     public function index()
     {
-        $data = categories::query()->orderBy('id','DESC')->paginate(10);
-        return CategoryResource::collection($data);
+        $data = categories::query()
+            ->orderBy('id','DESC');
+
+        $output = app(Pipeline::class)
+            ->send($data)
+            ->through([
+                StartDateFilter::class,
+                EndDateFilter::class,
+                NameFilter::class,
+            ])
+            ->thenReturn()
+            ->paginate(request('limit') ?? 10);
+
+        return CategoryResource::collection($output);
     }
 
     /**
