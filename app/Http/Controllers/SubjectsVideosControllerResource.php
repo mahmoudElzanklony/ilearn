@@ -35,8 +35,9 @@ class SubjectsVideosControllerResource extends Controller
     public function index()
     {
         $data = subjects_videos::query()
-            ->with(['subject'])
-            ->orderBy('id','DESC')->paginate(request('limit') ?? 10);
+            ->with(['subject','image'])
+            ->orderBy('id','DESC')
+            ->paginate(request('limit') ?? 10);
         return SubjectsVideosResource::collection($data);
     }
 
