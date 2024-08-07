@@ -14,11 +14,14 @@ class ProfileController extends Controller
     public function update_info(userFormRequest $request)
     {
         $data = $request->validated();
-        if(auth()->user()->phone != $data['phone']){
-           $data['phone_verified_at'] = null;
+        if(isset($data['id'])){
+            $user = User::query()->findOrFail($data['id']);
+        }else{
+            $user = auth()->user();
         }
 
-        auth()->user()->update($data);
+
+        $user->update($data);
         return Messages::success(__('messages.updated_successfully'),UserResource::make(auth()->user()));
     }
 }
