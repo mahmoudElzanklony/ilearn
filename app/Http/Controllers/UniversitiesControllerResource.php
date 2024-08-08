@@ -88,7 +88,7 @@ class UniversitiesControllerResource extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(categoriesFormRequest $request , $id)
+    public function update(universityFormRequest $request , $id)
     {
         $data = $request->validated();
         $data['id'] = $id;
