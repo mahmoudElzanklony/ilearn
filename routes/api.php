@@ -8,15 +8,8 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ActivationAccountController;
 use App\Http\Controllers\Auth\ForgetPasswordController;
 use App\Http\Controllers\CategoriesControllerResource;
-use App\Http\Controllers\ServicesControllerResource;
-use App\Http\Controllers\PropertiesControllerResource;
-use App\Http\Controllers\PropertiesHeadingControllerResource;
-use App\Http\Controllers\CouponsControllerResource;
-use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\NotificationsController;
-use App\Http\Controllers\RatesController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GeneralServiceController;
 use App\Http\Controllers\SubjectsControllerResource;
 use App\Http\Controllers\SubjectsVideosControllerResource;
@@ -24,6 +17,7 @@ use App\Http\Controllers\SubscriptionsControllerResource;
 use App\Http\Controllers\VideoViewController;
 use App\Http\Controllers\BillsControllerResource;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\UniversitiesControllerResource;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -84,6 +78,7 @@ Route::group(['middleware'=>'changeLang'],function (){
     });
     // resources
     Route::resources([
+        'universities'=>UniversitiesControllerResource::class,
         'categories'=>CategoriesControllerResource::class,
         'subjects'=>SubjectsControllerResource::class,
         'subjects-videos'=>SubjectsVideosControllerResource::class,

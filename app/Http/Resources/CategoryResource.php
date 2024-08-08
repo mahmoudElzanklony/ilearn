@@ -18,8 +18,9 @@ class CategoryResource extends JsonResource
     {
         return [
             'id'=>$this->id,
-             'name'=>$this->name,
-             'info'=>$this->info,
+            'name'=>$this->name,
+            'university'=>UniversityResource::make($this->whenLoaded('university')),
+            'info'=>$this->info,
             'created_at'=>$this->created_at->format('Y-m-d H:i:s'),
         ];
 

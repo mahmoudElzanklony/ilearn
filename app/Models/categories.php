@@ -11,11 +11,16 @@ class categories extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['user_id','name','info','parent_id'];
+    protected $fillable = ['user_id','university_id','name','info','parent_id'];
 
     public function parent()
     {
         return $this->belongsTo(categories::class,'id');
+    }
+
+    public function university()
+    {
+        return $this->belongsTo(universities::class,'university_id');
     }
 
     public function user()

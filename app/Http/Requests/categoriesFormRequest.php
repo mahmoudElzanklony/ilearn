@@ -29,6 +29,7 @@ class categoriesFormRequest extends FormRequest
         $arr = [
             'id'=>'filled',
             'parent_id'=>'filled',
+            'university_id'=>'required',
             'name'=>'required|string',
             'info'=>'nullable|string',
         ];

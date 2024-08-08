@@ -31,6 +31,10 @@ class LoginController extends Controller
                     return Messages::error('هذا الجهاز ليس الجهاز الاول الذي قمت بالدخول الي التطبيق من خلاله');
                 }
             }
+            // check if blocked
+            if($user->is_block == 1){
+                return Messages::error('لقد تم حظر حسابك من فضلك قم بالتواصل مع دكتور الماده لفك الحظر عنك');
+            }
             $user['token'] = $user->createToken($data['phone'])->plainTextToken;
             return Messages::success(__('messages.login_successfully'),UserResource::make($user));
         }else{

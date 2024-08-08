@@ -27,6 +27,7 @@ class userFormRequest extends FormRequest
                 'phone' => 'filled|unique:users,phone,'. request('id'),
                 'password' => 'filled',
                 'type' => 'filled',
+                'is_block' => 'filled',
                 'ip'=>'nullable',
                 'id'=>'required|exists:users,id'
             ];

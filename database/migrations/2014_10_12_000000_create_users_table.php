@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('phone')->unique();
             $table->string('otp_secret');
             $table->string('type');
+            $table->tinyInteger('is_block')->default(0);
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();
