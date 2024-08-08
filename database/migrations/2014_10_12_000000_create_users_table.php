@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('phone')->unique();
             $table->string('otp_secret');
+            $table->string('nationality')->default('مصري');
             $table->string('type');
             $table->tinyInteger('is_block')->default(0);
             $table->rememberToken();

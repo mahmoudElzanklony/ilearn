@@ -41,7 +41,8 @@ class User extends Authenticatable
         'password',
         'phone',
         'otp_secret',
-        'type'
+        'nationality',
+        'type',
     ];
 
     public function roleName()

@@ -20,6 +20,7 @@ class UserResource extends JsonResource
             'phone'=>$this->phone,
             'ip'=>$this->otp_secret,
             'type'=>$this->type,
+            'nationality'=>$this->nationality,
             'created_at'=>$this->created_at->format('Y-m-d H:i:s')
         ];
         if(isset($this->token)){

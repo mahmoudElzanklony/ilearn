@@ -28,6 +28,7 @@ class userFormRequest extends FormRequest
                 'password' => 'filled',
                 'type' => 'filled',
                 'is_block' => 'filled',
+                'nationality' => 'filled',
                 'ip'=>'nullable',
                 'id'=>'required|exists:users,id'
             ];
@@ -36,6 +37,7 @@ class userFormRequest extends FormRequest
                 'username' => 'required',
                 'phone' => 'required|unique:users,phone',
                 'password' => 'required',
+                'nationality' => 'required',
                 'type' => 'required',
             ];
         }
