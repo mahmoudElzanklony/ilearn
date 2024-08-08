@@ -21,7 +21,7 @@ class SubjectsVideosResource extends JsonResource
           'user'=>UserResource::make($this->whenLoaded('user')),
           'subject'=>SubjectsResource::make($this->whenLoaded('subject')),
           'image'=>ImageResource::make($this->whenLoaded('image')),
-          'video'=>'videos/'.$this->video,
+          'video'=>env('cloud_storage').(env('WAS_STATUS') == 1 ? '/':'/videos/').$this->video,
           'name'=>$this->name,
           'created_at'=>$this->created_at->format('Y-h-m ')
         ];

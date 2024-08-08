@@ -17,7 +17,7 @@ class ImageResource extends JsonResource
         return [
             //'id'=>$this->id,
             //'imageable_type'=>$this->imageable_type,
-            'name'=>$this->name ?? 'default.png',
+            'name'=>env('cloud_storage').(env('WAS_STATUS') == 1 ? '/' :'/images/').($this->name ?? 'default.png'),
         ];
     }
 }

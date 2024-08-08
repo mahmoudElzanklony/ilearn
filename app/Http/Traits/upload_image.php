@@ -7,6 +7,7 @@ namespace App\Http\Traits;
 use App\Actions\ImageModalSave;
 use App\Models\images;
 use App\Services\Messages;
+use Illuminate\Support\Facades\Storage;
 
 trait upload_image
 {
@@ -15,7 +16,18 @@ trait upload_image
         if($type == 'one') {
             if (in_array($file->getClientOriginalExtension(), $valid_extensions)) {
                 $name = time().rand(0,9999999999999). '_image.' . $file->getClientOriginalExtension();
-                $file->move(public_path('images/' . $folder_name), $name);
+
+                $filePath = $folder_name.'/'. $name;
+                if(env('WAS_STATUS') == 1) {
+                    Storage::disk('wasabi')
+                        ->put(
+                            $filePath,
+                            file_get_contents($file->getRealPath())
+                        );
+                }else{
+                    $file->move(public_path('images/' . $folder_name), $name);
+                }
+
                 return $name;
             } else {
                 return Messages::error('image extension is not correct');
@@ -39,8 +51,18 @@ trait upload_image
     public function upload_video($file)
     {
         $name = time().rand(0,9999999999999). '_video.' . $file->getClientOriginalExtension();
-        $file->move(public_path('videos/'), $name);
+        $filePath = 'videos/'. $name;
+        if(env('WAS_STATUS') == 1) {
+            Storage::disk('wasabi')
+                ->put(
+                    $filePath,
+                    file_get_contents($file->getRealPath())
+                );
+        }else{
+            $file->move(public_path('videos/'), $name);
+        }
         return $name;
+        //$file->move(public_path('videos/'), $name);
     }
 
 
