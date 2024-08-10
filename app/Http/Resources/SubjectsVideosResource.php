@@ -4,6 +4,9 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class SubjectsVideosResource extends JsonResource
 {
@@ -21,7 +24,9 @@ class SubjectsVideosResource extends JsonResource
           'user'=>UserResource::make($this->whenLoaded('user')),
           'subject'=>SubjectsResource::make($this->whenLoaded('subject')),
           'image'=>ImageResource::make($this->whenLoaded('image')),
-          'video'=>env('cloud_storage').(env('WAS_STATUS') == 1 ? '/':'/videos/').$this->video,
+
+          //'video'=>env('cloud_storage').(env('WAS_STATUS') == 1 ? '/':'/videos/').$this->video,
+          'video'=>$this->video,
           'name'=>$this->name,
           'created_at'=>$this->created_at->format('Y-h-m ')
         ];

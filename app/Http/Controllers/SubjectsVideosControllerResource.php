@@ -21,6 +21,8 @@ use App\Services\Messages;
 use Illuminate\Http\Request;
 use App\Http\Traits\upload_image;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class SubjectsVideosControllerResource extends Controller
 {
@@ -117,5 +119,32 @@ class SubjectsVideosControllerResource extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function stream()
+    {
+        $video = subjects_videos::query()->find(request('id'));
+        if($video == null){
+            return Messages::error('video not found');
+        }
+        $filePath = 'videos/'.$video->video;
+        $disk = Storage::disk('wasabi');
+        if (!$disk->exists($filePath)) {
+            return response()->json(['error' => 'File not found'], 404);
+        }
+
+        $stream = $disk->readStream($filePath);
+        $size = $disk->size($filePath);
+        $mimeType = $disk->mimeType($filePath);
+        $headers = [
+            'Content-Type' => $mimeType,
+            'Content-Length' => $size,
+            'Accept-Ranges' => 'bytes',
+            'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"',
+        ];
+
+        return new StreamedResponse(function () use ($stream) {
+            fpassthru($stream);
+        }, 200, $headers);
     }
 }

@@ -71,6 +71,9 @@ Route::group(['middleware'=>'changeLang'],function (){
     });
 
     Route::post('/lock-subscription',[SubjectsControllerResource::class,'lock']);
+    Route::group(['prefix'=>'/stream-video','middleware'=>'auth:sanctum'],function (){
+        Route::get('/',[SubjectsVideosControllerResource::class,'stream']);
+    });
 
     // Define the remaining resource routes with middleware
     Route::group(['middleware' => 'auth:sanctum'], function () {
