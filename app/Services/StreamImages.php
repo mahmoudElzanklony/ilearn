@@ -20,7 +20,7 @@ class StreamImages
 
             return  'data:' . $mimeType . ';base64,' . base64_encode($imageContent);
         }
-        return Messages::error('image not found');
+        return 'image not found';
 
         // Return the images as a JSON response
     }
