@@ -22,6 +22,5 @@ class StreamImages
         }
         return 'image not found';
 
-        // Return the images as a JSON response
     }
 }

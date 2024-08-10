@@ -36,7 +36,6 @@ class userFormRequest extends FormRequest
             return [
                 'username' => 'required',
                 'phone' => 'required|unique:users,phone',
-                'password' => 'required',
                 'nationality' => 'required',
                 'type' => 'required',
             ];

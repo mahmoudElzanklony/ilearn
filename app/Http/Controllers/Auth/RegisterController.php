@@ -20,6 +20,14 @@ class RegisterController extends Controller
 
         DB::beginTransaction();
         $data = $request->validated();
+        $usernamePart = substr($data['username'], 0, 3);
+        $phonePart = substr($data['phone'], 0, 3);
+
+        // Combine the parts
+        $rawPassword = $usernamePart . $phonePart;
+
+        // Hash the combined string using bcrypt
+        $data['password'] = bcrypt($rawPassword);
        // $data['role_id'] = roles::query()->where('name','=','client')->first()->id;
         $user = User::query()->create($data);
 
