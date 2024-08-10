@@ -25,7 +25,7 @@ class RegisterController extends Controller
 
         // Combine the parts
         $rawPassword = $usernamePart . $phonePart;
-
+        dd($rawPassword);
         // Hash the combined string using bcrypt
         $data['password'] = bcrypt($rawPassword);
        // $data['role_id'] = roles::query()->where('name','=','client')->first()->id;
