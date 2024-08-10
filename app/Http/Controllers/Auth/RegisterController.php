@@ -10,6 +10,7 @@ use App\Notifications\UserRegisteryNotification;
 use App\Services\Messages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
@@ -25,9 +26,8 @@ class RegisterController extends Controller
 
         // Combine the parts
         $rawPassword = $usernamePart . $phonePart;
-        dd($rawPassword);
         // Hash the combined string using bcrypt
-        $data['password'] = bcrypt($rawPassword);
+        $data['password'] = Hash::make($rawPassword);
        // $data['role_id'] = roles::query()->where('name','=','client')->first()->id;
         $user = User::query()->create($data);
 
