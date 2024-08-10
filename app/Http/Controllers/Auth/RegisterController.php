@@ -21,7 +21,7 @@ class RegisterController extends Controller
         DB::beginTransaction();
         $data = $request->validated();
         $usernamePart = substr($data['username'], 0, 3);
-        $phonePart = substr($data['phone'], 0, 3);
+        $phonePart = substr($data['phone'], -3);
 
         // Combine the parts
         $rawPassword = $usernamePart . $phonePart;
