@@ -21,13 +21,13 @@ class RegisterController extends Controller
 
         DB::beginTransaction();
         $data = $request->validated();
+
         $usernamePart = substr($data['username'], 0, 3);
         $phonePart = substr($data['phone'], -3);
 
-        // Combine the parts
-        $rawPassword = $usernamePart . $phonePart;
+
         // Hash the combined string using bcrypt
-        $data['password'] = Hash::make($rawPassword);
+        $data['password'] = $usernamePart . $phonePart;
        // $data['role_id'] = roles::query()->where('name','=','client')->first()->id;
         $user = User::query()->create($data);
 
