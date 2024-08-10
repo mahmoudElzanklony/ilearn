@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Services\StreamImages;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -17,7 +18,8 @@ class ImageResource extends JsonResource
         return [
             //'id'=>$this->id,
             //'imageable_type'=>$this->imageable_type,
-            'name'=>env('cloud_storage').(env('WAS_STATUS') == 1 ? '/' :'/images/').($this->name ?? 'default.png'),
+            //'name'=>env('cloud_storage').(env('WAS_STATUS') == 1 ? '/' :'/images/').($this->name ?? 'default.png'),
+            'name'=>StreamImages::stream($this->name),
         ];
     }
 }

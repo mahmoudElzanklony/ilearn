@@ -124,18 +124,20 @@ class SubjectsVideosControllerResource extends Controller
     public function stream()
     {
         $video = subjects_videos::query()->find(request('id'));
-        if($video == null){
+        if ($video == null) {
             return Messages::error('video not found');
         }
-        $filePath = 'videos/'.$video->video;
-        $disk = Storage::disk('wasabi');
-        if (!$disk->exists($filePath)) {
+        $filePath = 'videos/' . $video->video;
+
+
+        if (!Storage::disk('wasabi')->exists($filePath)) {
             return response()->json(['error' => 'File not found'], 404);
         }
 
-        $stream = $disk->readStream($filePath);
-        $size = $disk->size($filePath);
-        $mimeType = $disk->mimeType($filePath);
+        $stream = Storage::disk('wasabi')->readStream($filePath);
+        $size = Storage::disk('wasabi')->size($filePath);
+        $mimeType = Storage::disk('wasabi')->mimeType($filePath);
+
         $headers = [
             'Content-Type' => $mimeType,
             'Content-Length' => $size,
@@ -143,8 +145,34 @@ class SubjectsVideosControllerResource extends Controller
             'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"',
         ];
 
-        return new StreamedResponse(function () use ($stream) {
-            fpassthru($stream);
-        }, 200, $headers);
+        $range = request()->header('Range');
+        if ($range) {
+            [$unit, $range] = explode('=', $range, 2);
+            [$start, $end] = explode('-', $range, 2);
+
+            $start = intval($start);
+            $end = $end !== '' ? intval($end) : $size - 1;
+
+            if ($start > $end || $end >= $size) {
+                return response()->json(['error' => 'Invalid range'], 416); // 416 Range Not Satisfiable
+            }
+
+            $length = $end - $start + 1;
+
+            fseek($stream, $start);
+
+            $headers['Content-Length'] = $length;
+            $headers['Content-Range'] = "bytes $start-$end/$size";
+
+            return new StreamedResponse(function () use ($stream, $length) {
+                echo fread($stream, $length);
+                fclose($stream);
+            }, 206, $headers); // 206 Partial Content
+        } else {
+
+            return new StreamedResponse(function () use ($stream) {
+                fpassthru($stream);
+            }, 200, $headers);// 200 OK
+        }
     }
 }
