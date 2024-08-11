@@ -127,16 +127,16 @@ class SubjectsVideosControllerResource extends Controller
         if ($video == null) {
             return Messages::error('video not found');
         }
-        $filePath = 'videos/' . $video->video;
 
+        $filePath = 'videos/' . $video->video;
 
         if (!Storage::disk('wasabi')->exists($filePath)) {
             return response()->json(['error' => 'File not found'], 404);
         }
 
-        $stream = Storage::disk('wasabi')->readStream($filePath);
         $size = Storage::disk('wasabi')->size($filePath);
         $mimeType = Storage::disk('wasabi')->mimeType($filePath);
+        $stream = Storage::disk('wasabi')->readStream($filePath);
 
         $headers = [
             'Content-Type' => $mimeType,
@@ -145,34 +145,11 @@ class SubjectsVideosControllerResource extends Controller
             'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"',
         ];
 
-        $range = request()->header('Range');
-        if ($range) {
-            [$unit, $range] = explode('=', $range, 2);
-            [$start, $end] = explode('-', $range, 2);
-
-            $start = intval($start);
-            $end = $end !== '' ? intval($end) : $size - 1;
-
-            if ($start > $end || $end >= $size) {
-                return response()->json(['error' => 'Invalid range'], 416); // 416 Range Not Satisfiable
+        return new StreamedResponse(function () use ($stream) {
+            while (ob_get_level()) {
+                ob_end_flush();
             }
-
-            $length = $end - $start + 1;
-
-            fseek($stream, $start);
-
-            $headers['Content-Length'] = $length;
-            $headers['Content-Range'] = "bytes $start-$end/$size";
-
-            return new StreamedResponse(function () use ($stream, $length) {
-                echo fread($stream, $length);
-                fclose($stream);
-            }, 206, $headers); // 206 Partial Content
-        } else {
-
-            return new StreamedResponse(function () use ($stream) {
-                fpassthru($stream);
-            }, 200, $headers);// 200 OK
-        }
+            fpassthru($stream);
+        }, 200, $headers);
     }
 }
