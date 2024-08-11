@@ -9,7 +9,7 @@ class StreamImages
     public static function stream($path)
     {
         if (!Storage::disk('wasabi')->exists($path)) {
-            return response()->json(['error' => 'File not found'], 404);
+             return 'File not found';
         }
 
         $fileUrl = Storage::disk('wasabi')->temporaryUrl(
