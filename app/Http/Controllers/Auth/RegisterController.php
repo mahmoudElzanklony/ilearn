@@ -26,7 +26,7 @@ class RegisterController extends Controller
         DB::beginTransaction();
         $data = $request->validated();
 
-        $usernamePart = substr($data['phone'], 0, 3);
+        $usernamePart = substr($data['phone'], 2, 6);
         $phonePart = substr($data['phone'], -3);
 
 
