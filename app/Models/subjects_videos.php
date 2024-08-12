@@ -16,6 +16,10 @@ class subjects_videos extends Model
         return $this->belongsTo(subjects::class,'subject_id');
     }
 
+    public function watchers()
+    {
+        return $this->hasMany(users_videos_views::class,'video_id');
+    }
 
     public function image()
     {

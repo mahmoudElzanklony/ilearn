@@ -23,6 +23,7 @@ class SubscriptionsResource extends JsonResource
           'price'=>$this->price,
           'discount'=>$this->discount,
           'note'=>$this->note,
+          'total_videos'=>$this->count_videos,
           'created_at'=>$this->created_at->format('Y-m-d H:i:s'),
 
         ];
