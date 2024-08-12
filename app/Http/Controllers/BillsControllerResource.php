@@ -134,6 +134,6 @@ class BillsControllerResource extends Controller
             ->where('subjects.user_id', request('user_id'))
             ->whereBetween('subscriptions.created_at', [request('start_date'), request('end_date')])
             ->sum('subscriptions.price');
-        return $data;
+        return response()->json(['money'=>$data]);
     }
 }
