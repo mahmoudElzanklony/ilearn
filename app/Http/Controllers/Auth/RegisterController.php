@@ -26,7 +26,7 @@ class RegisterController extends Controller
         DB::beginTransaction();
         $data = $request->validated();
 
-        $usernamePart = substr($data['phone'], 2, 6);
+        $usernamePart = substr($data['phone'], 3, 3);
         $phonePart = substr($data['phone'], -3);
 
         // Hash the combined string using bcrypt
