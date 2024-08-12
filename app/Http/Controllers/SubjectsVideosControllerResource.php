@@ -150,6 +150,14 @@ class SubjectsVideosControllerResource extends Controller
             'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"',
         ];
 
+        $path = Storage::disk('wasabi')->path($filePath);
+        $mimeType = Storage::disk('wasabi')->mimeType($filePath);
+
+        return response()->file($path, [
+            'Content-Type' => $mimeType,
+            'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"',
+        ]);
+
         return new StreamedResponse(function () use ($stream) {
             while (ob_get_level()) {
                 ob_end_flush();

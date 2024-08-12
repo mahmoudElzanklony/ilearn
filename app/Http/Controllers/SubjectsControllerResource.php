@@ -49,7 +49,7 @@ class SubjectsControllerResource extends Controller
                 StartDateFilter::class,
                 EndDateFilter::class,
                 NameFilter::class,
-                CategoryIdFilter::class
+                CategoryIdFilter::class,
             ])
             ->thenReturn()
             ->paginate(request('limit') ?? 10);
