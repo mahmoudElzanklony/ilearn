@@ -71,7 +71,7 @@ Route::group(['middleware'=>'changeLang'],function (){
     });
 
     Route::post('/lock-subscription',[SubjectsControllerResource::class,'lock']);
-    Route::group(['prefix'=>'/stream-video','middleware'=>'auth:sanctum'],function (){
+    Route::group(['prefix'=>'/stream-video'],function (){
         Route::get('/',[SubjectsVideosControllerResource::class,'stream']);
     });
 
