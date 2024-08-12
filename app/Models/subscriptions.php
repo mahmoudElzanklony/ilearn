@@ -26,10 +26,7 @@ class subscriptions extends Model
         return $this->belongsTo(User::class,'added_by');
     }
 
-    public function videos()
-    {
-        return $this->hasMany(subjects_videos::class,'subject_id');
-    }
+
 
 
 

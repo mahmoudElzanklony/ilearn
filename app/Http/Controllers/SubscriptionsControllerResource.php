@@ -46,8 +46,6 @@ class SubscriptionsControllerResource extends Controller
 
         $data = subscriptions::query()
             ->with(['subject','user'])
-            ->with('videos')
-            ->withCount('videos')
             ->when(auth()->user()->type == 'doctor',function ($e){
                 $e->whereHas('subject',function($q){
                     $q->where('user_id','=',auth()->id());
