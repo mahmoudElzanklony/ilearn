@@ -26,12 +26,11 @@ class LoginController extends Controller
         if(auth()->attempt($data)){
             // check ip
             $user = User::query()->where('phone',$data['phone'])->first();
-            //if($user->type == 'client'){
-            if(false){
+            if($user->type == 'client'){
                 if($user->otp_secret == null){
-                    $user->otp_secret = request()->ip();
+                    $user->otp_secret = request('device_id');
                     $user->save();
-                }else if($user->otp_secret != request()->ip()){
+                }else if($user->otp_secret != request('device_id')){
                     return Messages::error('هذا الجهاز ليس الجهاز الاول الذي قمت بالدخول الي التطبيق من خلاله');
                 }
             }
