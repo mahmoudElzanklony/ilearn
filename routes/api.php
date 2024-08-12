@@ -42,7 +42,7 @@ Route::group(['middleware'=>'changeLang'],function (){
         Route::post('/register',[RegisterController::class,'register']);
         Route::post('/forget-password',[ForgetPasswordController::class,'index']);
         Route::post('/new-password',[ForgetPasswordController::class,'new_password']);
-        Route::post('/logout',[LoginController::class,'logout'])->middleware('auth:sanctum');
+        Route::post('/logout',[LoginController::class,'logout']);
         Route::post('/me',[LoginController::class,'get_user_by_token']);
         Route::post('/csrf',[LoginController::class,'getToken']);
     });

@@ -16,6 +16,10 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class LoginController extends Controller
 {
     //
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum')->only('logout');
+    }
     public function login()
     {
         $data = ['phone'=>request('phone'),'password'=>request('password')];
