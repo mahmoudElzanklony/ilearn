@@ -49,7 +49,6 @@ class BillsControllerResource extends Controller
     public function index()
     {
         $data = bills::query()
-            ->with('doctor')
             ->when(auth()->user()->type == 'doctor',fn($e) => $e->where('doctor_id','=',auth()->id()))
             ->with('doctor')
             ->orderBy('id','DESC');
