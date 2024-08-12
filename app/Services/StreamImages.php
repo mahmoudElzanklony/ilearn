@@ -33,8 +33,9 @@ class StreamImages
         }, 200, $headers);
 
         // Send the streamed response to the client
-        return $response;
+        $url = url("/video/$filePath"); // Generate a URL that points to your streaming route
 
+        return response()->json(['url' => $url], 200);
 
     }
     public static function stream($path)
