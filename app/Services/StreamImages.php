@@ -28,9 +28,14 @@ class StreamImages
             'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"',
         ];
 
-        dd(new StreamedResponse(function () use ($stream) {
+        $response = new StreamedResponse(function () use ($stream) {
             fpassthru($stream);
-        }, 200, $headers));
+        }, 200, $headers);
+
+        // Send the streamed response to the client
+        return $response->send();
+
+
     }
     public static function stream($path)
     {
