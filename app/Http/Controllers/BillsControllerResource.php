@@ -36,6 +36,11 @@ use Illuminate\Support\Facades\DB;
 
 class BillsControllerResource extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum')->except('index','show');
+    }
+
     use upload_image;
     /**
      * Display a listing of the resource.
