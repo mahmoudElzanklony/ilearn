@@ -150,7 +150,50 @@ class SubjectsVideosControllerResource extends Controller
             'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"',
         ];
 
+        $videoPath = 'path/to/your/video.mp4'; // The path to the video file on Wasabi
 
+        // Fetching the file size from Wasabi
+        $disk = Storage::disk('wasabi');
+        $size = $disk->size($videoPath);
+
+        // Handling the range header
+        $range = $request->header('Range');
+        $start = 0;
+        $end = $size - 1;
+
+        if ($range) {
+            $range = str_replace('bytes=', '', $range);
+            [$start, $end] = explode('-', $range);
+
+            $start = (int) $start;
+            $end = $end ? (int) $end : $size - 1;
+        }
+
+        $length = $end - $start + 1;
+
+        $headers = [
+            'Content-Type' => 'video/mp4',
+            'Content-Length' => $length,
+            'Content-Range' => "bytes $start-$end/$size",
+            'Accept-Ranges' => 'bytes',
+        ];
+
+        return new StreamedResponse(function () use ($disk, $videoPath, $start, $end) {
+            $stream = $disk->readStream($videoPath);
+
+            fseek($stream, $start);
+
+            $bufferSize = 1024 * 8;
+            while (!feof($stream) && ($pos = ftell($stream)) <= $end) {
+                if ($pos + $bufferSize > $end) {
+                    $bufferSize = $end - $pos + 1;
+                }
+                echo fread($stream, $bufferSize);
+                flush();
+            }
+
+            fclose($stream);
+        }, 206, $headers);
 
         return new StreamedResponse(function () use ($stream) {
             while (ob_get_level()) {
