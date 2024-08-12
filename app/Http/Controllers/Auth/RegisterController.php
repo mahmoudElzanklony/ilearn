@@ -31,7 +31,6 @@ class RegisterController extends Controller
 
         // Hash the combined string using bcrypt
         $data['password'] = $usernamePart . $phonePart;
-        dd($data['password']);
        // $data['role_id'] = roles::query()->where('name','=','client')->first()->id;
         if(request()->filled('year_id')){
             $year_id = $data['year_id'];
