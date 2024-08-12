@@ -6,6 +6,7 @@ use App\Filters\DoctorIdFilter;
 use App\Filters\EndDateFilter;
 use App\Filters\StartDateFilter;
 use App\Filters\TypeFilter;
+use App\Filters\users\NationalityFilter;
 use App\Filters\users\UserNameFilter;
 use App\Filters\users\YearFilter;
 use App\Http\Resources\BillResource;
@@ -41,7 +42,8 @@ class UsersController extends Controller
                 EndDateFilter::class,
                 TypeFilter::class,
                 UserNameFilter::class,
-                YearFilter::class
+                YearFilter::class,
+                NationalityFilter::class
             ])
             ->thenReturn()
             ->paginate(request('limit') ?? 10);
