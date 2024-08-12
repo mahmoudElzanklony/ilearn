@@ -157,7 +157,7 @@ class SubjectsVideosControllerResource extends Controller
         $size = $disk->size($videoPath);
 
         // Handling the range header
-        $range = $request->header('Range');
+        $range = request()->header('Range');
         $start = 0;
         $end = $size - 1;
 
