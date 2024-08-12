@@ -14,6 +14,16 @@ class BillResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+          'id'=>$this->id,
+          'doctor'=>UserResource::make($this->whenLoaded('doctor')),
+          'start_date'=>$this->start_date,
+          'end_date'=>$this->end_date,
+          'total_money'=>$this->total_money,
+          'profit'=>$this->profit,
+          'remain'=>$this->remain,
+          'note'=>$this->note,
+            'created_at'=>$this->created_at->format('Y-m-d H:i:s'),
+        ];
     }
 }
