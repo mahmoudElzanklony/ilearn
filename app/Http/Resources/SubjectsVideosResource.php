@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Services\StreamImages;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Http;
@@ -26,7 +27,7 @@ class SubjectsVideosResource extends JsonResource
           'image'=>ImageResource::make($this->whenLoaded('image')),
 
           //'video'=>env('cloud_storage').(env('WAS_STATUS') == 1 ? '/':'/videos/').$this->video,
-          'video'=>$this->video,
+          'video'=>StreamImages::stream('videos'/$this->video),
           'name'=>$this->name,
           'created_at'=>$this->created_at->format('Y-h-m ')
         ];

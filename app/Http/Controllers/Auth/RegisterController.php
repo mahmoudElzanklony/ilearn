@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\userFormRequest;
 use App\Models\roles;
+use App\Models\students_subjects_years;
 use App\Models\User;
 use App\Notifications\UserRegisteryNotification;
 use App\Services\Messages;
@@ -29,7 +30,21 @@ class RegisterController extends Controller
         // Hash the combined string using bcrypt
         $data['password'] = $usernamePart . $phonePart;
        // $data['role_id'] = roles::query()->where('name','=','client')->first()->id;
+        if(request()->filled('year_id')){
+            $year_id = $data['year_id'];
+            unset($data['year_id']);
+        }
+        $data['added_by'] = auth()->id();
+
+        // create user
         $user = User::query()->create($data);
+        // create user year
+        if(request()->filled('year_id')){
+            students_subjects_years::query()->create([
+                'user_id'=>$user->id,
+                'year_id'=>$year_id
+            ]);
+        }
 
         $user->createToken($data['phone'])->plainTextToken;
         DB::commit();

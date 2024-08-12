@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('otp_secret');
             $table->string('nationality')->default('مصري');
             $table->string('type');
+            $table->bigInteger('added_by');
             $table->tinyInteger('is_block')->default(0);
             $table->rememberToken();
             $table->softDeletes();

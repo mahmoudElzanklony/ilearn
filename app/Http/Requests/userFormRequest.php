@@ -30,6 +30,7 @@ class userFormRequest extends FormRequest
                 'is_block' => 'filled',
                 'nationality' => 'filled',
                 'ip'=>'nullable',
+                'year_id'=>'filled|exists:categories,id',
                 'id'=>'required|exists:users,id'
             ];
         }else{
@@ -37,6 +38,7 @@ class userFormRequest extends FormRequest
                 'username' => 'required',
                 'phone' => 'required|unique:users,phone',
                 'nationality' => 'required',
+                'year_id'=>'filled|exists:categories,id',
                 'type' => 'required',
             ];
         }

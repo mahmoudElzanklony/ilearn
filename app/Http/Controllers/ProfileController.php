@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\userFormRequest;
 use App\Http\Resources\UserResource;
+use App\Models\students_subjects_years;
 use App\Models\User;
 use App\Services\Messages;
 use Illuminate\Http\Request;
@@ -18,6 +19,14 @@ class ProfileController extends Controller
             $user = User::query()->findOrFail($data['id']);
         }else{
             $user = auth()->user();
+        }
+
+        if(request()->filled('year_id')){
+            students_subjects_years::query()
+                ->where('user_id','=',$user->id)
+                ->update([
+                    'year_id'=>request('year_id')
+                ]);
         }
 
 

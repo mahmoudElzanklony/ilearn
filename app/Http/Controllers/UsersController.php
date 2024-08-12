@@ -22,11 +22,12 @@ class UsersController extends Controller
         $data = User::query()
             ->with('subscriptions')
             ->when(auth()->user()->type == 'doctor',function ($e){
-                $e->whereHas('subscriptions',function($e){
+                $e->where('added_by','=',auth()->id());
+                /*$e->whereHas('subscriptions',function($e){
                     $e->whereHas('subject',function ($q){
                         $q->where('user_id','=',auth()->id());
                     });
-                });
+                });*/
             })
             ->orderBy('id','DESC');
 

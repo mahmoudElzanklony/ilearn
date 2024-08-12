@@ -13,7 +13,7 @@ class StreamImages
         }
 
         $fileUrl = Storage::disk('wasabi')->temporaryUrl(
-            $path, now()->addMinutes(180) // URL expires in 5 minutes
+            $path, now()->addMinutes(180) // URL expires in 3 hours
         );
 
         return $fileUrl;
