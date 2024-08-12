@@ -29,9 +29,6 @@ class StreamImages
         ];
 
         return new StreamedResponse(function () use ($stream) {
-            while (ob_get_level()) {
-                ob_end_flush();
-            }
             fpassthru($stream);
         }, 200, $headers);
     }
