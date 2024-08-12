@@ -15,10 +15,13 @@ use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum');
+    }
     //
     public function register(userFormRequest $request)
     {
-
 
         DB::beginTransaction();
         $data = $request->validated();
