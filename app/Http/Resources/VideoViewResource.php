@@ -19,7 +19,7 @@ class VideoViewResource extends JsonResource
           'user_id'=>$this->user_id,
           'video_id'=>$this->video_id,
           'user'=>UserResource::make($this->whenLoaded('user')),
-          'video'=>UserResource::make($this->whenLoaded('video')),
+          'video'=>SubjectsVideosResource::make($this->whenLoaded('video')),
           'created_at'=>$this->created_at->format('Y-m-d H:i:s'),
 
         ];
