@@ -22,7 +22,7 @@ class checkPeriodFormRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id'=>'required|exists:users,id',
+            'doctor_id'=>'required|exists:users,id',
             'start_date'=>'required',
             'end_date'=>'required',
         ];

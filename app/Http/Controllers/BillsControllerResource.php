@@ -82,7 +82,7 @@ class BillsControllerResource extends Controller
             return Messages::error('الفتره الزمنيه لانشاء الفاتوره لهذا الدكتور غير صحيحه حيث انها موجوده بالفعل');
         }
 
-
+        $data['total_money'] = $this->get_money_at($data);
         $bill = bills::query()->updateOrCreate([
             'id'=>$data['id'] ?? null
         ],$data);
@@ -129,11 +129,17 @@ class BillsControllerResource extends Controller
 
     public function check_period(checkPeriodFormRequest $request)
     {
-        $data = DB::table('subscriptions')
-            ->join('subjects', 'subscriptions.subject_id', '=', 'subjects.id')
-            ->where('subjects.user_id', request('user_id'))
-            ->whereBetween('subscriptions.created_at', [request('start_date'), request('end_date')])
-            ->sum('subscriptions.price');
+        $data = $this->get_money_at($request->validated());
         return response()->json(['money'=>$data]);
+    }
+
+    public function get_money_at($data)
+    {
+        $output = DB::table('subscriptions')
+            ->join('subjects', 'subscriptions.subject_id', '=', 'subjects.id')
+            ->where('subjects.user_id', $data['doctor_id'])
+            ->whereBetween('subscriptions.created_at', [$data['start_date'], $data['end_date']])
+            ->sum('subscriptions.price');
+        return $output;
     }
 }
