@@ -33,7 +33,7 @@ class StreamImages
         }, 200, $headers);
 
         // Send the streamed response to the client
-        return $response->send();
+        return $response;
 
 
     }
