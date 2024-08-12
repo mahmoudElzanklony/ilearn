@@ -24,6 +24,7 @@ class SubscriptionsResource extends JsonResource
           'discount'=>$this->discount,
           'note'=>$this->note,
           'total_videos'=>$this->videos_count,
+          'videos'=>SubjectsVideosResource::collection($this->whenLoaded('videos')),
           'created_at'=>$this->created_at->format('Y-m-d H:i:s'),
 
         ];
