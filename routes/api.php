@@ -77,11 +77,8 @@ Route::group(['middleware'=>'changeLang'],function (){
 
 
     // Define the remaining resource routes with middleware
-    Route::group(['middleware' => 'auth:sanctum'], function () {
-        Route::resource('bills', BillsControllerResource::class);
-        Route::group(['prefix'=>'/bills-data','middleware'=>'auth:sanctum'],function (){
-            Route::post('/check-period',[BillsControllerResource::class,'check_period']);
-        });
+    Route::group(['prefix'=>'/bills-data','middleware'=>'auth:sanctum'],function (){
+        Route::post('/check-period',[BillsControllerResource::class,'check_period']);
     });
     // resources
     Route::resources([
@@ -90,6 +87,7 @@ Route::group(['middleware'=>'changeLang'],function (){
         'subjects'=>SubjectsControllerResource::class,
         'subjects-videos'=>SubjectsVideosControllerResource::class,
         'subscriptions'=>SubscriptionsControllerResource::class,
+        'bills'=>BillsControllerResource::class,
     ]);
 
 
