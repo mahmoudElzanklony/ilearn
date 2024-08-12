@@ -183,7 +183,7 @@ class SubjectsVideosControllerResource extends Controller
 
             fseek($stream, $start);
 
-            $bufferSize = 1024 * 8;
+            $bufferSize = 1024;
             while (!feof($stream) && ($pos = ftell($stream)) <= $end) {
                 if ($pos + $bufferSize > $end) {
                     $bufferSize = $end - $pos + 1;
