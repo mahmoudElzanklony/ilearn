@@ -27,6 +27,7 @@ class ProfileController extends Controller
                 ->update([
                     'year_id'=>request('year_id')
                 ]);
+            $user->load('year');
         }
 
 

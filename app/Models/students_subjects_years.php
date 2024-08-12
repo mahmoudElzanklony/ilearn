@@ -20,4 +20,8 @@ class students_subjects_years extends Model
     {
         return $this->belongsTo(categories::class,'year_id');
     }
+    public function category()
+    {
+        return $this->belongsTo(categories::class,'year_id');
+    }
 }

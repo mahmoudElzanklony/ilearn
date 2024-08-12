@@ -21,6 +21,7 @@ class UsersController extends Controller
     public function index()
     {
         $data = User::query()
+            ->with('year.category')
             ->with('subscriptions')
             ->when(auth()->user()->type == 'doctor',function ($e){
                 $e->where('added_by','=',auth()->id());
