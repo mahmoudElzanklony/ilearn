@@ -78,7 +78,7 @@ Route::group(['middleware'=>'changeLang'],function (){
 
     // Define the remaining resource routes with middleware
     Route::group(['middleware' => 'auth:sanctum'], function () {
-        Route::resource('bills', BillsControllerResource::class)->except('index');
+        Route::resource('bills', BillsControllerResource::class);
         Route::group(['prefix'=>'/bills-data','middleware'=>'auth:sanctum'],function (){
             Route::post('/check-period',[BillsControllerResource::class,'check_period']);
         });
