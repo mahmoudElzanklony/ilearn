@@ -16,7 +16,8 @@ class StudentResource extends JsonResource
     {
         return [
           'id'=>$this->id,
-          'info'=>CategoryResource::make($this->whenLoaded('category'))
+          'info'=>CategoryResource::make($this->whenLoaded('category')),
+          'university'=>UniversityResource::make($this->whenLoaded('university')),
         ];
     }
 }
