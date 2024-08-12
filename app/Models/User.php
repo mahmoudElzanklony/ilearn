@@ -92,4 +92,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(subscriptions::class,'user_id');
     }
+
+    public function year()
+    {
+        return $this->hasOne(students_subjects_years::class,'user_id');
+    }
 }

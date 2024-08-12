@@ -75,6 +75,7 @@ Route::group(['middleware'=>'changeLang'],function (){
         Route::get('/',[SubjectsVideosControllerResource::class,'stream']);
     });
 
+
     // Define the remaining resource routes with middleware
     Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::resource('bills', BillsControllerResource::class)->except('index');

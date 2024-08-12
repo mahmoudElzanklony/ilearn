@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\CheckForUploadImage;
+use App\Filters\CategoryIdFilter;
 use App\Filters\EndDateFilter;
 use App\Filters\NameFilter;
 use App\Filters\StartDateFilter;
@@ -48,6 +49,7 @@ class SubjectsControllerResource extends Controller
                 StartDateFilter::class,
                 EndDateFilter::class,
                 NameFilter::class,
+                CategoryIdFilter::class
             ])
             ->thenReturn()
             ->paginate(request('limit') ?? 10);
