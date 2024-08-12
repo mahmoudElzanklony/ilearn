@@ -20,7 +20,6 @@ class BillResource extends JsonResource
           'start_date'=>$this->start_date,
           'end_date'=>$this->end_date,
           'total_money'=>$this->total_money,
-          'profit'=>$this->profit,
           'remain'=>$this->remain,
           'note'=>$this->note,
           'created_at'=>$this->created_at->format('Y-m-d H:i:s'),

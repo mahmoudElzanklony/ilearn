@@ -9,7 +9,7 @@ class bills extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['doctor_id','start_date','end_date','total_money','profit','remain','note'];
+    protected $fillable = ['doctor_id','start_date','end_date','total_money','remain','note'];
 
     public function doctor()
     {
