@@ -150,7 +150,7 @@ class SubjectsVideosControllerResource extends Controller
             'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"',
         ];
 
-        $videoPath = 'path/to/your/video.mp4'; // The path to the video file on Wasabi
+        $videoPath = $filePath; // The path to the video file on Wasabi
 
         // Fetching the file size from Wasabi
         $disk = Storage::disk('wasabi');
