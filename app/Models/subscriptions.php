@@ -14,11 +14,11 @@ class subscriptions extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class,'user_id');
+        return $this->belongsTo(User::class,'user_id')->withTrashed();
     }
     public function subject()
     {
-        return $this->belongsTo(subjects::class,'subject_id');
+        return $this->belongsTo(subjects::class,'subject_id')->withTrashed();
     }
 
     public function added_by()
