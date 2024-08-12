@@ -43,12 +43,14 @@ class SubscriptionsControllerResource extends Controller
     public function index()
     {
 
-        return subjects::query()
-            ->with('students')
-            ->first();
 
         $data = subscriptions::query()
             ->with(['subject','user'])
+            ->when(auth()->user()->type == 'doctor',function ($e){
+                $e->whereHas('subject',function($q){
+                    $q->where('user_id','=',auth()->id());
+                });
+            })
             ->orderBy('id','DESC');
         $output = app(Pipeline::class)
             ->send($data)
@@ -71,6 +73,7 @@ class SubscriptionsControllerResource extends Controller
     {
         DB::beginTransaction();
         $data['price'] = subjects::query()->find($data['subject_id'])->price;
+        $data['added_by'] = auth()->id();
         $data['is_locked'] = 0;
         if(!(array_key_exists('id',$data))){
             $check = subscriptions::query()

@@ -9,7 +9,7 @@ class subscriptions extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id','subject_id','is_locked','price','discount','note'];
+    protected $fillable = ['user_id','subject_id','is_locked','price','discount','note','added_by'];
 
 
     public function user()
@@ -19,5 +19,10 @@ class subscriptions extends Model
     public function subject()
     {
         return $this->belongsTo(subjects::class,'subject_id');
+    }
+
+    public function added_by()
+    {
+        return $this->belongsTo(User::class,'added_by');
     }
 }

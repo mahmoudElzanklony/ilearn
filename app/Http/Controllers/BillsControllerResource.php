@@ -12,6 +12,7 @@ use App\Filters\SubjectIdFilter;
 use App\Filters\UserIdFilter;
 use App\Http\Requests\billFormRequest;
 use App\Http\Requests\categoriesFormRequest;
+use App\Http\Requests\checkPeriodFormRequest;
 use App\Http\Requests\subjectsFormRequest;
 use App\Http\Requests\subscriptionsFormRequest;
 use App\Http\Resources\BillResource;
@@ -43,6 +44,7 @@ class BillsControllerResource extends Controller
     public function index()
     {
         $data = bills::query()
+            ->when(auth()->user()->type == 'doctor',fn($e) => $e->where('doctor_id','=',auth()->id()))
             ->with('doctor')
             ->orderBy('id','DESC');
 
@@ -123,5 +125,15 @@ class BillsControllerResource extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function check_period(checkPeriodFormRequest $request)
+    {
+        $data = DB::table('subscriptions')
+            ->join('subjects', 'subscriptions.subject_id', '=', 'subjects.id')
+            ->where('subjects.user_id', request('user_id'))
+            ->whereBetween('subscriptions.created_at', [request('start_date'), request('end_date')])
+            ->sum('subscriptions.price');
+        return $data;
     }
 }
