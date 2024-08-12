@@ -39,7 +39,7 @@ class SubjectsControllerResource extends Controller
     public function index()
     {
         $data = subjects::query()
-            ->with(['image','category'])
+            ->with(['image','category.university'])
             ->orderBy('id','DESC');
 
 
