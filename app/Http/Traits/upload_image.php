@@ -61,29 +61,27 @@ trait upload_image
         if(env('WAS_STATUS') == 1) {
 
             // Store the video temporarily in the local storage
+            // Create a temporary file
+            $tempPath = sys_get_temp_dir() . '/' . $filePath;
 
             // Open the video with FFmpeg
-            $ffmpeg = FFMpeg\FFMpeg::create();
+            $ffmpeg = FFMpeg::create();
             $video = $ffmpeg->open($file->getRealPath());
 
             // Set the format for the video compression
             $format = new X264();
             $format->setKiloBitrate(1000); // Adjust the bitrate as needed
 
-            $stream = fopen('php://memory', 'r+');
+            // Save the compressed video to the temporary file
+            $video->save($format, $tempPath);
 
-            // Save the compressed video stream directly to memory
-            $video->save($format, $stream);
-
-            // Rewind the stream to the beginning
-            rewind($stream);
-
-            // Upload the compressed stream directly to Wasabi using Laravel's Storage facade
+            // Stream the file to Wasabi
+            $stream = fopen($tempPath, 'r+');
             Storage::disk('wasabi')->put($filePath, $stream);
 
-            // Close the stream
+            // Close the stream and delete the temporary file
             fclose($stream);
-
+            unlink($tempPath);
         }else{
             $file->move(public_path('videos/'), $name);
         }
