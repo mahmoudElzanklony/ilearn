@@ -74,13 +74,10 @@ trait upload_image
 
             try {
                 // Define the FFmpeg command
+                // Simplified FFmpeg command
                 $command = [
                     'ffmpeg',
                     '-i', $file->getRealPath(),
-                    '-vcodec', 'libx264',
-                    '-b:v', '1000k',
-                    '-acodec', 'aac',
-                    '-b:a', '128k',
                     '-f', 'mp4', // Ensure the output format is MP4
                     'pipe:1' // Output to standard output
                 ];
