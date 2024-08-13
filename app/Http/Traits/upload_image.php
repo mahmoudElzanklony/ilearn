@@ -10,6 +10,9 @@ use App\Services\Messages;
 use Illuminate\Support\Facades\Storage;
 use FFMpeg;
 use FFMpeg\Format\Video\X264;
+use Illuminate\Http\Request;
+use Aws\S3\S3Client;
+use Aws\S3\Exception\S3Exception;
 use Mockery\Exception\RuntimeException;
 
 trait upload_image
@@ -60,10 +63,23 @@ trait upload_image
 
 
         if(env('WAS_STATUS') == 1) {
+            // Set up AWS S3 Client with Wasabi credentials
+            $s3Client = new S3Client([
+                'version' => 'latest',
+                'region'  => env('WASABI_REGION'),
+                'endpoint' => env('WASABI_ENDPOINT'), // e.g., 'https://s3.wasabisys.com'
+                'credentials' => [
+                    'key'    => env('WASABI_KEY'),
+                    'secret' => env('WASABI_SECRET'),
+                ],
+            ]);
+
+            $bucket = env('WASABI_BUCKET');
+            $key = 'videos/' . $name;
 
             try {
-                // Create a memory buffer stream
-                $stream = fopen('php://temp', 'w+'); // Using php://temp for large files
+                // Create a stream handler to directly upload to S3/Wasabi
+                $stream = fopen('php://temp', 'w+');
 
                 // Create a new FFMpeg instance
                 $ffmpeg = FFMpeg\FFMpeg::create();
@@ -81,18 +97,26 @@ trait upload_image
                 // Rewind the buffer stream to the beginning
                 rewind($stream);
 
-                // Upload the compressed stream directly to Wasabi
-                $wasabiPath = 'videos/' . $name;
-                Storage::disk('wasabi')->put($wasabiPath, $stream);
+                // Upload the stream to Wasabi using AWS SDK
+                $result = $s3Client->putObject([
+                    'Bucket' => $bucket,
+                    'Key'    => $key,
+                    'Body'   => $stream,
+                    'ACL'    => 'public-read', // Adjust as needed
+                ]);
 
-                // Close the memory stream
+                // Close the stream
                 fclose($stream);
 
-            } catch (RuntimeException $e) {
-                // Handle FFmpeg exceptions
-                return response()->json(['error' => 'Encoding failed: ' . $e->getMessage()], 500);
+                // Return the URL of the uploaded video
+                return response()->json([
+                    'wasabi_url' => $result['ObjectURL'],
+                ]);
+            } catch (S3Exception $e) {
+                // Handle S3 exceptions
+                return response()->json(['error' => 'S3 upload failed: ' . $e->getMessage()], 500);
             } catch (\Exception $e) {
-                // Handle other exceptions
+                // Handle general exceptions
                 return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
             }
         }else{
