@@ -71,9 +71,8 @@ trait upload_image
             $format->setKiloBitrate(1000); // Adjust the bitrate as needed
 
             // Create a stream to Wasabi
-            $wasabiClient = Storage::disk('wasabi')->getDriver()->getAdapter()->getClient();
-            $wasabiBucket = env('WASABI_BUCKET');
-            $wasabiKey = $filePath;
+            // Get the S3 client directly
+            $s3Client = Storage::disk('wasabi')->getDriver()->getAdapter()->getClient();
 
             // Create a stream resource
             $stream = fopen('php://memory', 'r+');
@@ -85,13 +84,12 @@ trait upload_image
             rewind($stream);
 
             // Upload the compressed stream directly to Wasabi
-            $wasabiClient->putObject([
-                'Bucket' => $wasabiBucket,
-                'Key'    => $wasabiKey,
+            $s3Client->putObject([
+                'Bucket' => env('WASABI_BUCKET'),
+                'Key'    => $filePath,
                 'Body'   => $stream,
                 'ACL'    => 'public-read',
             ]);
-
             // Close the stream
             fclose($stream);
 
