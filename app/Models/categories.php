@@ -15,12 +15,12 @@ class categories extends Model
 
     public function parent()
     {
-        return $this->belongsTo(categories::class,'id');
+        return $this->belongsTo(categories::class,'id')->withTrashed();
     }
 
     public function university()
     {
-        return $this->belongsTo(universities::class,'university_id');
+        return $this->belongsTo(universities::class,'university_id')->withTrashed();
     }
 
     public function user()

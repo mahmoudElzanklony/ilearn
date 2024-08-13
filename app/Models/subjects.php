@@ -14,7 +14,7 @@ class subjects extends Model
 
     public function category()
     {
-        return $this->belongsTo(categories::class,'category_id');
+        return $this->belongsTo(categories::class,'category_id')->withTrashed();
     }
 
     public function videos()
