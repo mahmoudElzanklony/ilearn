@@ -70,29 +70,19 @@ trait upload_image
             $format = new X264();
             $format->setKiloBitrate(1000); // Adjust the bitrate as needed
 
-            // Create a stream to Wasabi
-            // Get the S3 client directly
-            $s3Client = Storage::disk('wasabi')->getDriver()->getAdapter()->getClient();
-
-            // Create a stream resource
             $stream = fopen('php://memory', 'r+');
 
             // Save the compressed video stream directly to memory
-            $video->save($format, 'php://output');
+            $video->save($format, $stream);
 
             // Rewind the stream to the beginning
             rewind($stream);
 
-            // Upload the compressed stream directly to Wasabi
-            $s3Client->putObject([
-                'Bucket' => env('WASABI_BUCKET'),
-                'Key'    => $filePath,
-                'Body'   => $stream,
-                'ACL'    => 'public-read',
-            ]);
+            // Upload the compressed stream directly to Wasabi using Laravel's Storage facade
+            Storage::disk('wasabi')->put($filePath, $stream);
+
             // Close the stream
             fclose($stream);
-
 
         }else{
             $file->move(public_path('videos/'), $name);
