@@ -11,6 +11,8 @@ use Aws\S3\S3Client;
 use Illuminate\Support\Facades\Storage;
 use FFMpeg;
 use FFMpeg\Format\Video\X264;
+use GuzzleHttp\Psr7\Stream;
+use GuzzleHttp\Psr7\CachingStream;
 
 trait upload_image
 {
