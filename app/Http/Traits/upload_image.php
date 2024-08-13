@@ -96,13 +96,10 @@ trait upload_image
                     throw new \Exception("Failed to start FFmpeg process.");
                 }
 
-                // Create a Guzzle stream from the FFmpeg output
-                $stream = new Stream($pipes[1]);
+                if (!is_resource($pipes[1])) {
+                    throw new \Exception("FFmpeg did not return a valid stream resource.");
+                }
 
-                // Wrap the stream in a CachingStream to make it seekable
-                $cachingStream = new CachingStream($stream);
-
-                // Upload the CachingStream to Wasabi
                 // Create a Guzzle stream from the FFmpeg output
                 $stream = new Stream($pipes[1]);
 
@@ -121,7 +118,6 @@ trait upload_image
                 fclose($pipes[1]);
                 fclose($pipes[2]);
                 proc_close($process);
-
                 // Return the URL of the uploaded video on Wasabi
                 return response()->json([
                     'wasabi_url' => $result['ObjectURL'],
