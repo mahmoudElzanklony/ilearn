@@ -65,7 +65,7 @@ trait upload_image
             $tempPath = sys_get_temp_dir() . '/' . $filePath;
 
             // Open the video with FFmpeg
-            $ffmpeg = FFMpeg::create();
+            $ffmpeg = FFMpeg\FFMpeg::create();
             $video = $ffmpeg->open($file->getRealPath());
 
             // Set the format for the video compression
