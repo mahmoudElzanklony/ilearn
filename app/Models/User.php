@@ -44,6 +44,7 @@ class User extends Authenticatable
         'nationality',
         'type',
         'added_by',
+        'is_block',
     ];
 
     public function roleName()

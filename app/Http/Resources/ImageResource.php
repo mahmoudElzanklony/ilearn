@@ -32,8 +32,8 @@ class ImageResource extends JsonResource
             //'id'=>$this->id,
             //'imageable_type'=>$this->imageable_type,
             //'name'=>env('cloud_storage').(env('WAS_STATUS') == 1 ? '/' :'/images/').($this->name ?? 'default.png'),
-            //'name'=>StreamImages::stream($this->name),
-            'name'=>$this->tem_url($this->name)
+            'name'=>StreamImages::stream($this->name),
+            //'name'=>$this->tem_url($this->name)
         ];
     }
 }
