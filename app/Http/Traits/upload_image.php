@@ -103,6 +103,13 @@ trait upload_image
                 $cachingStream = new CachingStream($stream);
 
                 // Upload the CachingStream to Wasabi
+                // Create a Guzzle stream from the FFmpeg output
+                $stream = new Stream($pipes[1]);
+
+                // Wrap the stream in a CachingStream to make it seekable
+                $cachingStream = new CachingStream($stream);
+
+                // Upload the CachingStream to Wasabi
                 $result = $s3Client->putObject([
                     'Bucket' => env('WAS_BUCKET'),
                     'Key'    => $filePath,
@@ -119,6 +126,8 @@ trait upload_image
                 return response()->json([
                     'wasabi_url' => $result['ObjectURL'],
                 ]);
+                // Return the URL of the uploaded video on Wasabi
+
             } catch (\Exception $e) {
                 return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
             }
