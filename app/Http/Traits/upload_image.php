@@ -67,8 +67,9 @@ trait upload_image
             try {
                 // Compress the video using FFmpeg
                 $command = "ffmpeg -i $originalFilePath -vcodec libx264 -b:v 1000k -acodec aac -b:a 128k $compressedFilePath";
-                exec($command, $output, $returnVar);
+                exec($command . ' 2>&1', $output, $returnVar);
 
+                // Check if FFmpeg failed
                 if ($returnVar !== 0) {
                     throw new \Exception("FFmpeg compression failed: " . implode("\n", $output));
                 }
