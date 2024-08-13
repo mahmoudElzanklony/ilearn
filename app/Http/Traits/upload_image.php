@@ -84,8 +84,8 @@ trait upload_image
             Storage::disk('wasabi')->put($wasabiPath, file_get_contents($compressedFilePath));
 
             // Delete the temporary files
-            unlink($temporaryFilePath);
-            unlink($compressedFilePath);
+            /*unlink($temporaryFilePath);
+            unlink($compressedFilePath);*/
 
 
 
