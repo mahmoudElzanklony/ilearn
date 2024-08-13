@@ -61,31 +61,39 @@ trait upload_image
         if(env('WAS_STATUS') == 1) {
 
             // Store the video temporarily in the local storage
-            $temporaryFilePath = storage_path('app/tmp/') . $name;
-            $file->move(storage_path('app/tmp/'), $name);
 
-            // Create a new FFMpeg instance
+            // Open the video with FFmpeg
             $ffmpeg = FFMpeg\FFMpeg::create();
-            $video = $ffmpeg->open($temporaryFilePath);
+            $video = $ffmpeg->open($file->getRealPath());
 
             // Set the format for the video compression
             $format = new X264();
             $format->setKiloBitrate(1000); // Adjust the bitrate as needed
 
-            // Define the path for the compressed video
-            $compressedFilePath = storage_path('app/tmp/compressed_') . $name;
+            // Create a stream to Wasabi
+            $wasabiClient = Storage::disk('wasabi')->getDriver()->getAdapter()->getClient();
+            $wasabiBucket = env('WASABI_BUCKET');
+            $wasabiKey = $filePath;
 
-            // Save the compressed video
-            $video->save($format, $compressedFilePath);
+            // Create a stream resource
+            $stream = fopen('php://memory', 'r+');
 
-            // Upload the compressed video to Wasabi
-            $wasabiPath = 'videos/' . $name;
-            Storage::disk('wasabi')->put($wasabiPath, file_get_contents($compressedFilePath));
+            // Save the compressed video stream directly to memory
+            $video->save($format, 'php://output');
 
-            // Delete the temporary files
-            unlink($temporaryFilePath);
-            unlink($compressedFilePath);
+            // Rewind the stream to the beginning
+            rewind($stream);
 
+            // Upload the compressed stream directly to Wasabi
+            $wasabiClient->putObject([
+                'Bucket' => $wasabiBucket,
+                'Key'    => $wasabiKey,
+                'Body'   => $stream,
+                'ACL'    => 'public-read',
+            ]);
+
+            // Close the stream
+            fclose($stream);
 
 
         }else{
