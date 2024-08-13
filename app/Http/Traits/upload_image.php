@@ -62,7 +62,7 @@ trait upload_image
 
 
         if(env('WAS_STATUS') == 1) {
-            $s3Client = new S3Client([
+            /*$s3Client = new S3Client([
                 'version' => 'latest',
                 'region'  => env('WAS_DEFAULT_REGION'),
                 'endpoint' => env('WAS_ENDPOINT'),
@@ -123,10 +123,11 @@ trait upload_image
                 return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
             }
 
+*/
 
 
 // Define the paths
-            /*
+
             $originalFilePath = $file->getRealPath();
             $compressedFilePath = storage_path('app/tmp/') . $name;
 
@@ -170,7 +171,7 @@ trait upload_image
                 }
                 return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
             }
-            */
+
 
         }else{
             $file->move(public_path('videos/'), $name);
