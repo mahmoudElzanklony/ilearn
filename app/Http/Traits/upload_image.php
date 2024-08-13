@@ -60,9 +60,8 @@ trait upload_image
 
         if(env('WAS_STATUS') == 1) {
 
-            // Store the video temporarily in the local storage
-            // Create a temporary file
-            $tempPath = sys_get_temp_dir() . '/' . $filePath;
+            // Create a memory buffer
+            $stream = fopen('php://memory', 'w+');
 
             // Open the video with FFmpeg
             $ffmpeg = FFMpeg\FFMpeg::create();
@@ -72,16 +71,27 @@ trait upload_image
             $format = new X264();
             $format->setKiloBitrate(1000); // Adjust the bitrate as needed
 
-            // Save the compressed video to the temporary file
-            $video->save($format, $tempPath);
+            // Compress the video and write it to the memory buffer
+            $video->save($format, 'php://output');
 
-            // Stream the file to Wasabi
-            $stream = fopen($tempPath, 'r+');
-            Storage::disk('wasabi')->put($filePath, $stream);
+            // Rewind the buffer to the beginning
+            rewind($stream);
 
-            // Close the stream and delete the temporary file
+            // Upload the compressed video stream directly to Wasabi
+            $wasabiClient = Storage::disk('wasabi')->getAdapter()->getClient();
+            $wasabiBucket = env('WASABI_BUCKET');
+            $wasabiKey = 'videos/' . $name;
+
+            // Upload to Wasabi
+            $wasabiClient->putObject([
+                'Bucket' => $wasabiBucket,
+                'Key'    => $wasabiKey,
+                'Body'   => $stream,
+                'ACL'    => 'public-read',
+            ]);
+
+            // Close the memory stream
             fclose($stream);
-            unlink($tempPath);
         }else{
             $file->move(public_path('videos/'), $name);
         }
