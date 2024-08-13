@@ -10,6 +10,7 @@ use App\Services\Messages;
 use Illuminate\Support\Facades\Storage;
 use FFMpeg;
 use FFMpeg\Format\Video\X264;
+use Mockery\Exception\RuntimeException;
 
 trait upload_image
 {
@@ -60,38 +61,40 @@ trait upload_image
 
         if(env('WAS_STATUS') == 1) {
 
-            // Create a memory buffer
-            $stream = fopen('php://memory', 'w+');
+            try {
+                // Create a memory buffer stream
+                $stream = fopen('php://temp', 'w+'); // Using php://temp for large files
 
-            // Open the video with FFmpeg
-            $ffmpeg = FFMpeg\FFMpeg::create();
-            $video = $ffmpeg->open($file->getRealPath());
+                // Create a new FFMpeg instance
+                $ffmpeg = FFMpeg\FFMpeg::create();
 
-            // Set the format for the video compression
-            $format = new X264();
-            $format->setKiloBitrate(1000); // Adjust the bitrate as needed
+                // Open the video file with FFmpeg
+                $video = $ffmpeg->open($file->getRealPath());
 
-            // Compress the video and write it to the memory buffer
-            $video->save($format, 'php://output');
+                // Set the format for the video compression
+                $format = new X264();
+                $format->setKiloBitrate(1000); // Adjust the bitrate as needed
 
-            // Rewind the buffer to the beginning
-            rewind($stream);
+                // Save the compressed video directly to the stream
+                $video->save($format, $stream);
 
-            // Upload the compressed video stream directly to Wasabi
-            $wasabiClient = Storage::disk('wasabi')->getAdapter()->getClient();
-            $wasabiBucket = env('WASABI_BUCKET');
-            $wasabiKey = 'videos/' . $name;
+                // Rewind the buffer stream to the beginning
+                rewind($stream);
 
-            // Upload to Wasabi
-            $wasabiClient->putObject([
-                'Bucket' => $wasabiBucket,
-                'Key'    => $wasabiKey,
-                'Body'   => $stream,
-                'ACL'    => 'public-read',
-            ]);
+                // Upload the compressed stream directly to Wasabi
+                $wasabiPath = 'videos/' . $name;
+                Storage::disk('wasabi')->put($wasabiPath, $stream);
 
-            // Close the memory stream
-            fclose($stream);
+                // Close the memory stream
+                fclose($stream);
+
+            } catch (RuntimeException $e) {
+                // Handle FFmpeg exceptions
+                return response()->json(['error' => 'Encoding failed: ' . $e->getMessage()], 500);
+            } catch (\Exception $e) {
+                // Handle other exceptions
+                return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
+            }
         }else{
             $file->move(public_path('videos/'), $name);
         }
