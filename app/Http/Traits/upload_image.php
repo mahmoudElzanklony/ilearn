@@ -8,6 +8,8 @@ use App\Actions\ImageModalSave;
 use App\Models\images;
 use App\Services\Messages;
 use Illuminate\Support\Facades\Storage;
+use FFMpeg;
+use FFMpeg\Format\Video\X264;
 
 trait upload_image
 {
@@ -52,12 +54,41 @@ trait upload_image
     {
         $name = time().rand(0,9999999999999). '_video.' . $file->getClientOriginalExtension();
         $filePath = 'videos/'. $name;
+
+
+
+
         if(env('WAS_STATUS') == 1) {
-            Storage::disk('wasabi')
-                ->put(
-                    $filePath,
-                    file_get_contents($file->getRealPath())
-                );
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+
+            // Store the video temporarily in the local storage
+            $temporaryFilePath = storage_path('app/tmp/') . $filename;
+            $file->move(storage_path('app/tmp/'), $name);
+
+            // Create a new FFMpeg instance
+            $ffmpeg = FFMpeg\FFMpeg::create();
+            $video = $ffmpeg->open($temporaryFilePath);
+
+            // Set the format for the video compression
+            $format = new X264();
+            $format->setKiloBitrate(1000); // Adjust the bitrate as needed
+
+            // Define the path for the compressed video
+            $compressedFilePath = storage_path('app/tmp/compressed_') . $filename;
+
+            // Save the compressed video
+            $video->save($format, $compressedFilePath);
+
+            // Upload the compressed video to Wasabi
+            $wasabiPath = 'videos/' . $name;
+            Storage::disk('wasabi')->put($wasabiPath, file_get_contents($compressedFilePath));
+
+            // Delete the temporary files
+            unlink($temporaryFilePath);
+            unlink($compressedFilePath);
+
+
+
         }else{
             $file->move(public_path('videos/'), $name);
         }

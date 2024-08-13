@@ -139,16 +139,7 @@ class SubjectsVideosControllerResource extends Controller
             return response()->json(['error' => 'File not found'], 404);
         }
 
-        $size = Storage::disk('wasabi')->size($filePath);
-        $mimeType = Storage::disk('wasabi')->mimeType($filePath);
-        $stream = Storage::disk('wasabi')->readStream($filePath);
 
-        $headers = [
-            'Content-Type' => $mimeType,
-            'Content-Length' => $size,
-            'Accept-Ranges' => 'bytes',
-            'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"',
-        ];
 
         $videoPath = $filePath; // The path to the video file on Wasabi
 
@@ -194,12 +185,12 @@ class SubjectsVideosControllerResource extends Controller
 
             fclose($stream);
         }, 206, $headers);
-
+/*
         return new StreamedResponse(function () use ($stream) {
             while (ob_get_level()) {
                 ob_end_flush();
             }
             fpassthru($stream);
-        }, 200, $headers);
+        }, 200, $headers);*/
     }
 }
