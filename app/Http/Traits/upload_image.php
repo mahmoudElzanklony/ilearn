@@ -59,10 +59,9 @@ trait upload_image
 
 
         if(env('WAS_STATUS') == 1) {
-            $filename = time() . '.' . $file->getClientOriginalExtension();
 
             // Store the video temporarily in the local storage
-            $temporaryFilePath = storage_path('app/tmp/') . $filename;
+            $temporaryFilePath = storage_path('app/tmp/') . $name;
             $file->move(storage_path('app/tmp/'), $name);
 
             // Create a new FFMpeg instance
@@ -74,7 +73,7 @@ trait upload_image
             $format->setKiloBitrate(1000); // Adjust the bitrate as needed
 
             // Define the path for the compressed video
-            $compressedFilePath = storage_path('app/tmp/compressed_') . $filename;
+            $compressedFilePath = storage_path('app/tmp/compressed_') . $name;
 
             // Save the compressed video
             $video->save($format, $compressedFilePath);
