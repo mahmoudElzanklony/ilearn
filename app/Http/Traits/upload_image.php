@@ -66,15 +66,15 @@ trait upload_image
             // Set up AWS S3 Client with Wasabi credentials
             $s3Client = new S3Client([
                 'version' => 'latest',
-                'region'  => env('WASABI_REGION'),
-                'endpoint' => env('WASABI_ENDPOINT'), // e.g., 'https://s3.wasabisys.com'
+                'region'  => env('WAS_DEFAULT_REGION'),
+                'endpoint' => env('WAS_ENDPOINT'), // e.g., 'https://s3.wasabisys.com'
                 'credentials' => [
-                    'key'    => env('WASABI_KEY'),
-                    'secret' => env('WASABI_SECRET'),
+                    'key'    => env('WAS_ACCESS_KEY_ID'),
+                    'secret' => env('WAS_SECRET_ACCESS_KEY'),
                 ],
             ]);
 
-            $bucket = env('WASABI_BUCKET');
+            $bucket = env('WAS_BUCKET');
             $key = 'videos/' . $name;
 
             try {
