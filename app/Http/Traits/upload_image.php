@@ -7,6 +7,7 @@ namespace App\Http\Traits;
 use App\Actions\ImageModalSave;
 use App\Models\images;
 use App\Services\Messages;
+use Aws\S3\S3Client;
 use Illuminate\Support\Facades\Storage;
 use FFMpeg;
 use FFMpeg\Format\Video\X264;
@@ -59,34 +60,49 @@ trait upload_image
 
 
         if(env('WAS_STATUS') == 1) {
+// Define the paths
+            $originalFilePath = $file->getRealPath();
+            $compressedFilePath = storage_path('app/tmp/') . $name;
 
-            // Store the video temporarily in the local storage
-            $temporaryFilePath = storage_path('app/tmp/') . $name;
-            $file->move(storage_path('app/tmp/'), $name);
+            try {
+                // Compress the video using FFmpeg
+                $command = "ffmpeg -i $originalFilePath -vcodec libx264 -b:v 1000k -acodec aac -b:a 128k $compressedFilePath";
+                exec($command, $output, $returnVar);
 
-            // Create a new FFMpeg instance
-            $ffmpeg = FFMpeg\FFMpeg::create();
-            $video = $ffmpeg->open($temporaryFilePath);
+                if ($returnVar !== 0) {
+                    throw new \Exception("FFmpeg compression failed: " . implode("\n", $output));
+                }
 
-            // Set the format for the video compression
-            $format = new X264();
-            $format->setKiloBitrate(1000); // Adjust the bitrate as needed
+                // Set up AWS S3 Client with Wasabi credentials
+                $s3Client = new S3Client([
+                    'version' => 'latest',
+                    'region'  => env('WAS_DEFAULT_REGION'),
+                    'endpoint' => env('WAS_ENDPOINT'),
+                    'credentials' => [
+                        'key'    => env('WAS_ACCESS_KEY_ID'),
+                        'secret' => env('WAS_SECRET_ACCESS_KEY'),
+                    ],
+                ]);
 
-            // Define the path for the compressed video
-            $compressedFilePath = storage_path('app/tmp/compressed_') . $name;
+                // Upload the compressed video to Wasabi
+                $result = $s3Client->putObject([
+                    'Bucket' => env('WAS_BUCKET'),
+                    'Key'    => 'videos/' . $name,
+                    'SourceFile' => $compressedFilePath,
+                    'ACL'    => 'public-read',
+                ]);
 
-            // Save the compressed video
-            $video->save($format, $compressedFilePath);
-
-            // Upload the compressed video to Wasabi
-            $wasabiPath = 'videos/' . $name;
-            Storage::disk('wasabi')->put($wasabiPath, file_get_contents($compressedFilePath));
-
-            // Delete the temporary files
-            unlink($temporaryFilePath);
-            unlink($compressedFilePath);
+                // Delete the temporary compressed file
+                unlink($compressedFilePath);
 
 
+            } catch (\Exception $e) {
+                // Handle exceptions
+                if (file_exists($compressedFilePath)) {
+                    unlink($compressedFilePath);
+                }
+                return response()->json(['error' => 'An error occurred: ' . $e->getMessage()], 500);
+            }
 
         }else{
             $file->move(public_path('videos/'), $name);
