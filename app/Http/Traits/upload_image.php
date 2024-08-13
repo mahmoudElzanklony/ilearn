@@ -119,9 +119,7 @@ trait upload_image
                 fclose($pipes[2]);
                 proc_close($process);
                 // Return the URL of the uploaded video on Wasabi
-                return response()->json([
-                    'wasabi_url' => $result['ObjectURL'],
-                ]);
+
                 // Return the URL of the uploaded video on Wasabi
 
             } catch (\Exception $e) {
