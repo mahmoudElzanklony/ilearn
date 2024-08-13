@@ -70,7 +70,7 @@ trait upload_image
 
             // Set the format for the video compression
             $format = new X264();
-            $format->setKiloBitrate(1000); // Adjust the bitrate as needed
+           // $format->setKiloBitrate(1000); // Adjust the bitrate as needed
 
             // Define the path for the compressed video
             $compressedFilePath = storage_path('app/tmp/compressed_') . $name;
