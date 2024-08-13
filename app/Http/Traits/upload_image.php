@@ -94,11 +94,17 @@ trait upload_image
                     throw new \Exception("Failed to start FFmpeg process.");
                 }
 
-                // Upload the FFmpeg output stream directly to Wasabi
+                // Create a Guzzle stream from the FFmpeg output
+                $stream = new Stream($pipes[1]);
+
+                // Wrap the stream in a CachingStream to make it seekable
+                $cachingStream = new CachingStream($stream);
+
+                // Upload the CachingStream to Wasabi
                 $result = $s3Client->putObject([
                     'Bucket' => env('WAS_BUCKET'),
                     'Key'    => $filePath,
-                    'Body'   => $pipes[1], // Use the FFmpeg output as the body
+                    'Body'   => $cachingStream, // Use the seekable CachingStream
                     'ACL'    => 'public-read',
                 ]);
 
