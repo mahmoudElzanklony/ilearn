@@ -3,6 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Actions\CheckForUploadImage;
+use App\Filters\EndDateFilter;
+use App\Filters\NameFilter;
+use App\Filters\StartDateFilter;
+use App\Filters\SubjectIdFilter;
+use App\Filters\UniversityIdFilter;
+use App\Filters\UserIdFilter;
 use App\Http\Requests\categoriesFormRequest;
 use App\Http\Requests\subjectsFormRequest;
 use App\Http\Requests\subjectsVideoFormRequest;
@@ -20,6 +26,7 @@ use App\Services\FormRequestHandleInputs;
 use App\Services\Messages;
 use Illuminate\Http\Request;
 use App\Http\Traits\upload_image;
+use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -43,9 +50,19 @@ class SubjectsVideosControllerResource extends Controller
                 });
             })
             ->with(['subject','image'])
-            ->orderBy('id','DESC')
-            ->paginate(request('limit') ?? 5);
-        return SubjectsVideosResource::collection($data);
+            ->orderBy('id','DESC');
+
+        $output = app(Pipeline::class)
+            ->send($data)
+            ->through([
+                StartDateFilter::class,
+                EndDateFilter::class,
+                SubjectIdFilter::class,
+                UserIdFilter::class,
+            ])
+            ->thenReturn()
+            ->paginate(request('limit') ?? 10);
+        return SubjectsVideosResource::collection($output);
     }
 
     /**
@@ -55,7 +72,11 @@ class SubjectsVideosControllerResource extends Controller
     {
         DB::beginTransaction();
         // prepare data to be created or updated
-        $data['user_id'] = auth()->id();
+
+        if(!(array_key_exists('user_id',$data))){
+            $data['user_id'] = auth()->id();
+        }
+
 
 
 
@@ -85,7 +106,7 @@ class SubjectsVideosControllerResource extends Controller
 
 
         // Load the category with the associated image
-        $subject->load('subject');
+        $subject->load('subject.category.university');
         $subject->load('image');
 
         DB::commit();

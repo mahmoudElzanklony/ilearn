@@ -22,6 +22,7 @@ class subjectsVideoFormRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'user_id'=>'filled|exists:users,id',
             'subject_id'=>'required|exists:subjects,id',
             'video'=>'filled|mimes:mp4',
             'name'=>'required',
