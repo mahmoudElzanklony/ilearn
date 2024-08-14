@@ -18,7 +18,7 @@ class ProfileController extends Controller
         if(isset($data['id'])){
             $user = User::query()->findOrFail($data['id']);
             if(request()->has('ip')){
-                $data['ip'] = null;
+                $data['otp_secret'] = null;
             }
         }else{
             $user = auth()->user();
