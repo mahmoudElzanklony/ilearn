@@ -59,6 +59,7 @@ class SubjectsVideosControllerResource extends Controller
                 EndDateFilter::class,
                 SubjectIdFilter::class,
                 UserIdFilter::class,
+                NameFilter::class
             ])
             ->thenReturn()
             ->paginate(request('limit') ?? 10);
