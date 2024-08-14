@@ -55,7 +55,7 @@ class RegisterController extends Controller
 
     public function logout()
     {
-        auth()->guard('auth:sanctum')->logout();
+        auth()->guard('sanctum')->logout();
         return Messages::success(__('messages.logout_successfully'));
     }
 }
