@@ -25,7 +25,7 @@ class billFormRequest extends FormRequest
             'doctor_id'=>'required|exists:users,id',
             'start_date'=>'required|date',
             'end_date'=>'required|date',
-            'profit'=>'required|numeric',
+            //'profit'=>'required|numeric',
             'remain'=>'required|numeric',
             'note'=>'nullable',
         ];
