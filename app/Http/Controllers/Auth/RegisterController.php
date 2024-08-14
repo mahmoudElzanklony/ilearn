@@ -52,4 +52,10 @@ class RegisterController extends Controller
         DB::commit();
         return Messages::success(message: __('messages.user_registered_successfully'));
     }
+
+    public function logout()
+    {
+        auth()->logout();
+        return Messages::success(__('messages.logout_successfully'));
+    }
 }
