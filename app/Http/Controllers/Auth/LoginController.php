@@ -24,7 +24,7 @@ class LoginController extends Controller
             // check ip
             $user = User::query()->where('phone',$data['phone'])->first();
             if($user->type == 'client'){
-                if(!(request()->filled('device_id'))){
+                /*if(!(request()->filled('device_id'))){
                     return Messages::error('رقم الجهاز لم يتم ارساله');
                 }
                 if($user->otp_secret == null){
@@ -32,7 +32,7 @@ class LoginController extends Controller
                     $user->save();
                 }else if($user->otp_secret != request('device_id')){
                     return Messages::error('هذا الجهاز ليس الجهاز الاول الذي قمت بالدخول الي التطبيق من خلاله');
-                }
+                }*/
             }
             // check if blocked
             if($user->is_block == 1){
