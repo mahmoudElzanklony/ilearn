@@ -7,7 +7,7 @@ use App\Filters\EndDateFilter;
 use App\Filters\NameFilter;
 use App\Filters\StartDateFilter;
 use App\Filters\SubjectIdFilter;
-use App\Filters\subjects\UniversityFilter;
+use App\Filters\subjects_videos\UniversityFilter;
 use App\Filters\UniversityIdFilter;
 use App\Filters\UserIdFilter;
 use App\Http\Requests\categoriesFormRequest;

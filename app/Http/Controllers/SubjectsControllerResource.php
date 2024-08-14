@@ -7,6 +7,7 @@ use App\Filters\CategoryIdFilter;
 use App\Filters\EndDateFilter;
 use App\Filters\NameFilter;
 use App\Filters\StartDateFilter;
+use App\Filters\subjects\UniversityFilter;
 use App\Http\Requests\categoriesFormRequest;
 use App\Http\Requests\subjectsFormRequest;
 use App\Http\Resources\CategoryResource;
@@ -50,6 +51,7 @@ class SubjectsControllerResource extends Controller
                 EndDateFilter::class,
                 NameFilter::class,
                 CategoryIdFilter::class,
+                UniversityFilter::class,
             ])
             ->thenReturn()
             ->paginate(request('limit') ?? 10);
