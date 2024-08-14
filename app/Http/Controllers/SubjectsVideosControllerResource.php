@@ -49,7 +49,7 @@ class SubjectsVideosControllerResource extends Controller
                     $s->where('user_id',auth()->id());
                 });
             })
-            ->with(['subject','image'])
+            ->with(['subject.category.university','image'])
             ->orderBy('id','DESC');
 
         $output = app(Pipeline::class)
