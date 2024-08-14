@@ -29,7 +29,7 @@ class userFormRequest extends FormRequest
                 'type' => 'filled',
                 'is_block' => 'filled',
                 'nationality' => 'filled',
-                'ip'=>'filled',
+                'ip'=>'nullable',
                 'year_id'=>'filled|exists:categories,id',
                 'id'=>'required|exists:users,id'
             ];

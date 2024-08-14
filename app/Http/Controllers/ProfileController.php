@@ -17,6 +17,9 @@ class ProfileController extends Controller
         $data = $request->validated();
         if(isset($data['id'])){
             $user = User::query()->findOrFail($data['id']);
+            if(request()->has('ip')){
+                $data['ip'] = null;
+            }
         }else{
             $user = auth()->user();
         }
