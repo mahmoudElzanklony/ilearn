@@ -39,6 +39,7 @@ class SubjectsControllerResource extends Controller
     public function index()
     {
         $data = subjects::query()
+            ->when(auth()->user()->type == 'doctor',fn($e) => $e->where('user_id','=',auth()->id()))
             ->with(['image','category'])
             ->orderBy('id','DESC');
 
