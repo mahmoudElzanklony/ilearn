@@ -18,7 +18,8 @@ use Illuminate\Pipeline\Pipeline;
 
 class UsersController extends Controller
 {
-    //
+    // this is index method
+    // review data
     public function index()
     {
         $data = User::query()
