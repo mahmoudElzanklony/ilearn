@@ -36,6 +36,9 @@ class CategoriesControllerResource extends Controller
     public function index()
     {
         $data = categories::query()
+            ->when(auth()->user()->type == 'doctor',function ($e){
+                $e->whereHas('subjects',fn($q) => $q->where('user_id','=',auth()->id()));
+            })
             ->with('university')
             ->orderBy('id','DESC');
 

@@ -23,6 +23,11 @@ class categories extends Model
         return $this->belongsTo(universities::class,'university_id')->withTrashed();
     }
 
+    public function subjects()
+    {
+        return $this->hasMany(subjects::class,'category_id');
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class,'user_id');
@@ -37,8 +42,5 @@ class categories extends Model
         return $this->belongsToMany(properties::class,categories_properties::class,'category_id','property_id');
     }
 
-    public function headings()
-    {
-        return $this->hasManyThrough(properties::class,categories_properties::class,'category_id','id')->with('heading');
-    }
+
 }
