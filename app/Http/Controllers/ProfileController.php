@@ -17,6 +17,9 @@ class ProfileController extends Controller
         $data = $request->validated();
         if(isset($data['id'])){
             $user = User::query()->findOrFail($data['id']);
+            if(request()->has('ip')){
+                $data['otp_secret'] = null;
+            }
         }else{
             $user = auth()->user();
         }
@@ -27,6 +30,7 @@ class ProfileController extends Controller
                 ->update([
                     'year_id'=>request('year_id')
                 ]);
+            $user->load('year');
         }
 
 

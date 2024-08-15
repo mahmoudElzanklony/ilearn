@@ -20,6 +20,8 @@ class UserResource extends JsonResource
             'phone'=>$this->phone,
             'ip'=>$this->otp_secret,
             'type'=>$this->type,
+            'is_block'=>$this->is_block,
+            'year'=>StudentResource::make($this->whenLoaded('year')),
             'nationality'=>$this->nationality,
             'created_at'=>$this->created_at->format('Y-m-d H:i:s')
         ];

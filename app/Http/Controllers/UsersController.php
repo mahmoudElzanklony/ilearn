@@ -6,6 +6,7 @@ use App\Filters\DoctorIdFilter;
 use App\Filters\EndDateFilter;
 use App\Filters\StartDateFilter;
 use App\Filters\TypeFilter;
+use App\Filters\users\NationalityFilter;
 use App\Filters\users\UserNameFilter;
 use App\Filters\users\YearFilter;
 use App\Http\Resources\BillResource;
@@ -21,14 +22,16 @@ class UsersController extends Controller
     public function index()
     {
         $data = User::query()
+            ->with('year',fn($q)=>$q->with(['category.university']))
             ->with('subscriptions')
             ->when(auth()->user()->type == 'doctor',function ($e){
-                $e->where('added_by','=',auth()->id());
-                /*$e->whereHas('subscriptions',function($e){
-                    $e->whereHas('subject',function ($q){
-                        $q->where('user_id','=',auth()->id());
-                    });
-                });*/
+                $e
+                    ->where('added_by','=',auth()->id())
+                    ->orWhereHas('subscriptions',function($e){
+                        $e->whereHas('subject',function ($q){
+                            $q->where('user_id','=',auth()->id());
+                        });
+                });
             })
             ->orderBy('id','DESC');
 
@@ -39,7 +42,8 @@ class UsersController extends Controller
                 EndDateFilter::class,
                 TypeFilter::class,
                 UserNameFilter::class,
-                YearFilter::class
+                YearFilter::class,
+                NationalityFilter::class
             ])
             ->thenReturn()
             ->paginate(request('limit') ?? 10);

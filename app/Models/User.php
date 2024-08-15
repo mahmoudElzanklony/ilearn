@@ -44,6 +44,7 @@ class User extends Authenticatable
         'nationality',
         'type',
         'added_by',
+        'is_block',
     ];
 
     public function roleName()
@@ -97,4 +98,5 @@ class User extends Authenticatable
     {
         return $this->hasOne(students_subjects_years::class,'user_id');
     }
+
 }

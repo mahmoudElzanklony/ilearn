@@ -18,7 +18,7 @@ class SubscriptionsResource extends JsonResource
     {
         $video_base_query = subjects_videos::query();
         $user_view_base_query = users_videos_views::query();
-        return [
+        $arr =  [
           'id'=>$this->id,
           'user_id'=>$this->user_id,
           'subject_id'=>$this->subject_id,
@@ -27,13 +27,17 @@ class SubscriptionsResource extends JsonResource
           'price'=>$this->price,
           'discount'=>$this->discount,
           'note'=>$this->note,
-          'total_videos_per_subject'=>$video_base_query->clone()->where('subject_id','=',$this->subject_id)->count(),
-          'total_seen_per_user'=>$user_view_base_query->clone()
-              ->whereHas('video',fn($e)=> $e->where('subject_id','=',$this->subject_id))
-              ->count(),
+
           'videos'=>SubjectsVideosResource::collection($this->whenLoaded('videos')),
           'created_at'=>$this->created_at->format('Y-m-d H:i:s'),
 
         ];
+        if(request()->filled('web')){
+            $arr['total_videos_per_subject']=$video_base_query->clone()->where('subject_id','=',$this->subject_id)->count();
+          $arr['total_seen_per_user']=$user_view_base_query->clone()
+                ->whereHas('video',fn($e)=> $e->where('subject_id','=',$this->subject_id))
+                ->count();
+        }
+        return $arr;
     }
 }

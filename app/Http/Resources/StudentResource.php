@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UniversityResource extends JsonResource
+class StudentResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,9 +16,8 @@ class UniversityResource extends JsonResource
     {
         return [
           'id'=>$this->id,
-          'name'=>$this->name,
-          'created_at'=>$this->created_at->format('Y-h-m ')
-
+          'info'=>CategoryResource::make($this->whenLoaded('category')),
+          'university'=>UniversityResource::make($this->whenLoaded('university')),
         ];
     }
 }

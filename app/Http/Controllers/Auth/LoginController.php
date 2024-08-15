@@ -16,20 +16,23 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 class LoginController extends Controller
 {
     //
+
     public function login()
     {
         $data = ['phone'=>request('phone'),'password'=>request('password')];
         if(auth()->attempt($data)){
             // check ip
             $user = User::query()->where('phone',$data['phone'])->first();
-            //if($user->type == 'client'){
-            if(false){
-                if($user->otp_secret == null){
-                    $user->otp_secret = request()->ip();
-                    $user->save();
-                }else if($user->otp_secret != request()->ip()){
-                    return Messages::error('هذا الجهاز ليس الجهاز الاول الذي قمت بالدخول الي التطبيق من خلاله');
+            if($user->type == 'client'){
+                /*if(!(request()->filled('device_id'))){
+                    return Messages::error('رقم الجهاز لم يتم ارساله');
                 }
+                if($user->otp_secret == null){
+                    $user->otp_secret = request('device_id');
+                    $user->save();
+                }else if($user->otp_secret != request('device_id')){
+                    return Messages::error('هذا الجهاز ليس الجهاز الاول الذي قمت بالدخول الي التطبيق من خلاله');
+                }*/
             }
             // check if blocked
             if($user->is_block == 1){
@@ -42,11 +45,7 @@ class LoginController extends Controller
         }
     }
 
-    public function logout()
-    {
-        auth()->logout();
-        return Messages::success(__('messages.logout_successfully'));
-    }
+
 
     public function get_user_by_token(){
         if(request()->hasHeader('Authorization')) {

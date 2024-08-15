@@ -3,6 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Actions\CheckForUploadImage;
+use App\Filters\EndDateFilter;
+use App\Filters\NameFilter;
+use App\Filters\StartDateFilter;
+use App\Filters\SubjectIdFilter;
+use App\Filters\subjects_videos\UniversityFilter;
+use App\Filters\UniversityIdFilter;
+use App\Filters\UserIdFilter;
 use App\Http\Requests\categoriesFormRequest;
 use App\Http\Requests\subjectsFormRequest;
 use App\Http\Requests\subjectsVideoFormRequest;
@@ -20,6 +27,7 @@ use App\Services\FormRequestHandleInputs;
 use App\Services\Messages;
 use Illuminate\Http\Request;
 use App\Http\Traits\upload_image;
+use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -32,15 +40,32 @@ class SubjectsVideosControllerResource extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:sanctum')->except('index','show');
+        $this->middleware('auth:sanctum')->except('stream');
     }
     public function index()
     {
         $data = subjects_videos::query()
-            ->with(['subject','image'])
-            ->orderBy('id','DESC')
-            ->paginate(request('limit') ?? 5);
-        return SubjectsVideosResource::collection($data);
+            ->when(auth()->user()->type == 'doctor',function ($query){
+                $query->whereHas('subject',function($s){
+                    $s->where('user_id',auth()->id());
+                });
+            })
+            ->with(['subject.category.university','image'])
+            ->orderBy('id','DESC');
+
+        $output = app(Pipeline::class)
+            ->send($data)
+            ->through([
+                StartDateFilter::class,
+                EndDateFilter::class,
+                SubjectIdFilter::class,
+                UserIdFilter::class,
+                NameFilter::class,
+                UniversityFilter::class
+            ])
+            ->thenReturn()
+            ->paginate(request('limit') ?? 10);
+        return SubjectsVideosResource::collection($output);
     }
 
     /**
@@ -50,7 +75,11 @@ class SubjectsVideosControllerResource extends Controller
     {
         DB::beginTransaction();
         // prepare data to be created or updated
-        $data['user_id'] = auth()->id();
+
+        if(!(array_key_exists('user_id',$data))){
+            $data['user_id'] = auth()->id();
+        }
+
 
 
 
@@ -80,7 +109,7 @@ class SubjectsVideosControllerResource extends Controller
 
 
         // Load the category with the associated image
-        $subject->load('subject');
+        $subject->load('subject.category.university');
         $subject->load('image');
 
         DB::commit();
@@ -134,22 +163,58 @@ class SubjectsVideosControllerResource extends Controller
             return response()->json(['error' => 'File not found'], 404);
         }
 
-        $size = Storage::disk('wasabi')->size($filePath);
-        $mimeType = Storage::disk('wasabi')->mimeType($filePath);
-        $stream = Storage::disk('wasabi')->readStream($filePath);
+
+
+        $videoPath = $filePath; // The path to the video file on Wasabi
+
+        // Fetching the file size from Wasabi
+        $disk = Storage::disk('wasabi');
+        $size = $disk->size($videoPath);
+
+        // Handling the range header
+        $range = request()->header('Range');
+        $start = 0;
+        $end = $size - 1;
+
+        if ($range) {
+            $range = str_replace('bytes=', '', $range);
+            [$start, $end] = explode('-', $range);
+
+            $start = (int) $start;
+            $end = $end ? (int) $end : $size - 1;
+        }
+
+        $length = $end - $start + 1;
 
         $headers = [
-            'Content-Type' => $mimeType,
-            'Content-Length' => $size,
+            'Content-Type' => 'video/mp4',
+            'Content-Length' => $length,
+            'Content-Range' => "bytes $start-$end/$size",
             'Accept-Ranges' => 'bytes',
-            'Content-Disposition' => 'inline; filename="' . basename($filePath) . '"',
         ];
 
+        return new StreamedResponse(function () use ($disk, $videoPath, $start, $end) {
+            $stream = $disk->readStream($videoPath);
+
+            fseek($stream, $start);
+
+            $bufferSize = 1024;
+            while (!feof($stream) && ($pos = ftell($stream)) <= $end) {
+                if ($pos + $bufferSize > $end) {
+                    $bufferSize = $end - $pos + 1;
+                }
+                echo fread($stream, $bufferSize);
+                flush();
+            }
+
+            fclose($stream);
+        }, 206, $headers);
+/*
         return new StreamedResponse(function () use ($stream) {
             while (ob_get_level()) {
                 ob_end_flush();
             }
             fpassthru($stream);
-        }, 200, $headers);
+        }, 200, $headers);*/
     }
 }
