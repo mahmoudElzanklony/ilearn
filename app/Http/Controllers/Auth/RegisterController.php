@@ -39,6 +39,11 @@ class RegisterController extends Controller
         $data['added_by'] = auth()->id();
 
         // create user
+        if($data['type'] == 'client'){
+            if(!request()->filled('year_id')){
+                return Messages::error('الكليه غير موجوده يرجي ارفاقها في عملية الحفظ');
+            }
+        }
         $user = User::query()->create($data);
         // create user year
         if(request()->filled('year_id')){
