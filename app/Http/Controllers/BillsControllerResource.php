@@ -152,9 +152,12 @@ class BillsControllerResource extends Controller
             ->value('total');
 
         $get_stat = bills::query()
+            ->where('doctor_id',$data['doctor_id'])
             ->whereBetween('created_at', [$data['start_date'], $data['end_date']])->get();
         $paid = 0;
-
+        foreach ($get_stat as $item){
+            $paid += ($item->total_money - $item->remain);
+        }
 
         /*$last_bill = bills::where('doctor_id', $data['doctor_id'])->latest()->first();
         $remain = $last_bill ? $last_bill->remain : 0;*/
