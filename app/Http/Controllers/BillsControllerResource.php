@@ -88,9 +88,7 @@ class BillsControllerResource extends Controller
         }*/
 
         $data['total_money'] = $this->get_money_at($data);
-        if($data['remain'] < 0){
-            return Messages::error('هناك خطأ في المدفوع او المتبقي في الفاتورة');
-        }
+
         // Retrieve the last bill for the doctor to check the remaining balance
 
 
