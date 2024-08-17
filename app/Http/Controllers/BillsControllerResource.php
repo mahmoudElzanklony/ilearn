@@ -155,7 +155,7 @@ class BillsControllerResource extends Controller
         $remain = $last_bill ? $last_bill->remain : 0;
 
 
-        return  $output - $remain;
+        return  $output + $remain;
 
     }
 }
