@@ -18,6 +18,7 @@ class SubjectsResource extends JsonResource
           'id'=>$this->id,
           'name'=>$this->name,
           'category_id'=>$this->category_id,
+          'user_id'=>$this->user_id,
           'category'=>CategoryResource::make($this->whenLoaded('category')),
           'image'=>ImageResource::make($this->whenLoaded('image')),
           'user'=>UserResource::make($this->whenLoaded('user')),
