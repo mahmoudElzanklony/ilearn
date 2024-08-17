@@ -45,7 +45,7 @@ class SubscriptionsControllerResource extends Controller
 
 
         $data = subscriptions::query()
-            ->with(['subject','user.year'])
+            ->with(['subject','user.year.university'])
             ->when(auth()->user()->type == 'doctor',function ($e){
                 $e->whereHas('subject',function($q){
                     $q->where('user_id','=',auth()->id());
