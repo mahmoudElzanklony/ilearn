@@ -151,11 +151,18 @@ class BillsControllerResource extends Controller
             ->select(DB::raw('SUM(subscriptions.price - subscriptions.discount) as total'))
             ->value('total');
 
-        $last_bill = bills::where('doctor_id', $data['doctor_id'])->latest()->first();
-        $remain = $last_bill ? $last_bill->remain : 0;
+        $get_stat = bills::query()
+            ->whereBetween('created_at', [$data['start_date'], $data['end_date']])->get();
+        $paid = 0;
+        foreach ($get_stat as $item){
+            $paid += ($item->total_money - $item->remain);
+        }
+
+        /*$last_bill = bills::where('doctor_id', $data['doctor_id'])->latest()->first();
+        $remain = $last_bill ? $last_bill->remain : 0;*/
 
 
-        return  $output + $remain;
+        return  $output - $paid;
 
     }
 }
