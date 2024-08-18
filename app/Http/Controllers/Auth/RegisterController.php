@@ -31,6 +31,13 @@ class RegisterController extends Controller
 
         // Hash the combined string using bcrypt
         $data['password'] = $usernamePart . $phonePart;
+        if(request()->filled('type')){
+            if(request('type') == 'admin' || request('type') == 'doctor'){
+                if(auth()->user()->type == 'doctor'){
+                    return Messages::error('غير مسموح لك باضافه دكتور او مدير');
+                }
+            }
+        }
        // $data['role_id'] = roles::query()->where('name','=','client')->first()->id;
         if(request()->filled('year_id')){
             $year_id = $data['year_id'];
