@@ -24,6 +24,9 @@ class LoginController extends Controller
             // check ip
             $user = User::query()->where('phone',$data['phone'])->first();
             if($user->type == 'client'){
+                if(request()->filled('from')){
+                    return Messages::error('غير مسموح لك بالدخول');
+                }
                 /*if(!(request()->filled('device_id'))){
                     return Messages::error('رقم الجهاز لم يتم ارساله');
                 }
