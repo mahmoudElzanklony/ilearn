@@ -21,6 +21,7 @@ class SubscriptionsResource extends JsonResource
         $arr =  [
           'id'=>$this->id,
           'user_id'=>$this->user_id,
+          'username'=>$this->user->username,
           'subject_id'=>$this->subject_id,
           'user'=>UserResource::make($this->whenLoaded('user')),
           'subject'=>SubjectsResource::make($this->whenLoaded('subject')),

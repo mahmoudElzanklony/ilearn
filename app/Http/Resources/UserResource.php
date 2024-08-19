@@ -14,11 +14,6 @@ class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        if(isset($this->username) && !isset($this->phone)){
-            return [
-              'username'=>$this->username
-            ];
-        }
         $data = [
             'id'=>$this->id,
             'username'=>$this->username,
