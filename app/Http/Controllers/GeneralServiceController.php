@@ -26,7 +26,7 @@ class GeneralServiceController extends Controller
                 $obj = new ('App\\Http\\ConcreateInterfaces\\'.$table.'Concrete')();
                 $err = $obj->check_delete($id);
                 if($err > 0){
-                    return Messages::success('لا تستطيع المسح حيث انه مرتبط بعناصر اخري');
+                    return Messages::error('لا تستطيع المسح حيث انه مرتبط بعناصر اخري');
                 }
             }
             $model->whereIn('id',$id)->delete();
