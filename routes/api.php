@@ -82,7 +82,7 @@ Route::group(['middleware'=>'changeLang'],function (){
     });
     // resources
     Route::resources([
-        'universitiesConcrete'=>UniversitiesControllerResource::class,
+        'universities'=>UniversitiesControllerResource::class,
         'categories'=>CategoriesControllerResource::class,
         'subjects'=>SubjectsControllerResource::class,
         'subjects-videos'=>SubjectsVideosControllerResource::class,
