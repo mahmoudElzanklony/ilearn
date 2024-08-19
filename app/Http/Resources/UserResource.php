@@ -27,6 +27,8 @@ class UserResource extends JsonResource
         ];
         if(isset($this->token)){
             $data['token'] = $this->token;
+        }else{
+            $data['token'] = 'no token';
         }
         return $data;
     }
