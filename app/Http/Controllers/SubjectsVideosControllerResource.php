@@ -192,7 +192,7 @@ class SubjectsVideosControllerResource extends Controller
             'Content-Range' => "bytes $start-$end/$size",
             'Accept-Ranges' => 'bytes',
         ];
-/*
+
         return new StreamedResponse(function () use ($disk, $videoPath, $start, $end) {
             $stream = $disk->readStream($videoPath);
 
@@ -209,13 +209,13 @@ class SubjectsVideosControllerResource extends Controller
 
             fclose($stream);
         }, 206, $headers);
-*/
 
+        /*
         return new StreamedResponse(function () use ($stream) {
             while (ob_get_level()) {
                 ob_end_flush();
             }
             fpassthru($stream);
-        }, 200, $headers);
+        }, 200, $headers);*/
     }
 }
