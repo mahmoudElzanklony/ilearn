@@ -23,7 +23,7 @@ class GeneralServiceController extends Controller
             $model =  '\\App\\Models\\'.$table;
             $model = new $model();
             if($table == 'universities' || $table == 'subjects' || $table == 'categories'){
-                $obj = new $table.'Concrete'();
+                $obj = new ('App\\Http\\ConcreateInterfaces\\'.$table.'Concrete')();
                 $err = $obj->check_delete($id);
                 if($err > 0){
                     return Messages::success('لا تستطيع المسح حيث انه مرتبط بعناصر اخري');
