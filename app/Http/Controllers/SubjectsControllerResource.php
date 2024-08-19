@@ -126,7 +126,7 @@ class SubjectsControllerResource extends Controller
     {
         $data = subscriptions::query()
             ->with('subject',function ($e){
-                $e->with(['image','user:id,username']);
+                $e->with(['image','user']);
             })
             ->where('user_id','=',auth()->id())
             ->where('is_locked','=',0)
