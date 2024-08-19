@@ -32,7 +32,7 @@ class SubjectsVideosResource extends JsonResource
           'extension'=>pathinfo($this->video, PATHINFO_EXTENSION),
           'name'=>$this->name,
           'created_at'=>$this->created_at->format('Y-h-m'),
-          'updated_at'=>$this->updated_at->format('Y-h-m'),
+          'updated_at'=>$this->updated_at
         ];
     }
 }
