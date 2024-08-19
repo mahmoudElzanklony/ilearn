@@ -42,5 +42,10 @@ class categories extends Model
         return $this->belongsToMany(properties::class,categories_properties::class,'category_id','property_id');
     }
 
+    public function students_years()
+    {
+        return $this->hasMany(User::class,'year_id');
+    }
+
 
 }
