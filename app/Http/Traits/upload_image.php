@@ -133,7 +133,7 @@ trait upload_image
 
             try {
                 // Compress the video using FFmpeg
-                $command = "ffmpeg -i $originalFilePath -vcodec libx264 -crf 23 -preset slow -acodec aac -b:a 128k $compressedFilePath";
+                $command = "ffmpeg -i $originalFilePath -vcodec libx264 -b:v 1000k -acodec aac -b:a 128k $compressedFilePath";
                 exec($command . ' 2>&1', $output, $returnVar);
 
                 // Check if FFmpeg failed
