@@ -12,9 +12,11 @@ class categoriesConcrete implements CheckDeleteInterface
     public function check_delete($ids)
     {
         $err = 0;
-        $check = categories::query()->whereIn('id',$ids)->withCount('students_years')->get();
+        $check = categories::query()->whereIn('id',$ids)
+            ->withCount('subjects')
+            ->withCount('students_years')->get();
         foreach($check as $item){
-            if($item->students_years_count > 0){
+            if($item->students_years_count > 0 || $item->subjects_count > 0){
                 $err++;
                 break;
             }

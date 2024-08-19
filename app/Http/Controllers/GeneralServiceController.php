@@ -32,7 +32,7 @@ class GeneralServiceController extends Controller
             $model->whereIn('id',$id)->delete();
             return Messages::success([trans('messages.deleted_successfully')]);
         }catch (\Exception $e){
-            DB::table($table)->delete($id);
+           // DB::table($table)->delete($id);
         }
 
     }
