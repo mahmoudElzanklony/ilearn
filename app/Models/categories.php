@@ -44,7 +44,7 @@ class categories extends Model
 
     public function students_years()
     {
-        return $this->hasMany(User::class,'year_id');
+        return $this->hasMany(students_subjects_years::class,'year_id');
     }
 
 
