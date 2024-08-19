@@ -29,6 +29,7 @@ class GeneralServiceController extends Controller
                     return Messages::error('لا تستطيع المسح حيث انه مرتبط بعناصر اخري');
                 }
             }
+            return $model->whereIn('id',$id)->get();
             $model->whereIn('id',$id)->delete();
             return Messages::success([trans('messages.deleted_successfully')]);
         }catch (\Exception $e){
