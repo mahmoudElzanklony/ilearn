@@ -153,8 +153,9 @@ class SubjectsVideosControllerResource extends Controller
     public function stream()
     {
         $video = subjects_videos::query()->find(request('id'));
-        if ($video == null) {
-            return Messages::error('video not found');
+
+        if ($video === null) {
+            return response()->json(['error' => 'Video not found'], 404);
         }
 
         $filePath = 'videos/' . $video->video;
@@ -163,25 +164,20 @@ class SubjectsVideosControllerResource extends Controller
             return response()->json(['error' => 'File not found'], 404);
         }
 
-
-
-        $videoPath = $filePath; // The path to the video file on Wasabi
-
-        // Fetching the file size from Wasabi
         $disk = Storage::disk('wasabi');
-        $size = $disk->size($videoPath);
+        $size = $disk->size($filePath);
 
-        // Handling the range header
         $range = request()->header('Range');
         $start = 0;
         $end = $size - 1;
 
         if ($range) {
-            $range = str_replace('bytes=', '', $range);
-            [$start, $end] = explode('-', $range);
-
-            $start = (int) $start;
-            $end = $end ? (int) $end : $size - 1;
+            [$unit, $range] = explode('=', $range, 2);
+            if ($unit === 'bytes') {
+                [$start, $end] = explode('-', $range, 2);
+                $start = (int) $start;
+                $end = $end !== '' ? (int) $end : $size - 1;
+            }
         }
 
         $length = $end - $start + 1;
@@ -191,20 +187,25 @@ class SubjectsVideosControllerResource extends Controller
             'Content-Length' => $length,
             'Content-Range' => "bytes $start-$end/$size",
             'Accept-Ranges' => 'bytes',
+            'Content-Disposition' => 'inline',
+            'Cache-Control' => 'no-cache',
         ];
 
-        return new StreamedResponse(function () use ($disk, $videoPath, $start, $end) {
-            $stream = $disk->readStream($videoPath);
-
+        return response()->stream(function () use ($disk, $filePath, $start, $end) {
+            $stream = $disk->readStream($filePath);
             fseek($stream, $start);
 
-            $bufferSize = 15000;
-            while (!feof($stream) && ($pos = ftell($stream)) <= $end) {
+            $bufferSize = 65536; // 64KB buffer for faster loading
+            $pos = $start;
+
+            while (!feof($stream) && $pos <= $end) {
                 if ($pos + $bufferSize > $end) {
                     $bufferSize = $end - $pos + 1;
                 }
                 echo fread($stream, $bufferSize);
                 flush();
+                ob_flush(); // Flush the output buffer
+                $pos = ftell($stream);
             }
 
             fclose($stream);
