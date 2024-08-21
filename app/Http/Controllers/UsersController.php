@@ -6,6 +6,7 @@ use App\Filters\DoctorIdFilter;
 use App\Filters\EndDateFilter;
 use App\Filters\StartDateFilter;
 use App\Filters\TypeFilter;
+use App\Filters\users\IsBlockFilter;
 use App\Filters\users\NationalityFilter;
 use App\Filters\users\UserNameFilter;
 use App\Filters\users\YearFilter;
@@ -43,7 +44,8 @@ class UsersController extends Controller
                 TypeFilter::class,
                 UserNameFilter::class,
                 YearFilter::class,
-                NationalityFilter::class
+                NationalityFilter::class,
+                IsBlockFilter::class
             ])
             ->thenReturn()
             ->paginate(request('limit') ?? 10);
