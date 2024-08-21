@@ -30,6 +30,9 @@ class LoginController extends Controller
                 if(!(request()->filled('device_id'))){
                     return Messages::error('رقم الجهاز لم يتم ارساله');
                 }
+                if(request()->filled('device_id') && $user->type != 'client'){
+                    return Messages::error('ليس لديك صلاحيات الدخول فهذا التطبيق للطلبه فقط');
+                }
                 if($user->otp_secret == null){
                     $user->otp_secret = request('device_id');
                     $user->save();
