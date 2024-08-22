@@ -27,7 +27,7 @@ class LoginController extends Controller
                 if(request()->filled('from')){
                     return Messages::error('غير مسموح لك بالدخول');
                 }
-                if(!(request()->filled('device_id'))){
+                /*if(!(request()->filled('device_id'))){
                     return Messages::error('رقم الجهاز لم يتم ارساله');
                 }
                 if(request()->filled('device_id') && $user->type != 'client'){
@@ -38,7 +38,7 @@ class LoginController extends Controller
                     $user->save();
                 }else if($user->otp_secret != request('device_id')){
                     return Messages::error('هذا الجهاز ليس الجهاز الاول الذي قمت بالدخول الي التطبيق من خلاله');
-                }
+                }*/
             }
             // check if blocked
             if($user->is_block == 1){
