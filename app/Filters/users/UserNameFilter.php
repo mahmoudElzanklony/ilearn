@@ -13,7 +13,8 @@ class UserNameFilter
         }
         if(request()->has('name')){
             return $next($request)
-                ->where('username','LIKE','%'.request('name').'%');
+                ->where('username','LIKE','%'.request('name').'%')
+                ->orWhere('phone','LIKE','%'.request('name').'%');
         }
         return $next($request);
     }
