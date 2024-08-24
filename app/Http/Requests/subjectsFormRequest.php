@@ -27,7 +27,7 @@ class subjectsFormRequest extends FormRequest
             'category_id'=>'required|exists:categories,id',
             'semester'=>'required',
             'price'=>'required',
-            'note'=>'nullable'
+            'note'=>'required'
         ];
     }
 }
