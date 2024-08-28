@@ -53,6 +53,8 @@ class SubjectsVideosControllerResource extends Controller
             ->with(['subject.category.university','image'])
             ->orderBy('id','DESC');
 
+
+
         $output = app(Pipeline::class)
             ->send($data)
             ->through([

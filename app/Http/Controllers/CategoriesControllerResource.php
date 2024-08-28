@@ -41,7 +41,7 @@ class CategoriesControllerResource extends Controller
             })
             ->with('university')
             ->orderBy('id','DESC');
-
+        // DRY ==> dont repeat yourself
         $output = app(Pipeline::class)
             ->send($data)
             ->through([
@@ -78,6 +78,7 @@ class CategoriesControllerResource extends Controller
 
     public function store(categoriesFormRequest $request)
     {
+
         return $this->save($request->validated(),request()->file('image'));
     }
 
