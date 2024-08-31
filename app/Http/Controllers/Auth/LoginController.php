@@ -23,7 +23,7 @@ class LoginController extends Controller
         if(auth()->attempt($data)){
             // check ip
             $user = User::query()->where('phone',$data['phone'])->first();
-            if($user->type == 'client' && $user->username != 'Google Tester'){
+            if($user->type == 'client' && $user->phone != '+201111354352'){
                 if(request()->filled('from')){
                     return Messages::error('غير مسموح لك بالدخول');
                 }
