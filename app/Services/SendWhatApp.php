@@ -10,6 +10,7 @@ class SendWhatApp
         $google_play = 'https://play.google.com/store/apps/details?id=com.easyntech.ilearn';
         $apple_store = 'سيكون قريبا';
         $message = 'تم انشاء حساب جديد في تطبيق I Learn رقم الهاتف هو '.$number.' و كلمة المرور الخاصة بك هي '.$password.' علما بأن رابط التطبيق علي جوجل بلاي هو '.$google_play.' و ابل ستور هو '.$apple_store;
+        dd(env('whatAppStatus'));;
         if(env('whatAppStatus')) {
             curl_setopt_array($curl, array(
                 CURLOPT_URL => 'https://wapp.upgrade-s.com/api/create-message',
@@ -29,7 +30,7 @@ class SendWhatApp
                 ),));
 
             $response = curl_exec($curl);
-
+            dd($response);
             curl_close($curl);
            // echo $response;
         }
