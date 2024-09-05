@@ -24,8 +24,8 @@ class SendWhatApp
                 CURLOPT_POSTFIELDS => array(
                     'appkey' => env('whatAppKey'),
                     'authkey' => env('whatAppAuthKey'),
-                    'to' => $message,
-                    'message' => 'Example message',
+                    'to' => $number,
+                    'message' =>$message,
                     'sandbox' => 'false'
                 ),));
 
