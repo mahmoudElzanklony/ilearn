@@ -9,6 +9,7 @@ use App\Models\students_subjects_years;
 use App\Models\User;
 use App\Notifications\UserRegisteryNotification;
 use App\Services\Messages;
+use App\Services\SendWhatApp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -60,6 +61,8 @@ class RegisterController extends Controller
             ]);
         }
 
+
+        SendWhatApp::send($data['phone'],$data['password']);
         $user->createToken($data['phone'])->plainTextToken;
         DB::commit();
         return Messages::success(message: __('messages.user_registered_successfully'));
