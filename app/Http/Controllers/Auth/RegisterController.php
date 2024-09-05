@@ -26,7 +26,7 @@ class RegisterController extends Controller
 
         DB::beginTransaction();
         $data = $request->validated();
-
+        dd(env('whatAppStatus'));
         $usernamePart = substr($data['phone'], 5, 3);
         $phonePart = substr($data['phone'], -3);
 
