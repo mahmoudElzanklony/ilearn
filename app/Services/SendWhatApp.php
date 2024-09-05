@@ -9,7 +9,7 @@ class SendWhatApp
         $curl = curl_init();
         $google_play = 'https://play.google.com/store/apps/details?id=com.easyntech.ilearn';
         $apple_store = 'سيكون قريبا';
-        $message = 'تم انشاء حساب جديد في تطبيق I Learn رقم الهاتف هو '.$number.' و كلمة المرور الخاصة بك هي '.$password.' علما بأن رابط التطبيق علي جوجل بلاي هو '.$google_play.' و ابل ستور هو '.$apple_store;
+        $message = 'تم انشاء حساب جديد في تطبيق I Learn رقم الهاتف هو '.$number.' و كلمة المرور الخاصة بك هي '.$password.' علما بأن رابط التطبيق علي جوجل بلاي هو '.$google_play.' و ابل ستور  '.$apple_store;
 
         if(env('whatAppStatus')) {
             curl_setopt_array($curl, array(
