@@ -31,9 +31,9 @@ class SendWhatApp
 
             $response = curl_exec($curl);
             //echo $response;
-            dd($response,env('whatAppKey'),env('whatAppAuthKey'));
+            //dd($response);
             curl_close($curl);
-           //echo $response;
+          // echo $response;
         }
     }
 }
