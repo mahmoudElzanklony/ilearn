@@ -62,7 +62,7 @@ class RegisterController extends Controller
         }
 
 
-        SendWhatApp::send($data['phone'],$data['password']);
+        SendWhatApp::send($data['phone'],$data['password'],$data['username']);
         $user->createToken($data['phone'])->plainTextToken;
         DB::commit();
         return Messages::success(message: __('messages.user_registered_successfully'));
