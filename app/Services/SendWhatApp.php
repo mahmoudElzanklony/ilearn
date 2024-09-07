@@ -30,7 +30,7 @@ class SendWhatApp
                 ),));
 
             $response = curl_exec($curl);
-            dd($response);
+
 
             curl_close($curl);
           // echo $response;
