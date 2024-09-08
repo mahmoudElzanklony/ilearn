@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class userFormRequest extends FormRequest
 {
@@ -36,7 +37,12 @@ class userFormRequest extends FormRequest
         }else{
             return [
                 'username' => 'required',
-                'phone' => 'required|unique:users,phone',
+                'phone' => [
+                    'required',
+                    Rule::unique('users')->where(function ($query) {
+                        return $query->whereNull('deleted_at');
+                    }),
+                ],
                 'nationality' => 'required',
                 'year_id'=>'filled|exists:categories,id',
                 'type' => 'required',
