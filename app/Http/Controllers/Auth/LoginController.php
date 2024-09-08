@@ -19,7 +19,7 @@ class LoginController extends Controller
 
     public function login()
     {
-        $data = ['phone'=>request('phone'),'password'=>request('password')];
+        $data = ['phone'=>request('phone'),'password'=>request('password'),'deleted_at'=>null];
         if(auth()->attempt($data)){
             // check ip
             $user = User::query()->where('phone',$data['phone'])->first();
