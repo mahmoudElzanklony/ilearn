@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Actions\CheckForUploadImage;
+use App\Filters\CategoryIdFilter;
 use App\Filters\EndDateFilter;
+use App\Filters\orders\CategoryOrderFilter;
 use App\Filters\orders\RateOrderFilter;
 use App\Filters\orders\StatusOrderFilter;
 use App\Filters\StartDateFilter;
@@ -57,6 +59,7 @@ class SubscriptionsControllerResource extends Controller
             ->through([
                 StartDateFilter::class,
                 EndDateFilter::class,
+                CategoryOrderFilter::class,
                 UserIdFilter::class,
                 SubjectIdFilter::class,
                 SubscriptionDoctorFilter::class
