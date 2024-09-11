@@ -74,7 +74,12 @@ class SubscriptionsControllerResource extends Controller
         $totalMoney = $totals->total_price - $totals->total_discount;
 
         // Return paginated results with total money information
-        return Messages::success('',['total'=>$totalMoney]);
+        $result =  [
+            'final' => $totalMoney,
+            'total_price' => $totals->total_price,
+            'total_discount' => $totals->total_discount,
+        ];
+        return Messages::success('',$result);
     }
     public function index()
     {
