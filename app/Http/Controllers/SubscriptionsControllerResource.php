@@ -42,6 +42,40 @@ class SubscriptionsControllerResource extends Controller
     {
         $this->middleware('auth:sanctum');
     }
+
+    public function total_money()
+    {
+        $data = subscriptions::query()
+            ->with(['subject', 'user.year.category.university'])
+            ->when(auth()->user()->type == 'doctor', function ($e) {
+                $e->whereHas('subject', function ($q) {
+                    $q->where('user_id', '=', auth()->id());
+                });
+            });
+
+        // Apply filters through the pipeline
+        $data = app(Pipeline::class)
+            ->send($data)
+            ->through([
+                StartDateFilter::class,
+                EndDateFilter::class,
+                CategoryOrderFilter::class,
+                UserIdFilter::class,
+                SubjectIdFilter::class,
+                SubscriptionDoctorFilter::class
+            ])
+            ->thenReturn();
+
+        // Get the total sum of price and discount
+        $totals = $data->selectRaw('SUM(price) as total_price, SUM(discount) as total_discount')
+            ->first();
+
+        // Calculate total money as total price minus total discount
+        $totalMoney = $totals->total_price - $totals->total_discount;
+
+        // Return paginated results with total money information
+        return Messages::success('',['total'=>$totalMoney]);
+    }
     public function index()
     {
 
