@@ -8,7 +8,7 @@ class SendWhatApp
     {
         $curl = curl_init();
         $google_play = 'https://play.google.com/store/apps/details?id=com.easyntech.ilearn';
-        $apple_store = 'سيكون قريبا';
+        $apple_store = 'https://apps.apple.com/us/app/ilearn/id6670336964';
         $message = 'تم انشاء حساب جديد في تطبيق I Learn بأسم  '.$username.' رقم الهاتف هو '.$number.' و كلمة المرور الخاصة بك هي '.$password.' علما بأن رابط التطبيق علي جوجل بلاي هو '.$google_play.' و ابل ستور  '.$apple_store.' ملحوظه هامه عند  مسح التطبيق أو نسيان الباسورد يرجي التواصل مع الدعم الفني من خلال هذا الرقم او +201001889517';
 
         if(env('whatAppStatus')) {
