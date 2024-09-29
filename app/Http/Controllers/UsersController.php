@@ -56,6 +56,7 @@ class UsersController extends Controller
             ])
             ->thenReturn()
             ->paginate(request('limit') ?? 10);
+        return $data->get();
         return UserResource::collection($output);
     }
 }
