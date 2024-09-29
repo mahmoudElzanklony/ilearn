@@ -16,6 +16,7 @@ use App\Models\bills;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Pipeline\Pipeline;
+use Illuminate\Support\Facades\DB;
 
 class UsersController extends Controller
 {
@@ -34,9 +35,8 @@ class UsersController extends Controller
                         });
                 });
             })
-            ->withCount(['students_subscriptions as unique_students' => function($query) {
-                // Count distinct students who have subscribed to subjects related to this user
-                $query->distinct('user_id');
+            ->withCount(['subscriptions as unique_students' => function ($query) {
+                $query->select(DB::raw('COUNT(DISTINCT user_id)'));
             }])
             ->orderBy('id','DESC');
 
