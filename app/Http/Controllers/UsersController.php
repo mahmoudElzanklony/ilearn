@@ -35,7 +35,7 @@ class UsersController extends Controller
                         });
                 });
             })
-            ->withCount(['subscriptions as unique_students' => function ($query) {
+            ->withCount(['students_subscriptions as unique_students' => function($query) {
                 $query->select(DB::raw('COUNT(DISTINCT user_id)'));
             }])
             ->orderBy('id','DESC');
