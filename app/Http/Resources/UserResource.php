@@ -23,6 +23,7 @@ class UserResource extends JsonResource
             'is_block'=>$this->is_block,
             'year'=>StudentResource::make($this->whenLoaded('year')),
             'nationality'=>$this->nationality,
+            'unique_students'=>$this->unique_students ?? 0,
             'created_at'=>$this->created_at->format('Y-m-d H:i:s')
         ];
         if(isset($this->token)){
