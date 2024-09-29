@@ -34,13 +34,7 @@ class UsersController extends Controller
                         });
                 });
             })
-            ->withCount(['students_subscriptions as unique_students' => function($query) {
-                // Count distinct students who have subscribed to subjects related to this user
-                $query
-                    ->whereHas('subject', function ($q) {
-                        $q->where('user_id', '=', auth()->id());
-                    });
-            }])
+            ->withCount(['students_subscriptions as unique_students'])
             ->orderBy('id','DESC');
 
         $output = app(Pipeline::class)
