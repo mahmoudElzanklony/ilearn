@@ -53,7 +53,7 @@ class SubjectsControllerResource extends Controller
                 StartDateFilter::class,
                 EndDateFilter::class,
                 NameFilter::class,
-                CategoryIdFilter::class,
+
                 UniversityFilter::class,
             ])
             ->thenReturn()
