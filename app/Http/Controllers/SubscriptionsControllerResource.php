@@ -114,10 +114,11 @@ class SubscriptionsControllerResource extends Controller
     public function save($data)
     {
         DB::beginTransaction();
-        $data['price'] = subjects::query()->find($data['subject_id'])->price;
+
         $data['added_by'] = auth()->id();
         $data['is_locked'] = 0;
         if(!(array_key_exists('id',$data))){
+            $data['price'] = subjects::query()->find($data['subject_id'])->price;
             $check = subscriptions::query()
                 ->where('user_id',$data['user_id'])
                 ->where('subject_id',$data['subject_id'])->first();
@@ -128,6 +129,7 @@ class SubscriptionsControllerResource extends Controller
         if(is_array($data['subject_id'])){
             foreach ($data['subject_id'] as $datum){
                 $saved = $data;
+                $saved['price'] = subjects::query()->find($datum)->price;
                 unset($saved['subject_id']);
                 $saved['subject_id'] = $datum;
                 subscriptions::query()->create($saved);
