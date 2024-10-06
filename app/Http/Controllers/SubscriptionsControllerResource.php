@@ -143,7 +143,7 @@ class SubscriptionsControllerResource extends Controller
 
                 $check = $this->check_subscription($saved);
                 if(is_array($check)){
-                    return Messages::error('هذا الطالب تم اشتراكه في مادة '.$subject_obj->name.'لذا يرجي ازالتها من الاشتراك ');
+                    return Messages::error('هذا الطالب تم اشتراكه في مادة '.$subject_obj->name.' لذا يرجي ازالتها من الاشتراك ');
                 }
                 subscriptions::query()->create($saved);
                 $related = '';
