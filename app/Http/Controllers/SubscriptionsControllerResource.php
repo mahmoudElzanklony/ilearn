@@ -133,10 +133,10 @@ class SubscriptionsControllerResource extends Controller
         $data['is_locked'] = 0;
 
         if(is_array($data['subject_id'])){
-            return $data['subject_id'];
             foreach ($data['subject_id'] as $datum){
                 $saved = $data;
                 $subject_obj =  subjects::query()->find($datum);
+                return $subject_obj;
                 $saved['price'] = $subject_obj->price;
                 unset($saved['subject_id']);
                 $saved['subject_id'] = $datum;
