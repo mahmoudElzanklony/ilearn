@@ -141,7 +141,7 @@ class SubscriptionsControllerResource extends Controller
                 unset($saved['subject_id']);
                 $saved['subject_id'] = $datum;
 
-                $check = $this->check_subscription($data);
+                $check = $this->check_subscription($saved);
                 if(is_array($check)){
                     return Messages::error('هذا الطالب تم اشتراكه في مادة '.$subject_obj->name.'لذا يرجي ازالتها من الاشتراك ');
                 }
