@@ -125,17 +125,28 @@ class SubscriptionsControllerResource extends Controller
                 return Messages::error('هذا الطالب تم اشتراكه في هذه الماده من قبل');
             }
         }
+        if(is_array($data['subject_id'])){
+            foreach ($data['subject_id'] as $datum){
+                $saved = $data;
+                unset($saved['subject_id']);
+                $saved['subject_id'] = $datum;
+                subscriptions::query()->create($saved);
+                $related = '';
+            }
+        }else {
+            $subject = subscriptions::query()->updateOrCreate([
+                'id' => $data['id'] ?? null
+            ], $data);
+            // Load the category with the associated image
+            $subject->load('user');
+            $subject->load('subject');
+            $related = SubscriptionsResource::make($subject);
+        }
 
-        $subject = subscriptions::query()->updateOrCreate([
-            'id'=>$data['id'] ?? null
-        ],$data);
-        // Load the category with the associated image
-        $subject->load('user');
-        $subject->load('subject');
 
         DB::commit();
         // return response
-        return Messages::success(__('messages.saved_successfully'),SubscriptionsResource::make($subject));
+        return Messages::success(__('messages.saved_successfully'),$related);
     }
 
     public function store(subscriptionsFormRequest $request)

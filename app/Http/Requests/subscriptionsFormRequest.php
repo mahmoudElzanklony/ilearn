@@ -24,7 +24,8 @@ class subscriptionsFormRequest extends FormRequest
         return [
             'id'=>'filled',
             'user_id'=>'required|exists:users,id',
-            'subject_id'=>'required|exists:subjects,id',
+            'subject_id'=>'required',
+            'subject_id.*'=>'filled|exists:subjects,id',
             'discount'=>'filled',
             'note'=>'nullable'
         ];
