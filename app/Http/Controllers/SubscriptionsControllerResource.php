@@ -148,6 +148,7 @@ class SubscriptionsControllerResource extends Controller
                     return Messages::error('هذا الطالب تم اشتراكه في مادة '.$subject_obj->name.' لذا يرجي ازالتها من الاشتراك ');
                 }
                 $saved['created_at'] = now();
+                $saved['added_by'] = auth()->id();
                 array_push($output_saved,$saved);
                 $related = '';
             }
