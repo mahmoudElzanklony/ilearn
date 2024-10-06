@@ -132,6 +132,7 @@ class SubscriptionsControllerResource extends Controller
         $data['added_by'] = auth()->id();
         $data['is_locked'] = 0;
 
+        $output_saved = [];
         if(is_array($data['subject_id'])){
             foreach ($data['subject_id'] as $datum){
                 $saved = $data;
@@ -143,11 +144,15 @@ class SubscriptionsControllerResource extends Controller
 
                 $check = $this->check_subscription($saved);
                 if(is_array($check)){
+
                     return Messages::error('هذا الطالب تم اشتراكه في مادة '.$subject_obj->name.' لذا يرجي ازالتها من الاشتراك ');
                 }
-                subscriptions::query()->create($saved);
+                $saved['created_at'] = now();
+                array_push($output_saved,$saved);
                 $related = '';
             }
+            subjects::query()->insert($output_saved);
+
         }else {
 
             $subject = subscriptions::query()->updateOrCreate([
