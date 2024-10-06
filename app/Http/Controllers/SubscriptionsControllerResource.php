@@ -131,7 +131,7 @@ class SubscriptionsControllerResource extends Controller
 
         $data['added_by'] = auth()->id();
         $data['is_locked'] = 0;
-        return is_array($data['subject_id']);
+
         if(is_array($data['subject_id'])){
             return $data['subject_id'];
             foreach ($data['subject_id'] as $datum){
