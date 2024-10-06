@@ -108,6 +108,20 @@ class SubscriptionsControllerResource extends Controller
         return SubscriptionsResource::collection($output);
     }
 
+
+    public function check_subscription($data)
+    {
+        $data['price'] = subjects::query()->find($data['subject_id'])->price;
+        $check = subscriptions::query()
+            ->where('user_id',$data['user_id'])
+            ->where('subject_id',$data['subject_id'])->first();
+        if($check != null){
+            return ['status'=>1,'subject_id'=>$data['subject_id']];
+            //return Messages::error('هذا الطالب تم اشتراكه في هذه الماده من قبل');
+        }
+        return null;
+    }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -117,25 +131,23 @@ class SubscriptionsControllerResource extends Controller
 
         $data['added_by'] = auth()->id();
         $data['is_locked'] = 0;
-        if(!(array_key_exists('id',$data))){
-            $data['price'] = subjects::query()->find($data['subject_id'])->price;
-            $check = subscriptions::query()
-                ->where('user_id',$data['user_id'])
-                ->where('subject_id',$data['subject_id'])->first();
-            if($check != null){
-                return Messages::error('هذا الطالب تم اشتراكه في هذه الماده من قبل');
-            }
-        }
+
         if(is_array($data['subject_id'])){
             foreach ($data['subject_id'] as $datum){
                 $saved = $data;
-                $saved['price'] = subjects::query()->find($datum)->price;
+                $subject_obj =  subjects::query()->find($datum);
+                $saved['price'] = $subject_obj->price;
                 unset($saved['subject_id']);
                 $saved['subject_id'] = $datum;
+                $check = $this->check_subscription($data);
+                if(is_array($check)){
+                    return Messages::error('هذا الطالب تم اشتراكه في مادة '.$subject_obj->name.'لذا يرجي ازالتها من الاشتراك ');
+                }
                 subscriptions::query()->create($saved);
                 $related = '';
             }
         }else {
+
             $subject = subscriptions::query()->updateOrCreate([
                 'id' => $data['id'] ?? null
             ], $data);
