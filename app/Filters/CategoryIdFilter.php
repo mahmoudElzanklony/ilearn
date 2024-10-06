@@ -20,9 +20,7 @@ class CategoryIdFilter
                 });
             });
         }else if (request()->filled('category_id')) {
-            return $next($request)->whereHas('subject.category', function ($e) {
-                $e->where('id','=',request('category_id'));
-            });
+            return $next($request)->where('category_id','=',request('category_id'));
         }
         return $next($request);
     }
