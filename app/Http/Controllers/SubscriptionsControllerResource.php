@@ -111,7 +111,7 @@ class SubscriptionsControllerResource extends Controller
 
     public function check_subscription($data)
     {
-        $data['price'] = subjects::query()->find($data['subject_id'])->price;
+
         $check = subscriptions::query()
             ->where('user_id',$data['user_id'])
             ->where('subject_id',$data['subject_id'])->first();
