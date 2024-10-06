@@ -140,7 +140,7 @@ class SubscriptionsControllerResource extends Controller
                 $saved['price'] = $subject_obj->price;
                 unset($saved['subject_id']);
                 $saved['subject_id'] = $datum;
-                return $saved;
+
                 $check = $this->check_subscription($data);
                 if(is_array($check)){
                     return Messages::error('هذا الطالب تم اشتراكه في مادة '.$subject_obj->name.'لذا يرجي ازالتها من الاشتراك ');
