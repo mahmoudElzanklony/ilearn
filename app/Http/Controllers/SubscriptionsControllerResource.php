@@ -152,7 +152,7 @@ class SubscriptionsControllerResource extends Controller
                 array_push($output_saved,$saved);
                 $related = '';
             }
-            subjects::query()->insert($output_saved);
+            subscriptions::query()->insert($output_saved);
 
         }else {
 
