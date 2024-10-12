@@ -166,56 +166,14 @@ class SubjectsVideosControllerResource extends Controller
             return response()->json(['error' => 'File not found'], 404);
         }
 
+// Generate a presigned URL (valid for 1 hour)
         $disk = Storage::disk('wasabi');
-        $size = $disk->size($filePath);
+        $expiration = now()->addMinutes(60); // Set the expiration time
+        $presignedUrl = $disk->temporaryUrl($filePath, $expiration);
 
-// Handle range requests
-        $range = request()->header('Range');
-        $start = 0;
-        $end = $size - 1;
+// Redirect to the presigned URL
+        return redirect()->away($presignedUrl);
 
-        if ($range) {
-            [$unit, $range] = explode('=', $range, 2);
-            if ($unit === 'bytes') {
-                [$start, $end] = explode('-', $range, 2);
-                $start = (int) $start;
-                $end = $end !== '' ? (int) $end : $size - 1;
-            }
-        }
-
-        $length = $end - $start + 1;
-
-// Response headers
-        $headers = [
-            'Content-Type' => 'video/mp4',
-            'Content-Length' => $length,
-            'Content-Range' => "bytes $start-$end/$size",
-            'Accept-Ranges' => 'bytes',
-            'Content-Disposition' => 'inline',
-            'Cache-Control' => 'no-cache, must-revalidate',
-            'Pragma' => 'no-cache',
-        ];
-
-// Stream the file
-        return response()->stream(function () use ($disk, $filePath, $start, $end) {
-            $stream = $disk->readStream($filePath);
-            fseek($stream, $start);
-
-            $bufferSize = 262144; // 256KB buffer size for faster streaming
-            $pos = $start;
-
-            while (!feof($stream) && $pos <= $end) {
-                if ($pos + $bufferSize > $end) {
-                    $bufferSize = $end - $pos + 1;
-                }
-                echo fread($stream, $bufferSize);
-                flush();
-                ob_flush(); // Ensure that the buffer is flushed
-                $pos = ftell($stream); // Track current position
-            }
-
-            fclose($stream);
-        }, 206, $headers);
 
 
         /*
