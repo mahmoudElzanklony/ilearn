@@ -169,6 +169,7 @@ class SubjectsVideosControllerResource extends Controller
         $disk = Storage::disk('wasabi');
         $size = $disk->size($filePath);
 
+// Handle range requests
         $range = request()->header('Range');
         $start = 0;
         $end = $size - 1;
@@ -184,20 +185,23 @@ class SubjectsVideosControllerResource extends Controller
 
         $length = $end - $start + 1;
 
+// Response headers
         $headers = [
             'Content-Type' => 'video/mp4',
             'Content-Length' => $length,
             'Content-Range' => "bytes $start-$end/$size",
             'Accept-Ranges' => 'bytes',
             'Content-Disposition' => 'inline',
-            'Cache-Control' => 'no-cache',
+            'Cache-Control' => 'no-cache, must-revalidate',
+            'Pragma' => 'no-cache',
         ];
 
+// Stream the file
         return response()->stream(function () use ($disk, $filePath, $start, $end) {
             $stream = $disk->readStream($filePath);
             fseek($stream, $start);
 
-            $bufferSize = 65536; // 64KB buffer for faster loading
+            $bufferSize = 262144; // 256KB buffer size for faster streaming
             $pos = $start;
 
             while (!feof($stream) && $pos <= $end) {
@@ -206,12 +210,13 @@ class SubjectsVideosControllerResource extends Controller
                 }
                 echo fread($stream, $bufferSize);
                 flush();
-                ob_flush(); // Flush the output buffer
-                $pos = ftell($stream);
+                ob_flush(); // Ensure that the buffer is flushed
+                $pos = ftell($stream); // Track current position
             }
 
             fclose($stream);
         }, 206, $headers);
+
 
         /*
         return new StreamedResponse(function () use ($stream) {
