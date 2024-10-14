@@ -134,6 +134,25 @@ class SubjectsVideosControllerResource extends Controller
         return SubjectsVideosResource::make($data);
     }
 
+    public function get_size()
+    {
+        $video_obj = subjects_videos::query()->find(request('video_id'));
+        if($video_obj == null){
+            return Messages::error('الفديو غير موجود');
+        }
+        $filePath = 'videos/' . $video_obj->video;
+        // Use the Wasabi disk to get file metadata
+        $fileSize = Storage::disk('wasabi')->size($filePath);
+
+        // Convert size to megabytes for easier readability (optional)
+        $fileSizeInMb = round($fileSize / 1024 / 1024, 2);
+
+        return Messages::success([
+            'size_in_bytes' => $fileSize,
+            'size_in_mb' => $fileSizeInMb
+        ]);
+    }
+
     /**
      * Update the specified resource in storage.
      */

@@ -74,6 +74,7 @@ Route::group(['middleware'=>'changeLang'],function (){
     Route::post('/total-money-subscriptions',[SubscriptionsControllerResource::class,'total_money']);
     Route::group(['prefix'=>'/stream-video'],function (){
         Route::get('/',[SubjectsVideosControllerResource::class,'stream']);
+        Route::get('/get-video-size',[SubjectsVideosControllerResource::class,'get_size']);
     });
 
 
