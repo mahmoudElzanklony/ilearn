@@ -147,7 +147,7 @@ class SubjectsVideosControllerResource extends Controller
         // Convert size to megabytes for easier readability (optional)
         $fileSizeInMb = round($fileSize / 1024 / 1024, 2);
 
-        return Messages::success([
+        return Messages::success('',[
             'size_in_bytes' => $fileSize,
             'size_in_mb' => $fileSizeInMb
         ]);
