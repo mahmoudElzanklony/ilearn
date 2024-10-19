@@ -186,12 +186,12 @@ class SubjectsVideosControllerResource extends Controller
             return response()->json(['error' => 'File not found'], 404);
         }
 
-// Generate a presigned URL (valid for 1 hour)
+        // Generate a presigned URL (valid for 1 hour)
         $disk = Storage::disk('wasabi');
         $expiration = now()->addMinutes(60); // Set the expiration time
         $presignedUrl = $disk->temporaryUrl($filePath, $expiration);
 
-// Redirect to the presigned URL
+        // Redirect to the presigned URL
         return redirect()->away($presignedUrl);
 
 

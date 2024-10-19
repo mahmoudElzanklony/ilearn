@@ -91,8 +91,8 @@ class SubscriptionsControllerResource extends Controller
                 $e->whereHas('subject',function($q){
                     $q->where('user_id','=',auth()->id());
                 });
-            });
-           // ->orderBy('id','DESC');
+            })
+            ->orderBy('id','ASC');
         $output = app(Pipeline::class)
             ->send($data)
             ->through([
