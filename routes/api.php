@@ -40,13 +40,14 @@ Route::group(['middleware'=>'changeLang'],function (){
         Route::post('/login',[LoginController::class,'login']);
         Route::post('/activate-account',[ActivationAccountController::class,'index']);
         Route::post('/register',[RegisterController::class,'register']);
-        Route::post('/send-whatapp',[RegisterController::class,'send_msg']);
+
         Route::post('/forget-password',[ForgetPasswordController::class,'index']);
         Route::post('/new-password',[ForgetPasswordController::class,'new_password']);
         Route::post('/logout',[RegisterController::class,'logout']);
         Route::post('/me',[LoginController::class,'get_user_by_token']);
         Route::post('/csrf',[LoginController::class,'getToken']);
     });
+    Route::post('/send-whatapp',[RegisterController::class,'send_msg']);
 
     // get users
     Route::group(['prefix'=>'/users','middleware'=>'auth:sanctum'],function (){
