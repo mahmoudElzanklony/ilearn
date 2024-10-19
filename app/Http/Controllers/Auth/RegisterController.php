@@ -70,7 +70,7 @@ class RegisterController extends Controller
 
     public function send_msg()
     {
-        SendWhatApp::send('+201152296646','522646','محمود عبد الله');
+         SendWhatApp::send('+201152296646','522646','محمود عبد الله');
     }
 
     public function logout()

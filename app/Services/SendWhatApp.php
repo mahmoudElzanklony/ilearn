@@ -37,7 +37,7 @@ class SendWhatApp
 
 
             curl_close($curl);
-          // echo $response;
+           echo $response;
         }
     }
 }
