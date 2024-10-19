@@ -50,8 +50,8 @@ class BillsControllerResource extends Controller
     {
         $data = bills::query()
             ->when(auth()->user()->type == 'doctor',fn($e) => $e->where('doctor_id','=',auth()->id()))
-            ->with('doctor')
-            ->orderBy('id','DESC');
+            ->with('doctor');
+          //  ->orderBy('id','DESC');
 
         $output = app(Pipeline::class)
             ->send($data)
