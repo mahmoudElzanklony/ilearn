@@ -137,6 +137,7 @@ class SubjectsVideosControllerResource extends Controller
     public function get_size()
     {
         $video_obj = subjects_videos::query()->find(request('video_id'));
+
         if($video_obj == null){
             return Messages::error('الفديو غير موجود');
         }

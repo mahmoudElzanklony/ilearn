@@ -68,6 +68,11 @@ class RegisterController extends Controller
         return Messages::success(message: __('messages.user_registered_successfully'));
     }
 
+    public function send_msg()
+    {
+        SendWhatApp::send('+201152296646','522646','محمود عبد الله');
+    }
+
     public function logout()
     {
         auth()->user()->currentAccessToken()->delete();
