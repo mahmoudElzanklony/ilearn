@@ -137,7 +137,7 @@ trait upload_image
                /* $command = "ffmpeg -i $originalFilePath -vcodec libx264 -crf 23 -preset medium -acodec aac -b:a 128k -threads 4 $compressedFilePath";
                 exec($command . ' 2>&1', $output, $returnVar);*/
 
-                $command = "ffmpeg -i $originalFilePath -vcodec libx264 -crf 28 -preset slower -acodec aac -b:a 128k -threads 4 $compressedFilePath";
+                $command = "ffmpeg -i $originalFilePath -vcodec libx264 -crf 28 -preset slower -vf scale=-1:480 -acodec aac -b:a 128k -threads 4 $compressedFilePath";
                 exec($command . ' 2>&1', $output, $returnVar);
 
                 // Check if FFmpeg failed
