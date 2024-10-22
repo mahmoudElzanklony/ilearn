@@ -136,7 +136,6 @@ trait upload_image
                 //$command = "ffmpeg -i $originalFilePath -vcodec libx264 -b:v 1000k -acodec aac -b:a 128k $compressedFilePath";
                /* $command = "ffmpeg -i $originalFilePath -vcodec libx264 -crf 23 -preset medium -acodec aac -b:a 128k -threads 4 $compressedFilePath";
                 exec($command . ' 2>&1', $output, $returnVar);*/
-
                 $command = "ffmpeg -i $originalFilePath -vcodec libx264 -crf 28 -preset slower -b:v 500k -maxrate 1M -bufsize 1M -tune zerolatency -acodec aac -b:a 128k $compressedFilePath";
                 exec($command . ' 2>&1', $output, $returnVar);
 
