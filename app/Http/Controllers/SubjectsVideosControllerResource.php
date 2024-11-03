@@ -50,7 +50,7 @@ class SubjectsVideosControllerResource extends Controller
                     $s->where('user_id',auth()->id());
                 });
             })
-            ->with(['subject.category.university','image'])
+            ->with(['subject.category.university'])
             ->orderBy('id','DESC');
 
 
