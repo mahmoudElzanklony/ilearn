@@ -67,6 +67,7 @@ class SubjectsVideosControllerResource extends Controller
             ])
             ->thenReturn()
             ->paginate(request('limit') ?? 10);
+        request()->merge(['no_video'=>true]);
         return SubjectsVideosResource::collection($output);
     }
 
