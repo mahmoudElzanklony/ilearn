@@ -42,7 +42,6 @@ class SubjectsControllerResource extends Controller
         $data = subjects::query()
             ->with('user')
             ->when(auth()->user()->type == 'doctor',fn($e) => $e->where('user_id','=',auth()->id()))
-            ->with(['image','category'])
             ->with(['image','category.university'])
             ->orderBy('id','DESC');
 
@@ -58,6 +57,7 @@ class SubjectsControllerResource extends Controller
             ])
             ->thenReturn()
             ->paginate(request('limit') ?? 10);
+
         return SubjectsResource::collection($output);
     }
 
