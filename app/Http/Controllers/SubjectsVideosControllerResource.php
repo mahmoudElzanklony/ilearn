@@ -20,12 +20,14 @@ use App\Http\Resources\SubjectsVideosResource;
 use App\Jobs\GenerateExpiringWasabiUrls;
 use App\Models\categories;
 use App\Models\categories_properties;
+use App\Models\images;
 use App\Models\properties;
 use App\Models\properties_heading;
 use App\Models\subjects;
 use App\Models\subjects_videos;
 use App\Services\FormRequestHandleInputs;
 use App\Services\Messages;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Traits\upload_image;
 use Illuminate\Pipeline\Pipeline;
@@ -213,7 +215,22 @@ class SubjectsVideosControllerResource extends Controller
 
     public function wasbi_generation()
     {
-        GenerateExpiringWasabiUrls::dispatch();
+       // GenerateExpiringWasabiUrls::dispatch();
+        $images = images::query()->get();
+        $videos = subjects_videos::query()->get();
+        var_dump($images);
+        foreach ($images as $image) {
+            // Generate a presigned URL with a 12-hour expiration
+            $expiration = Carbon::now()->addHours(11);
+            $temporaryUrl = Storage::disk('wasabi')
+                ->temporaryUrl($image->name, $expiration);
+
+            // Update the wasbi_url column in the database
+            $image->wasbi_url = $temporaryUrl;
+            $image->save(); // Use save instead of update
+
+
+        }
         return response()->json(['message' => 'Job dispatched to update Wasabi URLs'], 200);
 
     }
