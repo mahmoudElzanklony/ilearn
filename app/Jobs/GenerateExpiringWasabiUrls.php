@@ -29,7 +29,7 @@ class GenerateExpiringWasabiUrls implements ShouldQueue
      */
     public function handle(): void
     {
-
+        dd('start of generation');
         // Assuming your images are stored with Wasabi storage
         $images = images::query()->get();
         $videos = subjects_videos::query()->get();
