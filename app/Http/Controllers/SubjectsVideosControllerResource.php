@@ -109,8 +109,9 @@ class SubjectsVideosControllerResource extends Controller
         ],$data);
 
         if(isset($data['id'])){
-            $data['created_at'] = Carbon::today()->toDateTimeString();
-            $data->save();
+            $record = subjects_videos::find($data['id']);
+            $record->created_at = Carbon::now(); // or specify your own date
+            $record->save();
         }
 
         // check if there is any image related to this category and save it
