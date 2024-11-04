@@ -41,7 +41,8 @@ class GenerateExpiringWasabiUrls implements ShouldQueue
                 ->temporaryUrl($image->name, $expiration);
 
             // Update the wasbi_url column in the database
-            $image->update(['wasbi_url' => $temporaryUrl]);
+            $image->wasbi_url = $temporaryUrl;
+            $image->save(); // Use save instead of update
 
 
         }
@@ -53,7 +54,8 @@ class GenerateExpiringWasabiUrls implements ShouldQueue
                 ->temporaryUrl('videos/'.$video->video, $expiration); // Assuming `path` is the column for the file path
 
             // Update the wasbi_url column in the database
-            $video->update(['wasbi_url' => $temporaryUrl]);
+            $video->wasbi_url = $temporaryUrl;
+            $video->save(); // Use save instead of update
 
 
         }
