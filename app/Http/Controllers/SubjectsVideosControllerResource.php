@@ -189,7 +189,7 @@ class SubjectsVideosControllerResource extends Controller
 
         // Generate a presigned URL (valid for 1 hour)
         $disk = Storage::disk('wasabi');
-        $expiration = now()->addMinutes(60); // Set the expiration time
+        $expiration = now()->addMinutes(700); // Set the expiration time after 12 hour
         $presignedUrl = $disk->temporaryUrl($filePath, $expiration);
 
         // Redirect to the presigned URL

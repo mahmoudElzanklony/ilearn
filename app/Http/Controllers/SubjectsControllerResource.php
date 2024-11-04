@@ -42,7 +42,7 @@ class SubjectsControllerResource extends Controller
         $data = subjects::query()
             ->with('user')
             ->when(auth()->user()->type == 'doctor',fn($e) => $e->where('user_id','=',auth()->id()))
-            ->with(['category.university'])
+            ->with(['image','category.university'])
             ->orderBy('id','DESC');
 
 
