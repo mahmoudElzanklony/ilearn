@@ -38,7 +38,7 @@ class GenerateExpiringWasabiUrls implements ShouldQueue
             // Generate a presigned URL with a 12-hour expiration
             $expiration = Carbon::now()->addHours(11);
             $temporaryUrl = Storage::disk('wasabi')
-                ->temporaryUrl($image->name, $expiration); // Assuming `path` is the column for the file path
+                ->temporaryUrl($image->name, $expiration);
 
             // Update the wasbi_url column in the database
             $image->update(['wasbi_url' => $temporaryUrl]);
