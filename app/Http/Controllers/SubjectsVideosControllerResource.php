@@ -110,7 +110,7 @@ class SubjectsVideosControllerResource extends Controller
 
         if(isset($data['id'])){
             $record = subjects_videos::find($data['id']);
-            $record->created_at = Carbon::now(); // or specify your own date
+            $record->created_at = Carbon::now(); //
             $record->save();
         }
 
