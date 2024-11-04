@@ -218,7 +218,7 @@ class SubjectsVideosControllerResource extends Controller
        // GenerateExpiringWasabiUrls::dispatch();
         $images = images::query()->get();
         $videos = subjects_videos::query()->get();
-        var_dump($images);
+        return $images;
         foreach ($images as $image) {
             // Generate a presigned URL with a 12-hour expiration
             $expiration = Carbon::now()->addHours(11);
