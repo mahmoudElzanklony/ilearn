@@ -187,6 +187,10 @@ class SubjectsVideosControllerResource extends Controller
             return response()->json(['error' => 'File not found'], 404);
         }
 
+        if($this->wasbi_url != ''){
+            return redirect()->away($this->wasbi_url);
+        }
+
         // Generate a presigned URL (valid for 1 hour)
         $disk = Storage::disk('wasabi');
         $expiration = now()->addMinutes(700); // Set the expiration time after 12 hour
