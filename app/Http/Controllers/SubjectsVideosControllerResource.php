@@ -101,7 +101,7 @@ class SubjectsVideosControllerResource extends Controller
         if(array_key_exists('video',$data) && $data['video'] != null){
             $data['video'] =$this->upload_video($data['video']);
         }
-
+        $data['created_at'] = now();
 
 
         $subject = subjects_videos::query()->updateOrCreate([
