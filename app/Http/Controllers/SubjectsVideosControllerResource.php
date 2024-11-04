@@ -215,23 +215,8 @@ class SubjectsVideosControllerResource extends Controller
 
     public function wasbi_generation()
     {
-       // GenerateExpiringWasabiUrls::dispatch();
-        $images = images::query()->get();
-        $videos = subjects_videos::query()->get();
+        GenerateExpiringWasabiUrls::dispatch();
 
-        foreach ($images as $image) {
-            // Generate a presigned URL with a 12-hour expiration
-            $expiration = Carbon::now()->addHours(11);
-            $temporaryUrl = Storage::disk('wasabi')
-                ->temporaryUrl($image->name, $expiration);
-
-            // Update the wasbi_url column in the database
-            $image->wasbi_url = $temporaryUrl;
-
-            $image->save(); // Use save instead of update
-
-
-        }
         return response()->json(['message' => 'Job dispatched to update Wasabi URLs'], 200);
 
     }
