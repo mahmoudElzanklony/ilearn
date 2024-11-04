@@ -224,7 +224,7 @@ class SubjectsVideosControllerResource extends Controller
             $expiration = Carbon::now()->addHours(11);
             $temporaryUrl = Storage::disk('wasabi')
                 ->temporaryUrl($image->name, $expiration);
-
+            dd($temporaryUrl,$image);
             // Update the wasbi_url column in the database
             $image->wasbi_url = $temporaryUrl;
             $image->save(); // Use save instead of update
