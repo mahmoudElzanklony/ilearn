@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\GenerateExpiringWasabiUrls;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -14,7 +15,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         // Schedule the job to run every 12 hours
-        $schedule->job(new \App\Jobs\GenerateExpiringWasabiUrls)->everyMinute();
+        $schedule->job('wasbi:generate')->everyMinute();
     }
 
     /**
