@@ -39,7 +39,7 @@ class GenerateExpiringWasabiUrls implements ShouldQueue
             $expiration = Carbon::now()->addHours(11);
             $temporaryUrl = Storage::disk('wasabi')
                 ->temporaryUrl($image->name, $expiration);
-
+            dd($image);
             // Update the wasbi_url column in the database
             $image->wasbi_url = $temporaryUrl;
             dd($image);
