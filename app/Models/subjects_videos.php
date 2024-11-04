@@ -9,7 +9,7 @@ class subjects_videos extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id','name','subject_id','video'];
+    protected $fillable = ['user_id','name','subject_id','video','wasbi_url'];
 
     public function subject()
     {
