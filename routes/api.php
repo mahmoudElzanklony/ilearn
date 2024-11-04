@@ -76,6 +76,7 @@ Route::group(['middleware'=>'changeLang'],function (){
     Route::group(['prefix'=>'/stream-video'],function (){
         Route::get('/',[SubjectsVideosControllerResource::class,'stream']);
         Route::get('/get-video-size',[SubjectsVideosControllerResource::class,'get_size']);
+        Route::get('/wasbi-generation',[SubjectsVideosControllerResource::class,'wasbi_generation']);
     });
 
 

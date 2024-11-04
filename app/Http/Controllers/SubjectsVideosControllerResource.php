@@ -17,6 +17,7 @@ use App\Http\Resources\CategoryResource;
 use App\Http\Resources\PropertyHeadingResource;
 use App\Http\Resources\SubjectsResource;
 use App\Http\Resources\SubjectsVideosResource;
+use App\Jobs\GenerateExpiringWasabiUrls;
 use App\Models\categories;
 use App\Models\categories_properties;
 use App\Models\properties;
@@ -208,5 +209,12 @@ class SubjectsVideosControllerResource extends Controller
             }
             fpassthru($stream);
         }, 200, $headers);*/
+    }
+
+    public function wasbi_generation()
+    {
+        GenerateExpiringWasabiUrls::dispatch();
+        return response()->json(['message' => 'Job dispatched to update Wasabi URLs'], 200);
+
     }
 }
