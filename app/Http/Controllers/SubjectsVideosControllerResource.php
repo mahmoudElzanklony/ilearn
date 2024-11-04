@@ -215,7 +215,8 @@ class SubjectsVideosControllerResource extends Controller
 
     public function wasbi_generation()
     {
-        GenerateExpiringWasabiUrls::dispatch();
+        $obj = new GenerateExpiringWasabiUrls();
+        $obj->handle();
 
         return response()->json(['message' => 'Job dispatched to update Wasabi URLs'], 200);
 
