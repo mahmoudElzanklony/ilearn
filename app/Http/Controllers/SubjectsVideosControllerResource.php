@@ -44,6 +44,7 @@ class SubjectsVideosControllerResource extends Controller
     public function __construct()
     {
         //$this->middleware('auth:sanctum');
+        $this->middleware('throttle:500,1');
     }
     public function index()
     {
