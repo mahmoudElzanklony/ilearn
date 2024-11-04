@@ -50,12 +50,16 @@ class GenerateExpiringWasabiUrls implements ShouldQueue
         foreach ($videos as $video) {
             // Generate a presigned URL with a 12-hour expiration
             $expiration = Carbon::now()->addHours(11);
-            $temporaryUrl = Storage::disk('wasabi')
-                ->temporaryUrl('videos/'.$video->video, $expiration); // Assuming `path` is the column for the file path
+            $filePath = 'videos/' . $video->video;
+            if (Storage::disk('wasabi')->exists($filePath)) {
+                $temporaryUrl = Storage::disk('wasabi')
+                    ->temporaryUrl($filePath, $expiration); // Assuming `path` is the column for the file path
 
-            // Update the wasbi_url column in the database
-            $video->wasbi_url = $temporaryUrl;
-            $video->save(); // Use save instead of update
+                // Update the wasbi_url column in the database
+                $video->wasbi_url = $temporaryUrl;
+                $video->save(); // Use save instead of update
+            }
+
 
 
         }
