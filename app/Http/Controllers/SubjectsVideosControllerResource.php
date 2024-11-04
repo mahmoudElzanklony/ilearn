@@ -101,12 +101,17 @@ class SubjectsVideosControllerResource extends Controller
         if(array_key_exists('video',$data) && $data['video'] != null){
             $data['video'] =$this->upload_video($data['video']);
         }
-        $data['created_at'] = Carbon::today()->toDateTimeString();
+
 
 
         $subject = subjects_videos::query()->updateOrCreate([
             'id'=>$data['id'] ?? null
         ],$data);
+
+        if(isset($data['id'])){
+            $data['created_at'] = Carbon::today()->toDateTimeString();
+            $data->save();
+        }
 
         // check if there is any image related to this category and save it
         if(!(array_key_exists('id',$data)) || (array_key_exists('id',$data) && $image != null)){
