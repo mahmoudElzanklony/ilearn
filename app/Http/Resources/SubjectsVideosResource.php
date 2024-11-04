@@ -27,7 +27,7 @@ class SubjectsVideosResource extends JsonResource
           'image'=>ImageResource::make($this->whenLoaded('image')),
 
           //'video'=>env('cloud_storage').(env('WAS_STATUS') == 1 ? '/':'/videos/').$this->video,
-         // 'video'=>StreamImages::stream('videos/'.$this->video),
+          'video'=>$this->wasbi_url,
 
           'video_file_name'=>$this->video,
           'extension'=>pathinfo($this->video, PATHINFO_EXTENSION),
