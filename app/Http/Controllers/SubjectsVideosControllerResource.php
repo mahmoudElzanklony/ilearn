@@ -43,16 +43,16 @@ class SubjectsVideosControllerResource extends Controller
      */
     public function __construct()
     {
-        //$this->middleware('auth:sanctum');
+        $this->middleware('auth:sanctum');
     }
     public function index()
     {
         $data = subjects_videos::query()
-            /*->when(auth()->user()->type == 'doctor',function ($query){
+            ->when(auth()->user()->type == 'doctor',function ($query){
                 $query->whereHas('subject',function($s){
                     $s->where('user_id',auth()->id());
                 });
-            })*/
+            })
             ->with(['subject.category.university'])
             ->orderBy('id','DESC');
 
