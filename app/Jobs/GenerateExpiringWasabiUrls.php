@@ -41,7 +41,7 @@ class GenerateExpiringWasabiUrls implements ShouldQueue
 
             // Update the wasbi_url column in the database
             $image->wasbi_url = $temporaryUrl;
-            dd($image);
+
             $image->save(); // Use save instead of update
 
 
