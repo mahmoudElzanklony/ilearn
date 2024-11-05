@@ -1,0 +1,12 @@
+1 - open blutooth
+
+2 - make pdf inside app
+
+3 - screen video from mobile video stop enabled at easy 
+
+4 - print then print all data not 10 rows
+
+5 - filter at subscriptions using username or phone
+
+6 -  filter at subscriptions by doctor and year show subjects 
+not pretend to this doctor
