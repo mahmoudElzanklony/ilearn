@@ -12,6 +12,7 @@ use App\Filters\orders\StatusOrderFilter;
 use App\Filters\StartDateFilter;
 use App\Filters\SubjectIdFilter;
 use App\Filters\SubscriptionDoctorFilter;
+use App\Filters\subscriptions\UserNameFilter;
 use App\Filters\UserIdFilter;
 use App\Http\Requests\categoriesFormRequest;
 use App\Http\Requests\subjectsFormRequest;
@@ -64,7 +65,7 @@ class SubscriptionsControllerResource extends Controller
                 UserIdFilter::class,
                 SubjectIdFilter::class,
                 SubscriptionDoctorFilter::class,
-                NameFilter::class,
+                UserNameFilter::class,
             ])
             ->thenReturn();
 
