@@ -54,7 +54,7 @@ class SubscriptionsControllerResource extends Controller
                     $q->where('user_id', '=', auth()->id());
                 });
             });
-
+        dd(request('name'));
         // Apply filters through the pipeline
         $data = app(Pipeline::class)
             ->send($data)
