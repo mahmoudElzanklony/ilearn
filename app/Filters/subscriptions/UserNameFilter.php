@@ -7,9 +7,9 @@ use Closure;
 class UserNameFilter
 {
     public function handle($request, Closure $next){
-        if(request()->has('name')){
+        if(request()->filled('name')){
             return $next($request)->whereHas('user',function($e){
-                $e->where('username','LIKE','%'.request('name').'%');
+                $e->where('usernamesx','LIKE','%'.request('name').'%');
             });
 
         }
