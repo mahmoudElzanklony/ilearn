@@ -9,7 +9,7 @@ class UserNameFilter
     public function handle($request, Closure $next){
         if(request()->filled('name')){
             return $next($request)->whereHas('user',function($e){
-                $e->where('users.username','LIKE','%'.request('name').'%');
+                $e->where('username','LIKE','%'.request('name').'%');
             });
 
         }
