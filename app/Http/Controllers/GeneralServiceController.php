@@ -20,21 +20,12 @@ class GeneralServiceController extends Controller
         $id = request('id');
         try{
 
-            $model =  '\\App\\Models\\'.$table;
-            $model = new $model();
-            if($table == 'universities' || $table == 'subjects' || $table == 'categories'){
-                $obj = new ('App\\Http\\ConcreateInterfaces\\'.$table.'Concrete')();
-                $err = $obj->check_delete($id);
-                if($err > 0){
-                    return Messages::error('لا تستطيع المسح حيث انه مرتبط بعناصر اخري');
-                }
-            }
-
-            $model->whereIn('id',$id)->delete();
+            DB::table($table)->delete($id);
             return Messages::success([trans('messages.deleted_successfully')]);
         }catch (\Exception $e){
-            return Messages::error($e->getMessage());
-           // DB::table($table)->delete($id);
+
+
+            return Messages::success($e->getMessage());
         }
 
     }
