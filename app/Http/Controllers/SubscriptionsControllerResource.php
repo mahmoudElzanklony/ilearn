@@ -65,6 +65,7 @@ class SubscriptionsControllerResource extends Controller
                 UserIdFilter::class,
                 SubjectIdFilter::class,
                 SubscriptionDoctorFilter::class,
+                UserNameFilter::class,
 
             ])
             ->thenReturn();
