@@ -161,10 +161,8 @@ class SubscriptionsControllerResource extends Controller
             subscriptions::query()->insert($output_saved);
             // delete old user that has same phone
             $user_check = User::query()->find($data['user_id']);
-            $user_old_deleted = User::onlyTrashed()->where('phone','=',$user_check->phone)->get();
-            foreach ($user_old_deleted as $u){
-                $u->forceDelete();
-            }
+            $user_old_deleted = User::onlyTrashed()->where('phone','=',$user_check->phone)->forceDelete();
+
 
 
         }else {
