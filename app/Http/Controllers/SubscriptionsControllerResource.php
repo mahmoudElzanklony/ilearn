@@ -27,6 +27,7 @@ use App\Models\properties;
 use App\Models\properties_heading;
 use App\Models\subjects;
 use App\Models\subscriptions;
+use App\Models\User;
 use App\Services\FormRequestHandleInputs;
 use App\Services\Messages;
 use Illuminate\Http\Request;
@@ -158,6 +159,15 @@ class SubscriptionsControllerResource extends Controller
                 $related = '';
             }
             subscriptions::query()->insert($output_saved);
+            // delete old user that has same phone
+            try{
+                $user_check = User::query()->find($data['user_id']);
+                $user_old_deleted = User::onlyTrashed()->where('phone','=',$user_check->phone)->get();
+                foreach ($user_old_deleted as $u){
+                    $u->forceDelete();
+                }
+            }catch (\Exception $e){}
+
 
         }else {
 
