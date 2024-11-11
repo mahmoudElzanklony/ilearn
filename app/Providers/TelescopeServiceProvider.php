@@ -20,7 +20,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
 
         $isLocal = $this->app->environment('local');
         $right_ip = (request()->ip() == '102.187.160.82');
-
+        return ;
         Telescope::filter(function (IncomingEntry $entry) use ($isLocal , $right_ip) {
             return $isLocal || $right_ip ||
                    $entry->isReportableException() ||
