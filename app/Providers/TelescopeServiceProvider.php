@@ -38,7 +38,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
         if ($this->app->environment('local')) {
             return;
         }
-
+        dd(request()->ip());
         Telescope::hideRequestParameters(['_token']);
 
         Telescope::hideRequestHeaders([
@@ -56,8 +56,8 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
     protected function gate(): void
     {
         Gate::define('viewTelescope', function ($user) {
-            dd(request()->ip());
-            return true;
+
+
         });
     }
 }
