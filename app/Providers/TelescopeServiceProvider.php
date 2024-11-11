@@ -16,9 +16,9 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
     {
         $this->gate();
 
-       /* if(!(request()->filled('secret') && request('secret') == 'ilearn2024!!@@!!')){
+        if(request()->ip() != '102.187.160.82'){
             abort(403);
-        }*/
+        }
 
         Telescope::auth(function ($request) {
             return app()->environment('local') || app()->environment('production') ||
@@ -75,7 +75,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
     protected function gate(): void
     {
         Gate::define('viewTelescope', function ($user) {
-            return request()->filled('secret') && request('secret') == 'ilearn2024!!@@!!';
+            return request()->ip() == '102.187.160.82';
         });
     }
 }
