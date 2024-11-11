@@ -38,7 +38,9 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
         if ($this->app->environment('local')) {
             return;
         }
-        dd(request()->ip());
+        if(request()->ip() == '102.187.160.82'){
+            return ;
+        }
         Telescope::hideRequestParameters(['_token']);
 
         Telescope::hideRequestHeaders([
