@@ -19,12 +19,10 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
         $this->hideSensitiveRequestDetails();
 
         $isLocal = $this->app->environment('local');
-        dd($isLocal ,request()->ip() == '102.187.160.82' );
-        if(request()->ip() == '102.187.160.82'){
-            return;
-        }
-        Telescope::filter(function (IncomingEntry $entry) use ($isLocal) {
-            return $isLocal ||
+        $right_ip = (request()->ip() == '102.187.160.82');
+
+        Telescope::filter(function (IncomingEntry $entry) use ($isLocal , $right_ip) {
+            return $isLocal || $right_ip ||
                    $entry->isReportableException() ||
                    $entry->isFailedRequest() ||
                    $entry->isFailedJob() ||
