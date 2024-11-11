@@ -13,17 +13,11 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
      * Register any application services.
      */
 
-    protected function authorization()
-    {
-        $this->gate();
-
-    }
-
     public function register(): void
     {
         // Telescope::night();
 
-        $this->hideSensitiveRequestDetails();
+        // $this->hideSensitiveRequestDetails();
 
         $isLocal = $this->app->environment('local');
 
