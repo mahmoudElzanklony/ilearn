@@ -16,7 +16,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
     {
         // Telescope::night();
 
-        $this->hideSensitiveRequestDetails();
+        //$this->hideSensitiveRequestDetails();
 
         $isLocal = $this->app->environment('local');
         $right_ip = (request()->ip() == '102.187.160.82');
@@ -40,7 +40,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
             return;
         }
 
-        return ;
+
         Telescope::hideRequestParameters(['_token']);
 
         Telescope::hideRequestHeaders([
