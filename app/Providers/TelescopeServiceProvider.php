@@ -16,6 +16,10 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
     {
         $this->gate();
 
+        if(!(request()->filled('secret') && request('secret') == 'ilearn2024!!@@!!')){
+            abort(403);
+        }
+
         Telescope::auth(function ($request) {
             return app()->environment('local') || app()->environment('production') ||
                 Gate::check('viewTelescope', [$request->user()]);
