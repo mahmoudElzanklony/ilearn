@@ -40,7 +40,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
             return;
         }
 
-
+        return ;
         Telescope::hideRequestParameters(['_token']);
 
         Telescope::hideRequestHeaders([
