@@ -16,14 +16,14 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
     {
         $this->gate();
 
-        if(request()->ip() != '102.187.160.82'){
+        /*if(request()->ip() != '102.187.160.82'){
             //abort(403);
         }
 
         Telescope::auth(function ($request) {
             return app()->environment('local') || app()->environment('production') ||
                 Gate::check('viewTelescope', [$request->user()]);
-        });
+        });*/
     }
 
     public function register(): void
