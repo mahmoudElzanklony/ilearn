@@ -22,12 +22,12 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
         $right_ip = (request()->ip() == '102.187.160.82');
 
         Telescope::filter(function (IncomingEntry $entry) use ($isLocal , $right_ip) {
-            return $isLocal || $right_ip ||
-                   $entry->isReportableException() ||
+            return $isLocal || $right_ip
+                   /*$entry->isReportableException() ||
                    $entry->isFailedRequest() ||
                    $entry->isFailedJob() ||
                    $entry->isScheduledTask() ||
-                   $entry->hasMonitoredTag();
+                   $entry->hasMonitoredTag();*/
         });
     }
 
