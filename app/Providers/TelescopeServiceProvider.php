@@ -56,14 +56,8 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
     protected function gate(): void
     {
         Gate::define('viewTelescope', function ($user) {
+            dd(request()->ip());
             return true;
-            $requestIp = request()->ip();
-            $forwardedIp = request()->header('X-Forwarded-For');
-
-            return in_array('102.187.160.82', [$requestIp, $forwardedIp]);
-            /*return in_array($user->phone, [
-                '+201005663932'
-            ]);*/
         });
     }
 }
