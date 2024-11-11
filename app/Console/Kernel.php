@@ -16,6 +16,9 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         // Schedule the job to run every 12 hours
         $schedule->command('wasbi:generate')->everySixHours();
+        $schedule->command('telescope:prune --hours=48')->daily();
+
+
     }
 
     /**
