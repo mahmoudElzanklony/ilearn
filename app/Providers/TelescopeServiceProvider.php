@@ -12,6 +12,15 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
     /**
      * Register any application services.
      */
+    protected function authorization()
+    {
+        $this->gate();
+
+        Telescope::auth(function ($request) {
+            return app()->environment('local') || app()->environment('production') ||
+                Gate::check('viewTelescope', [$request->user()]);
+        });
+    }
 
     public function register(): void
     {
@@ -61,9 +70,8 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
      */
     protected function gate(): void
     {
-        Gate::define('viewTelescope', function () {
-            return true;
-            //return request()->ip() == '102.187.160.82';
+        Gate::define('viewTelescope', function ($user) {
+            return request()->ip() == '102.187.160.82';
         });
     }
 }
