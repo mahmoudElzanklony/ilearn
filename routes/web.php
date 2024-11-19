@@ -2,9 +2,8 @@
 
 use App\Http\Controllers\Employees\CreateController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Employees\IndexController;
-
+use App\Http\Controllers\WebLoginController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,6 +19,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
+Route::get('/login-by-phone',WebLoginController::class);
 
 Route::group(['prefix'=>'/employees'],function (){
    Route::get('/', IndexController::class);
