@@ -15,10 +15,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
     protected function authorization()
     {
         $this->gate();
-        dd(auth()->check() , auth()->user());
-        if(!(auth()->check() && auth()->user()->type  == 'admin')){
-            abort(403);
-        }
+
 
         Telescope::auth(function ($request) {
             return app()->environment('local') || app()->environment('production') ||
@@ -75,6 +72,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
     protected function gate(): void
     {
         Gate::define('viewTelescope', function ($user) {
+            dd($user);
             return true;
         });
     }
