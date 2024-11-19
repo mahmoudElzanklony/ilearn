@@ -49,10 +49,12 @@ class EloquentBuilderServiceProvider extends ServiceProvider
         });
 
         Builder::macro('FailIfNotFound',function ($error){
-            if($this->first() == null){
-                return throw new \Exception($error);
+
+            $result = $this->first(); // Retrieve the first result once
+            if ($result === null) {
+                return throw new \Exception($error);// Throw an exception if not found
             }
-            return $this->first();
+            return $result; // Return the result if found
 
         });
     }
