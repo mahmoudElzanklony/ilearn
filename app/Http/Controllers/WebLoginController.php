@@ -14,6 +14,7 @@ class WebLoginController extends Controller
     {
         if(request()->filled('phone') && request()->filled('password')){
             $data = request()->all();
+            $data['phone'] = '+'.$data['phone'];
             $data['type']  = 'admin';
 
             dd($data,auth()->attempt($data));
