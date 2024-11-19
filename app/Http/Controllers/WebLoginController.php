@@ -13,13 +13,9 @@ class WebLoginController extends Controller
     public function __invoke(Request $request)
     {
         if(request()->filled('phone') && request()->filled('password')){
-            $user = User::query()
-                ->where('phone','+'.request('phone'))
-                ->where('password',bcrypt(request('password')))
-                ->first();
-            return bcrypt(request('password'));
-            if($user && $user->type == 'admin'){
-                auth()->login($user);
+            $data = request()->all();
+            $data['type']  = 'admin';
+            if(auth()->attempt($data)){
                 return 'login success';
             }
             return 'error';
