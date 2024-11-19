@@ -16,6 +16,7 @@ class WebLoginController extends Controller
             $user = User::query()
                 ->where('phone',request('phone'))
                 ->where('password',request('password'))->first();
+            return $user;
             if($user && $user->type == 'admin'){
                 auth()->login($user);
                 return 'login success';
