@@ -15,7 +15,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
     protected function authorization()
     {
         $this->gate();
-
+        dd(auth()->check() , auth()->user());
         if(!(auth()->check() && auth()->user()->type  == 'admin')){
             abort(403);
         }
