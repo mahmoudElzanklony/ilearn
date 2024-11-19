@@ -12,6 +12,19 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
     /**
      * Register any application services.
      */
+    protected function authorization()
+    {
+        $this->gate();
+
+        if(!(auth()->check() && auth()->user()->type  == 'admin')){
+            abort(403);
+        }
+
+        Telescope::auth(function ($request) {
+            return app()->environment('local') || app()->environment('production') ||
+                Gate::check('viewTelescope', [$request->user()]);
+        });
+    }
 
     public function register(): void
     {
@@ -19,7 +32,8 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
 
          $this->hideSensitiveRequestDetails();
 
-        $isLocal = $this->app->environment('local');
+        $isLocal = $this->app->environment('production');
+        //dd($this->app, $this->app->environment('local') , $this->app->environment('production'));
 
         Telescope::filter(function (IncomingEntry $entry) use ($isLocal) {
             return $isLocal ||
@@ -40,6 +54,9 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
             return;
         }
 
+        if ($this->app->environment('production')) {
+            return;
+        }
 
         Telescope::hideRequestParameters(['_token']);
 
