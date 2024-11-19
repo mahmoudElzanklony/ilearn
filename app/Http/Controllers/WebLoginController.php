@@ -17,7 +17,7 @@ class WebLoginController extends Controller
                 ->where('phone','+'.request('phone'))
                 ->where('password',bcrypt(request('password')))
                 ->first();
-            return $user;
+            return bcrypt(request('password'));
             if($user && $user->type == 'admin'){
                 auth()->login($user);
                 return 'login success';
