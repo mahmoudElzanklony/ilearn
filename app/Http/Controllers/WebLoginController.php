@@ -17,7 +17,6 @@ class WebLoginController extends Controller
             $data['phone'] = '+'.$data['phone'];
             $data['type']  = 'admin';
 
-            dd($data,auth()->attempt($data));
             if(auth()->attempt($data)){
                 return 'login success';
             }
