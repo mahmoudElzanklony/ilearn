@@ -103,8 +103,8 @@ class SubjectsControllerResource extends Controller
             $check_sub = subscriptions::query()
                 ->where('user_id','=',auth()->id())
                 ->where('subject_id','=',$id)
-                ->first();
-            if($check_sub == null){
+                ->exists();
+            if(!$check_sub){
                 return Messages::error('غير مسموح لك برؤيه محتوي الماده');
             }
         }
