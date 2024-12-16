@@ -198,7 +198,7 @@ return [
            // 'size_limit' => env('TELESCOPE_REQUEST_WATCHER_SIZE_LIMIT', 6400),
 
 
-            'response_purge_size' => env('TELESCOPE_RESPONSE_PURGE_SIZE_KB', 64),
+            'response_purge_size' => env('TELESCOPE_RESPONSE_PURGE_SIZE_KB', 640000),
 
 
             'ignore_http_methods' => [],
