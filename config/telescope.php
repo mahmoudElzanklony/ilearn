@@ -193,7 +193,7 @@ return [
         ],
 
         Watchers\RedisWatcher::class => env('TELESCOPE_REDIS_WATCHER', true),
-        Watchers\RequestWatcher::class => [
+        \App\Actions\FastRequestWatcher::class => [
             'enabled' => env('TELESCOPE_REQUEST_WATCHER', true),
             'size_limit' => null,
         ],
