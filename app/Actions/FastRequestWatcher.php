@@ -2,7 +2,10 @@
 
 namespace App\Actions;
 
+use Illuminate\Http\Response as IlluminateResponse;
+use Illuminate\View\View;
 use Laravel\Telescope\Watchers\RequestWatcher;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class FastRequestWatcher  extends RequestWatcher
@@ -16,16 +19,20 @@ class FastRequestWatcher  extends RequestWatcher
     protected function response(Response $response)
     {
 
-        $content = $response->getContent();
-
-        if (is_string($content) &&
-            is_array(json_decode($content, true)) &&
-            json_last_error() === JSON_ERROR_NONE) {
-            return $this->contentWithinLimits($content)
-                ? json_decode($response->getContent(), true) : 'Purged by Telescope';
+        if ($response instanceof RedirectResponse) {
+            return 'Redirected to '.$response->getTargetUrl();
         }
 
-        return "HTML Response";
+        if ($response instanceof IlluminateResponse && $response->getOriginalContent() instanceof View) {
+            return [
+                'view' => $response->getOriginalContent()->getPath(),
+                'data' => $this->extractDataFromView($response->getOriginalContent()),
+            ];
+        }
+
+
+
+        return 'HTML Response';
 
     }
 }
