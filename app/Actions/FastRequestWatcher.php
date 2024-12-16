@@ -69,20 +69,7 @@ class FastRequestWatcher  extends RequestWatcher
     protected function response(Response $response)
     {
 
-        if ($response instanceof RedirectResponse) {
-            return 'Redirected to '.$response->getTargetUrl();
-        }
-
-        if ($response instanceof IlluminateResponse && $response->getOriginalContent() instanceof View) {
-            return [
-                'view' => $response->getOriginalContent()->getPath(),
-                'data' => $this->extractDataFromView($response->getOriginalContent()),
-            ];
-        }
-
-
-
-        return 'HTML Response';
+        return $response;
 
     }
 
