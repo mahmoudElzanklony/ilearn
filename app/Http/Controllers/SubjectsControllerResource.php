@@ -20,6 +20,7 @@ use App\Models\properties;
 use App\Models\properties_heading;
 use App\Models\subjects;
 use App\Models\subscriptions;
+use App\Services\CacheSubjectVideosService;
 use App\Services\FormRequestHandleInputs;
 use App\Services\Messages;
 use Illuminate\Http\Request;
@@ -97,8 +98,10 @@ class SubjectsControllerResource extends Controller
     public function show(string $id)
     {
         //
-        $data  = subjects::query()->with('videos')
-            ->where('id', $id)->FailIfNotFound(__('errors.not_found_data'));
+        /*$data  = subjects::query()->with('videos')
+            ->where('id', $id)->FailIfNotFound(__('errors.not_found_data'));*/
+        $data = CacheSubjectVideosService::get_cached($id);
+
         if(auth()->user()->type == 'client'){
             $check_sub = subscriptions::query()
                 ->where('user_id','=',auth()->id())
@@ -108,6 +111,7 @@ class SubjectsControllerResource extends Controller
                 return Messages::error('غير مسموح لك برؤيه محتوي الماده');
             }
         }
+
         return SubjectsResource::make($data);
     }
 

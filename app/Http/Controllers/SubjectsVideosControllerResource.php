@@ -25,6 +25,7 @@ use App\Models\properties;
 use App\Models\properties_heading;
 use App\Models\subjects;
 use App\Models\subjects_videos;
+use App\Services\CacheSubjectVideosService;
 use App\Services\FormRequestHandleInputs;
 use App\Services\Messages;
 use Carbon\Carbon;
@@ -102,7 +103,11 @@ class SubjectsVideosControllerResource extends Controller
             $data['video'] =$this->upload_video($data['video']);
         }
 
-
+        if(env('WAS_STATUS') == 1) {
+            $data['wasbi_url'] = Storage::disk('wasabi')->temporaryUrl(
+                'videos/' . $data['video'], now()->addMinutes(600) // URL expires in 3 hours
+            );
+        }
 
         $subject = subjects_videos::query()->updateOrCreate([
             'id'=>$data['id'] ?? null
@@ -123,6 +128,9 @@ class SubjectsVideosControllerResource extends Controller
         // Load the category with the associated image
         $subject->load('subject.category.university');
         $subject->load('image');
+
+        // cache subject info videos
+        CacheSubjectVideosService::set_cached($subject->subject_id);
 
         DB::commit();
         // return response
@@ -191,7 +199,7 @@ class SubjectsVideosControllerResource extends Controller
         }
 
         $filePath = 'videos/' . $video->video;
-        
+
         if (!Storage::disk('wasabi')->exists($filePath)) {
             return response()->json(['error' => 'File not found'], 404);
         }

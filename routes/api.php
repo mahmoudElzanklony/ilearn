@@ -18,6 +18,7 @@ use App\Http\Controllers\VideoViewController;
 use App\Http\Controllers\BillsControllerResource;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\UniversitiesControllerResource;
+use App\Http\Controllers\CacheSubjectVideosController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -78,6 +79,10 @@ Route::group(['middleware'=>'changeLang'],function (){
         Route::get('/get-video-size',[SubjectsVideosControllerResource::class,'get_size']);
         Route::get('/wasbi-generation',[SubjectsVideosControllerResource::class,'wasbi_generation']);
     });
+
+
+    Route::get('/cache-videos',CacheSubjectVideosController::class);
+
 
 
     // Define the remaining resource routes with middleware

@@ -36,7 +36,11 @@ class SubjectsVideosResource extends JsonResource
            'created_at'=>$this->created_at->format('Y-m-d'),
           'updated_at'=>$this->created_at
         ];
-        if(!(request()->has('no_video'))){
+       /* if(!(request()->has('no_video'))){
+            $arr['video'] = StreamImages::stream('videos/'.$this->video);
+        }*/
+        if($arr['video'] == null){
+
             $arr['video'] = StreamImages::stream('videos/'.$this->video);
         }
         return $arr;
