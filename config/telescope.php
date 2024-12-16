@@ -191,19 +191,10 @@ return [
         ],
 
         Watchers\RedisWatcher::class => env('TELESCOPE_REDIS_WATCHER', true),
-        \App\Actions\FastRequestWatcher::class => true,
-        /*\App\Actions\FastRequestWatcher::class => [
+        Watchers\RequestWatcher::class => [
             'enabled' => env('TELESCOPE_REQUEST_WATCHER', true),
-            'size_limit' => env('TELESCOPE_RESPONSE_SIZE_LIMIT', 6400000),
-           // 'size_limit' => env('TELESCOPE_REQUEST_WATCHER_SIZE_LIMIT', 6400),
-
-
-            'response_purge_size' => env('TELESCOPE_RESPONSE_PURGE_SIZE_KB', 640000),
-
-
-            'ignore_http_methods' => [],
-            'ignore_status_codes' => [],
-        ],*/
+            'size_limit' => env('TELESCOPE_REQUEST_SIZE_LIMIT', 1024 * 1024),
+        ],
 
         Watchers\ScheduleWatcher::class => env('TELESCOPE_SCHEDULE_WATCHER', true),
         Watchers\ViewWatcher::class => env('TELESCOPE_VIEW_WATCHER', true),
