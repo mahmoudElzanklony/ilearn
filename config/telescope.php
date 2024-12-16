@@ -80,6 +80,8 @@ return [
         'queue' => env('TELESCOPE_QUEUE', null),
     ],
 
+    'entry_payload_max_bytes' => env('TELESCOPE_ENTRY_PAYLOAD_MAX_BYTES', 5 * 1024 * 1024), // 5 MB
+
     /*
     |--------------------------------------------------------------------------
     | Telescope Route Middleware
@@ -193,7 +195,7 @@ return [
         Watchers\RedisWatcher::class => env('TELESCOPE_REDIS_WATCHER', true),
         Watchers\RequestWatcher::class => [
             'enabled' => env('TELESCOPE_REQUEST_WATCHER', true),
-            'size_limit' => env('TELESCOPE_REQUEST_SIZE_LIMIT', 1024 * 1024),
+            'size_limit' => null,
         ],
 
         Watchers\ScheduleWatcher::class => env('TELESCOPE_SCHEDULE_WATCHER', true),
