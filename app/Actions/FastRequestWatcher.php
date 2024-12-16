@@ -43,7 +43,6 @@ class FastRequestWatcher  extends RequestWatcher
     {
 
         $startTime = defined('LARAVEL_START') ? LARAVEL_START : $event->request->server('REQUEST_TIME_FLOAT');
-        Log::info('URL IS ==> '.(str_replace($event->request->root(), '', $event->request->fullUrl()) ?: '/'));
         Telescope::recordRequest(IncomingEntry::make([
             'ip_address' => $event->request->ip(),
             'uri' => str_replace($event->request->root(), '', $event->request->fullUrl()) ?: '/',
