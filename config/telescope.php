@@ -194,7 +194,13 @@ return [
 
         Watchers\RequestWatcher::class => [
             'enabled' => env('TELESCOPE_REQUEST_WATCHER', true),
-            'size_limit' => env('TELESCOPE_RESPONSE_SIZE_LIMIT', 640000000000),
+            'size_limit' => env('TELESCOPE_RESPONSE_SIZE_LIMIT', 6400000),
+           // 'size_limit' => env('TELESCOPE_REQUEST_WATCHER_SIZE_LIMIT', 6400),
+
+
+            'response_purge_size' => env('TELESCOPE_RESPONSE_PURGE_SIZE_KB', 64),
+
+
             'ignore_http_methods' => [],
             'ignore_status_codes' => [],
         ],
