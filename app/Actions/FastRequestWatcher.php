@@ -16,7 +16,7 @@ class FastRequestWatcher  extends RequestWatcher
     protected function response(Response $response)
     {
 
-        parent::response($response);
+        return $response;
 
     }
 }
