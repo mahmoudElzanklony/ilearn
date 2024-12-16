@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Laravel\Telescope\IncomingEntry;
 use Laravel\Telescope\Telescope;
 use Laravel\Telescope\TelescopeApplicationServiceProvider;
@@ -33,6 +34,13 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
         //dd($this->app, $this->app->environment('local') , $this->app->environment('production'));
 
         Telescope::filter(function (IncomingEntry $entry) use ($isLocal) {
+            if ($entry->type === 'request') {
+                Log::info('Telescope captured request:', [
+                    'url' => $entry->content['uri'] ?? 'Unknown URL',
+                    'size' => strlen(json_encode($entry->content)),
+                ]);
+            }
+
             return $isLocal ||
                    $entry->isReportableException() ||
                    $entry->isFailedRequest() ||
