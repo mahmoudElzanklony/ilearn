@@ -16,7 +16,16 @@ class FastRequestWatcher  extends RequestWatcher
     protected function response(Response $response)
     {
 
-        return $response;
+        $content = $response->getContent();
+
+        if (is_string($content) &&
+            is_array(json_decode($content, true)) &&
+            json_last_error() === JSON_ERROR_NONE) {
+            return $this->contentWithinLimits($content)
+                ? json_decode($response->getContent(), true) : 'Purged by Telescope';
+        }
+
+        return "HTML Response";
 
     }
 }
