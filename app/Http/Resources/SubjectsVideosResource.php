@@ -32,7 +32,7 @@ class SubjectsVideosResource extends JsonResource
           'video_file_name'=>$this->video,
           'extension'=>pathinfo($this->video, PATHINFO_EXTENSION),
           'name'=>$this->name,
-          'render'=>'stream',
+          'render'=>'url', // or stream
            'created_at'=>$this->created_at->format('Y-m-d'),
           'updated_at'=>$this->created_at
         ];

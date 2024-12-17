@@ -23,6 +23,7 @@ class CacheSubjectVideosService
     public static function set_cached($subject_id)
     {
         $data = self::get_data($subject_id);
-        return Cache::put('subject-'.$subject_id,$data,now()->addDays(10));
+        return Cache::put('subject-'.$subject_id,$data,now()->addMinutes(60));
     }
+
 }

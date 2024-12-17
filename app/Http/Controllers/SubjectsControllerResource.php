@@ -98,9 +98,9 @@ class SubjectsControllerResource extends Controller
     public function show(string $id)
     {
         //
-        /*$data  = subjects::query()->with('videos')
-            ->where('id', $id)->FailIfNotFound(__('errors.not_found_data'));*/
-        $data = CacheSubjectVideosService::get_cached($id);
+        $data  = subjects::query()->with('videos')
+            ->where('id', $id)->FailIfNotFound(__('errors.not_found_data'));
+      //  $data = CacheSubjectVideosService::get_cached($id);
 
         if(auth()->user()->type == 'client'){
             $check_sub = subscriptions::query()
