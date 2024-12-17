@@ -33,6 +33,7 @@ use Illuminate\Http\Request;
 use App\Http\Traits\upload_image;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -203,7 +204,7 @@ class SubjectsVideosControllerResource extends Controller
         if (!Storage::disk('wasabi')->exists($filePath)) {
             return response()->json(['error' => 'File not found'], 404);
         }
-
+        Log::info('check before redirect  path ==>'.$filePath);
         if($video->wasbi_url != ''){
             return redirect()->away($video->wasbi_url);
         }
