@@ -131,7 +131,7 @@ class SubjectsVideosControllerResource extends Controller
         $subject->load('image');
 
         // cache subject info videos
-        CacheSubjectVideosService::set_cached($subject->subject_id);
+        //CacheSubjectVideosService::set_cached($subject->subject_id);
 
         DB::commit();
         // return response
