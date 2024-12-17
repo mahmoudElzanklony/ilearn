@@ -149,8 +149,13 @@ class SubjectsVideosControllerResource extends Controller
     public function show(string $id)
     {
         //
-        $data  = subjects_videos::query()->where('id', $id)->FailIfNotFound(__('errors.not_found_data'));
-        return SubjectsVideosResource::make($data);
+        $data  = subjects_videos::query()
+            ->where('id', $id)
+            ->FailIfNotFound(__('errors.not_found_data'));
+        return response()->json([
+            'data'=>SubjectsVideosResource::make($data),
+            'video_size'=>$this->get_size_video($data)
+        ]);
     }
 
     public function get_size()
@@ -160,17 +165,25 @@ class SubjectsVideosControllerResource extends Controller
         if($video_obj == null){
             return Messages::error('الفديو غير موجود');
         }
+        $output = $this->get_size_video($video_obj);
+
+
+        return Messages::success('',$output);
+    }
+
+    public function get_size_video($video_obj)
+    {
         $filePath = 'videos/' . $video_obj->video;
         // Use the Wasabi disk to get file metadata
         $fileSize = Storage::disk('wasabi')->size($filePath);
 
         // Convert size to megabytes for easier readability (optional)
         $fileSizeInMb = round($fileSize / 1024 / 1024, 2);
-
-        return Messages::success('',[
+        return [
             'size_in_bytes' => $fileSize,
             'size_in_mb' => $fileSizeInMb
-        ]);
+        ];
+
     }
 
     /**
