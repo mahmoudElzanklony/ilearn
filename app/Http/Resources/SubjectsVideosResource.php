@@ -39,10 +39,10 @@ class SubjectsVideosResource extends JsonResource
        /* if(!(request()->has('no_video'))){
             $arr['video'] = StreamImages::stream('videos/'.$this->video);
         }*/
-        if($arr['video'] == null){
+        /*if($arr['video'] == null){
 
             $arr['video'] = StreamImages::stream('videos/'.$this->video);
-        }
+        }*/
         return $arr;
     }
 }

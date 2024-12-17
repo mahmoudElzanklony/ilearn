@@ -106,7 +106,7 @@ class SubjectsVideosControllerResource extends Controller
 
         if(env('WAS_STATUS') == 1) {
             $data['wasbi_url'] = Storage::disk('wasabi')->temporaryUrl(
-                'videos/' . $data['video'], now()->addMinutes(600) // URL expires in 3 hours
+                'videos/' . $data['video'], now()->addMinutes(400) // URL expires in 3 hours
             );
         }
 
