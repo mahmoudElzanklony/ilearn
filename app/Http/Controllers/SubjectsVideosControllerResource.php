@@ -208,7 +208,7 @@ class SubjectsVideosControllerResource extends Controller
         if($video->wasbi_url != ''){
             return redirect()->away($video->wasbi_url);
         }
-
+        Log::info('after redirect');
         // Generate a presigned URL (valid for 1 hour)
         $disk = Storage::disk('wasabi');
         $expiration = now()->addMinutes(700); // Set the expiration time after 12 hour
