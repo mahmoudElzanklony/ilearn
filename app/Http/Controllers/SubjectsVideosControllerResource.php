@@ -204,7 +204,7 @@ class SubjectsVideosControllerResource extends Controller
         if (!Storage::disk('wasabi')->exists($filePath)) {
             return response()->json(['error' => 'File not found'], 404);
         }
-        Log::info($video->wasbi_url);
+        Log::info($filePath);
         if($video->wasbi_url != ''){
             return redirect()->away($video->wasbi_url);
         }
