@@ -58,6 +58,7 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'strict' => null,
+            PDO::ATTR_EMULATE_PREPARES=>true,
             //'strict' => true,
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
