@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class GenerateExpiringWasabiUrls implements ShouldQueue
@@ -29,18 +30,18 @@ class GenerateExpiringWasabiUrls implements ShouldQueue
      */
     public function handle(): void
     {
-        $this->processImages();
         $this->processVideos();
+        $this->processImages();
     }
 
     private function processImages(): void
     {
         $page = 1;
-        $perPage = 100;
+        $perPage = 10;
 
         do {
             $images = images::query()->paginate($perPage, ['*'], 'page', $page);
-
+            Log::info('start build new urls');
             foreach ($images as $image) {
                 $expiration = Carbon::now()->addHours(11);
                 $temporaryUrl = Storage::disk('wasabi')
@@ -57,11 +58,11 @@ class GenerateExpiringWasabiUrls implements ShouldQueue
     private function processVideos(): void
     {
         $page = 1;
-        $perPage = 100;
+        $perPage = 10;
 
         do {
             $videos = subjects_videos::query()->paginate($perPage, ['*'], 'page', $page);
-
+            Log::info('start build new urls');
             foreach ($videos as $video) {
                 $expiration = Carbon::now()->addHours(11);
                 $filePath = 'videos/' . $video->video;
