@@ -8,6 +8,7 @@ use App\Filters\NameFilter;
 use App\Filters\StartDateFilter;
 use App\Filters\SubjectIdFilter;
 use App\Filters\subjects_videos\UniversityFilter;
+use App\Filters\TypeFilter;
 use App\Filters\UniversityIdFilter;
 use App\Filters\UserIdFilter;
 use App\Http\Requests\categoriesFormRequest;
@@ -68,7 +69,8 @@ class SubjectsVideosControllerResource extends Controller
                 SubjectIdFilter::class,
                 UserIdFilter::class,
                 NameFilter::class,
-                UniversityFilter::class
+                UniversityFilter::class,
+                TypeFilter::class
             ])
             ->thenReturn()
             ->paginate(request('limit') ?? 10);
