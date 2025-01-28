@@ -27,6 +27,7 @@ class v2SubjectVideoResource extends JsonResource
             'image'=>ImageResource::make($this->whenLoaded('image')),
             'qualities'=>VideoQualitiesResource::collection($this->whenLoaded('qualities')),
             'file'=>$this->wasbi_url,
+            'video'=>$this->wasbi_url,
             'type'=>$this->type,
             'extension'=>pathinfo($this->video, PATHINFO_EXTENSION),
             'name'=>$this->name,

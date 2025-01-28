@@ -136,6 +136,6 @@ class SubjectsVideosController extends SubjectsVideosControllerResource
 
         DB::commit();
         // return response
-        return Messages::success(__('messages.saved_successfully'),SubjectsVideosResource::make($subject));
+        return Messages::success(__('messages.saved_successfully'),v2SubjectVideoResource::make($subject));
     }
 }
