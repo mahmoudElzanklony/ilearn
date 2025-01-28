@@ -97,10 +97,9 @@ class VideoQualities
                 ],
             ]);
             // Upload the compressed video to Wasabi
-            dd($start_path_wasbi. $name,$compressedFilePath,is_file($compressedFilePath));
             $result = $s3Client->putObject([
                 'Bucket' => env('WAS_BUCKET'),
-                'Key'    => $start_path_wasbi. $name,
+                'Key'    => $start_path_wasbi.'/'. $name,
                 'SourceFile' => $compressedFilePath,
                 'ACL'    => 'public-read',
             ]);
