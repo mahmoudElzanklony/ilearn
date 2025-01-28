@@ -92,6 +92,7 @@ class SubjectsVideosController extends SubjectsVideosControllerResource
 
             if($extension == 'pdf'){
                 $name = time().rand(0,9999999999999). '_file.' . $data['video']->getClientOriginalExtension();
+                dd(is_dir(storage_path('app/tmp/')));
                 exec("ffmpeg -i ".$data['video']."  ".storage_path('app/tmp/')."$name");
                 VideoQualities::save_at_wasabi($name,storage_path('app/tmp/').$name,'pdfs');
                 $data['video'] = $name;
