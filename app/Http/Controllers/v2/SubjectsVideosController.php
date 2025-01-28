@@ -91,12 +91,12 @@ class SubjectsVideosController extends SubjectsVideosControllerResource
         if(array_key_exists('video',$data) && $data['video'] != null){
 
             if($extension == 'pdf'){
-                $name = 'ilearn_'.time().rand(0,9999999999999). '_file.' . $data['video']->getClientOriginalExtension();
+                $name = time().rand(0,9999999999999). '_file.' . $data['video']->getClientOriginalExtension();
                 VideoQualities::save_at_wasabi($name,'pdfs'.'/'.$name,'pdfs');
                 $data['video'] = $name;
                 $data['type'] = 'pdf';
             }else{
-                $name = 'ilearn_'.time().rand(0,9999999999999). '_file';
+                $name = time().rand(0,9999999999999). '_file';
                 VideoQualities::execute($data['video'],$name);
                 $data['video'] = VideoQualities::getFinalNames()[0]['name'];
             }
