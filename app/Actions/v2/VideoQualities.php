@@ -96,6 +96,7 @@ class VideoQualities
                     'secret' => env('WAS_SECRET_ACCESS_KEY'),
                 ],
             ]);
+            dd($start_path_wasbi,$name);
             // Upload the compressed video to Wasabi
             $result = $s3Client->putObject([
                 'Bucket' => env('WAS_BUCKET'),
