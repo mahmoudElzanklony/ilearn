@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('subjects_videos', function (Blueprint $table) {
+        Schema::create('video_qualities', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('subject_id')->constrained('subjects')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->string('video');
-            $table->text('wasbi_url');
+            $table->foreignId('subject_video_id')
+                ->constrained('subjects_videos')->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('name');
-            $table->string('type')->default('video');
+            $table->string('quality');
+            $table->text('wasbi_url')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('subjects_videos');
+        Schema::dropIfExists('video_qualities');
     }
 };

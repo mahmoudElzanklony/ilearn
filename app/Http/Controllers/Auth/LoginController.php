@@ -74,6 +74,7 @@ class LoginController extends Controller
         }
     }
 
+
     public function getToken(Request $request)
     {
 

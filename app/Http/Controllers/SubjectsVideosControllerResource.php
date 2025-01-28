@@ -173,16 +173,18 @@ class SubjectsVideosControllerResource extends Controller
 
     public function get_size_video($video_obj)
     {
-        $filePath = 'videos/' . $video_obj->video;
-        // Use the Wasabi disk to get file metadata
-        $fileSize = Storage::disk('wasabi')->size($filePath);
+        if(env('WAS_STATUS')){
+            $filePath = 'videos/' . $video_obj->video;
+            // Use the Wasabi disk to get file metadata
+            $fileSize = Storage::disk('wasabi')->size($filePath);
 
-        // Convert size to megabytes for easier readability (optional)
-        $fileSizeInMb = round($fileSize / 1024 / 1024, 2);
-        return [
-            'size_in_bytes' => $fileSize,
-            'size_in_mb' => $fileSizeInMb
-        ];
+            // Convert size to megabytes for easier readability (optional)
+            $fileSizeInMb = round($fileSize / 1024 / 1024, 2);
+            return [
+                'size_in_bytes' => $fileSize,
+                'size_in_mb' => $fileSizeInMb
+            ];
+        }
 
     }
 
