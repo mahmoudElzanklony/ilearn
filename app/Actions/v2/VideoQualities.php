@@ -85,7 +85,7 @@ class VideoQualities
 
     public static function save_at_wasabi($name,$compressedFilePath,$start_path_wasbi = 'videos')
     {
-        dd($compressedFilePath);
+        dd($start_path_wasbi.'/'. $name);
         if(env('WAS_STATUS') == 1){
             // Set up AWS S3 Client with Wasabi credentials
             $s3Client = new S3Client([
