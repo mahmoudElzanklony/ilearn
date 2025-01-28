@@ -76,7 +76,7 @@ class VideoQualities
             $file_name = $name."-".$item['quality'].".mp4";
 
             exec("ffmpeg -i $video_obj ".$item['scale']." $compressedFilePath$file_name");
-            self::save_at_wasabi($name,$compressedFilePath.'/'.$file_name);
+            self::save_at_wasabi($name,$compressedFilePath.$file_name);
             array_push(self::$final_names,['quality'=>$item['quality'],'name'=>$file_name]);
 
         }
