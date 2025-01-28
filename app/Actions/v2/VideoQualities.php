@@ -78,7 +78,7 @@ class VideoQualities
             self::save_at_wasabi($name,$compressedFilePath.'/'.$file_name);
             array_push(self::$final_names,['quality'=>$item['quality'],'name'=>$file_name]);
             if(env('WAS_STATUS') == 1){
-                // unlink($compressedFilePath.'/'.$name.'-'.$item['quality'].'.mp4');
+                 unlink($compressedFilePath.'/'.$name.'-'.$item['quality'].'.mp4');
             }
         }
 
