@@ -95,6 +95,7 @@ class SubjectsVideosController extends SubjectsVideosControllerResource
                 $data['video'] = $name;
                 $data['type'] = 'pdf';
             }else{
+
                 VideoQualities::execute($data['video'],$name);
                 $data['video'] = VideoQualities::getFinalNames()[0]['name'];
             }
