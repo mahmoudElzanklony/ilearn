@@ -9,6 +9,7 @@ use App\Filters\NameFilter;
 use App\Filters\StartDateFilter;
 use App\Filters\SubjectIdFilter;
 use App\Filters\subjects_videos\UniversityFilter;
+use App\Filters\TypeFilter;
 use App\Filters\UserIdFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\SubjectsVideosControllerResource;
@@ -27,6 +28,35 @@ use Illuminate\Support\Facades\Storage;
 class SubjectsVideosController extends SubjectsVideosControllerResource
 {
     //
+    public function index()
+    {
+        $data = subjects_videos::query()
+            ->when(auth()->user()->type == 'doctor',function ($query){
+                $query->whereHas('subject',function($s){
+                    $s->where('user_id',auth()->id());
+                });
+            })
+            ->with(['subject.category.university'])
+            ->orderBy('id','DESC');
+
+
+
+        $output = app(Pipeline::class)
+            ->send($data)
+            ->through([
+                StartDateFilter::class,
+                EndDateFilter::class,
+                SubjectIdFilter::class,
+                UserIdFilter::class,
+                NameFilter::class,
+                UniversityFilter::class,
+                TypeFilter::class
+            ])
+            ->thenReturn()
+            ->paginate(request('limit') ?? 10);
+        request()->merge(['no_video'=>true]);
+        return v2SubjectVideoResource::collection($output);
+    }
     public function show(string $id)
     {
         //
