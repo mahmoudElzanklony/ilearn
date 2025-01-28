@@ -97,11 +97,11 @@ class VideoQualities
                     'secret' => env('WAS_SECRET_ACCESS_KEY'),
                 ],
             ]);
-            dd($start_path_wasbi,$start_path_wasbi.'/' . $name);
+            dd($compressedFilePath);
             // Upload the compressed video to Wasabi
             $result = $s3Client->putObject([
                 'Bucket' => env('WAS_BUCKET'),
-                'Key'    => 'videos/'.$start_path_wasbi.'/' . $name,
+                'Key'    => $start_path_wasbi.'/' . $name,
                 'SourceFile' => $compressedFilePath,
                 'ACL'    => 'public-read',
             ]);
