@@ -6,6 +6,7 @@ use Aws\S3\S3Client;
 use FFMpeg\Coordinate\Dimension;
 use FFMpeg\FFMpeg;
 use FFMpeg\Format\Video\X264;
+use Illuminate\Support\Facades\File;
 
 class VideoQualities
 {
@@ -77,9 +78,7 @@ class VideoQualities
             exec("ffmpeg -i $video_obj ".$item['scale']." $compressedFilePath$file_name");
             self::save_at_wasabi($name,$compressedFilePath.'/'.$file_name);
             array_push(self::$final_names,['quality'=>$item['quality'],'name'=>$file_name]);
-            if(env('WAS_STATUS') == 1){
-                 unlink($compressedFilePath.'/'.$name.'-'.$item['quality'].'.mp4');
-            }
+
         }
 
     }
@@ -118,6 +117,9 @@ class VideoQualities
 
         if($is_command){
             self::save_videos_using_commands($file,$compressedFilePath,$name);
+            if(env('WAS_STATUS') == 1){
+                File::cleanDirectory($compressedFilePath);
+            }
             return 1;
         }
         $ffmpeg = FFMpeg::create([

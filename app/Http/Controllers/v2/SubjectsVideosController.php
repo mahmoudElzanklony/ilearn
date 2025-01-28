@@ -89,7 +89,7 @@ class SubjectsVideosController extends SubjectsVideosControllerResource
 
 
         if(array_key_exists('video',$data) && $data['video'] != null){
-            $name = time().rand(0,9999999999999). '_file.' . $data['video']->getClientOriginalExtension();
+            $name = 'quality_'.time().rand(0,9999999999999). '_file.' . $data['video']->getClientOriginalExtension();
             if($extension == 'pdf'){
                 VideoQualities::save_at_wasabi($name,'pdfs'.'/'.$name,'pdfs');
                 $data['video'] = $name;
