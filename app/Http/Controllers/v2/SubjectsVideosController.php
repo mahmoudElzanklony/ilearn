@@ -93,7 +93,7 @@ class SubjectsVideosController extends SubjectsVideosControllerResource
             if($extension == 'pdf'){
                 $name = time().rand(0,9999999999999). '_file.' . $data['video']->getClientOriginalExtension();
                 $data['video']->move(storage_path('app/tmp/'), $name);
-                VideoQualities::save_at_wasabi($name,storage_path('app/tmp/').$name,'pdfs');
+                VideoQualities::save_at_wasabi($name,storage_path('app/tmp/').$name);
                 $data['video'] = $name;
                 $data['type'] = 'pdf';
             }else{
