@@ -74,7 +74,7 @@ class VideoQualities
 
         foreach ($items as $item){
             $file_name = $name."-".$item['quality'].".mp4";
-
+            $name = $file_name;
             exec("ffmpeg -i $video_obj ".$item['scale']." $compressedFilePath$file_name");
             self::save_at_wasabi($name,$compressedFilePath.$file_name);
             array_push(self::$final_names,['quality'=>$item['quality'],'name'=>$file_name]);
@@ -85,7 +85,7 @@ class VideoQualities
 
     public static function save_at_wasabi($name,$compressedFilePath,$start_path_wasbi = 'videos')
     {
-        dd($start_path_wasbi.'/'. $name);
+
         if(env('WAS_STATUS') == 1){
             // Set up AWS S3 Client with Wasabi credentials
             $s3Client = new S3Client([
@@ -97,7 +97,7 @@ class VideoQualities
                     'secret' => env('WAS_SECRET_ACCESS_KEY'),
                 ],
             ]);
-           // dd($start_path_wasbi.'/'. $name,$start_path_wasbi,$name);
+            dd($start_path_wasbi.'/'. $name,$compressedFilePath);
             // Upload the compressed video to Wasabi
             $result = $s3Client->putObject([
                 'Bucket' => env('WAS_BUCKET'),
