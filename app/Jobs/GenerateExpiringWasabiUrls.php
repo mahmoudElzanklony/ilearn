@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class GenerateExpiringWasabiUrls implements ShouldQueue
@@ -29,39 +30,53 @@ class GenerateExpiringWasabiUrls implements ShouldQueue
      */
     public function handle(): void
     {
-        // Assuming your images are stored with Wasabi storage
-        $images = images::query()->get();
-        $videos = subjects_videos::query()->get();
+        $this->processVideos();
+        $this->processImages();
+    }
 
-        foreach ($images as $image) {
-            // Generate a presigned URL with a 12-hour expiration
-            $expiration = Carbon::now()->addHours(11);
-            $temporaryUrl = Storage::disk('wasabi')
-                ->temporaryUrl($image->name, $expiration);
+    private function processImages(): void
+    {
+        $page = 1;
+        $perPage = 10;
 
-            // Update the wasbi_url column in the database
-            $image->wasbi_url = $temporaryUrl;
-
-            $image->save(); // Use save instead of update
-
-
-        }
-
-        foreach ($videos as $video) {
-            // Generate a presigned URL with a 12-hour expiration
-            $expiration = Carbon::now()->addHours(11);
-            $filePath = 'videos/' . $video->video;
-            if (Storage::disk('wasabi')->exists($filePath)) {
+        do {
+            $images = images::query()->paginate($perPage, ['*'], 'page', $page);
+            Log::info('start build new urls');
+            foreach ($images as $image) {
+                $expiration = Carbon::now()->addHours(11);
                 $temporaryUrl = Storage::disk('wasabi')
-                    ->temporaryUrl($filePath, $expiration); // Assuming `path` is the column for the file path
+                    ->temporaryUrl($image->name, $expiration);
 
-                // Update the wasbi_url column in the database
-                $video->wasbi_url = $temporaryUrl;
-                $video->save(); // Use save instead of update
+                $image->wasbi_url = $temporaryUrl;
+                $image->save();
             }
 
+            $page++;
+        } while ($images->hasMorePages());
+    }
 
+    private function processVideos(): void
+    {
+        $page = 1;
+        $perPage = 10;
 
-        }
+        do {
+            $videos = subjects_videos::query()->paginate($perPage, ['*'], 'page', $page);
+            Log::info('start build new urls');
+            foreach ($videos as $video) {
+                $expiration = Carbon::now()->addHours(11);
+                $filePath = 'videos/' . $video->video;
+
+                if (Storage::disk('wasabi')->exists($filePath)) {
+                    $temporaryUrl = Storage::disk('wasabi')
+                        ->temporaryUrl($filePath, $expiration);
+
+                    $video->wasbi_url = $temporaryUrl;
+                    $video->save();
+                }
+            }
+
+            $page++;
+        } while ($videos->hasMorePages());
     }
 }
