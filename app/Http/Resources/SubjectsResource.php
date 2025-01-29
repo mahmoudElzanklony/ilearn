@@ -26,6 +26,7 @@ class SubjectsResource extends JsonResource
           'semester'=>$this->semester,
           'price'=>$this->price,
           'note'=>$this->note,
+          'support_bluetooth'=>$this->support_bluetooth,
           'videos'=>SubjectsVideosResource::collection($this->whenLoaded('videos')),
           'created_at'=>$this->created_at->format('Y-m-d H:i:s'),
 

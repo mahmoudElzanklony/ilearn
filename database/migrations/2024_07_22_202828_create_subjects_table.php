@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('semester');
             $table->string('price');
             $table->string('note')->nullable();
+            $table->tinyInteger('support_bluetooth')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });
