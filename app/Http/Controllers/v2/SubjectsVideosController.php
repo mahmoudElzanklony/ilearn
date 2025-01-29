@@ -30,7 +30,7 @@ class SubjectsVideosController extends SubjectsVideosControllerResource
     //
     public function index()
     {
-        $data = subjects_videos::query()
+        $data = subjects_videos::query()->with('qualities')
             ->when(auth()->user()->type == 'doctor',function ($query){
                 $query->whereHas('subject',function($s){
                     $s->where('user_id',auth()->id());
