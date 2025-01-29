@@ -10,7 +10,7 @@ class subjects extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable = ['user_id','category_id','name','price','semester','note'];
+    protected $fillable = ['user_id','category_id','name','price','semester','note','support_bluetooth'];
 
     public function category()
     {
