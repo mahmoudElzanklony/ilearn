@@ -33,7 +33,8 @@ class v2SubjectVideoResource extends JsonResource
             'name'=>$this->name,
             'render'=>'url', // or stream
             'created_at'=>$this->created_at->format('Y-m-d'),
-            'updated_at'=>$this->created_at
+            'updated_at'=>$this->created_at,
+            'file_updated_at'=>$this->updated_at->format('Y-m-d'),
         ];
         return $arr;
     }

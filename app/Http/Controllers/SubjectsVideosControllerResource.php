@@ -26,6 +26,7 @@ use App\Models\properties;
 use App\Models\properties_heading;
 use App\Models\subjects;
 use App\Models\subjects_videos;
+use App\Models\video_qualities;
 use App\Services\CacheSubjectVideosService;
 use App\Services\FormRequestHandleInputs;
 use App\Services\Messages;
@@ -222,6 +223,14 @@ class SubjectsVideosControllerResource extends Controller
             return response()->json(['error' => 'File not found'], 404);
         }
         Log::info($video->wasbi_url);
+        if(request()->filled('quality')){
+            $qual = request()->get('quality') == 'HD' ? 'original':request('quality');
+            $quality = video_qualities::query()
+                ->where('quality',$qual)->first();
+            if($quality != null && $qual->wasbi_url != null){
+                return redirect()->away($video->wasbi_url);
+            }
+        }
         if($video->wasbi_url != ''){
             return redirect()->away($video->wasbi_url);
         }
