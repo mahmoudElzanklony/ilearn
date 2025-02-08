@@ -226,7 +226,9 @@ class SubjectsVideosControllerResource extends Controller
         if(request()->filled('quality')){
             $qual = request()->get('quality') == 'HD' ? 'original':request('quality');
             $quality = video_qualities::query()
-                ->where('quality',$qual)->first();
+                ->where('quality',$qual)
+                ->where('subject_video_id',$video->id)
+                ->first();
             if($quality != null && $quality->wasbi_url != null){
                 return redirect()->away($video->wasbi_url);
             }
