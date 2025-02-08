@@ -229,6 +229,7 @@ class SubjectsVideosControllerResource extends Controller
                 ->where('quality',$qual)
                 ->where('subject_video_id',$video->id)
                 ->first();
+            return $quality;
             if($quality != null && $quality->wasbi_url != null){
                 return redirect()->away($video->wasbi_url);
             }
