@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\v2\v2SubjectVideoResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -27,7 +28,7 @@ class SubjectsResource extends JsonResource
           'price'=>$this->price,
           'note'=>$this->note,
           'support_bluetooth'=>$this->support_bluetooth,
-          'videos'=>SubjectsVideosResource::collection($this->whenLoaded('videos')),
+          'videos'=>v2SubjectVideoResource::collection($this->whenLoaded('videos')),
           'created_at'=>$this->created_at->format('Y-m-d H:i:s'),
 
         ];
