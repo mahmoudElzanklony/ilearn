@@ -18,6 +18,7 @@ use App\Http\Controllers\VideoViewController;
 use App\Http\Controllers\BillsControllerResource;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\UniversitiesControllerResource;
+use App\Http\Controllers\CacheSubjectVideosController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -40,6 +41,7 @@ Route::group(['middleware'=>'changeLang'],function (){
         Route::post('/login',[LoginController::class,'login']);
         Route::post('/activate-account',[ActivationAccountController::class,'index']);
         Route::post('/register',[RegisterController::class,'register']);
+        Route::post('/send-whatapp',[RegisterController::class,'send_msg']);
         Route::post('/forget-password',[ForgetPasswordController::class,'index']);
         Route::post('/new-password',[ForgetPasswordController::class,'new_password']);
         Route::post('/logout',[RegisterController::class,'logout']);
@@ -71,9 +73,16 @@ Route::group(['middleware'=>'changeLang'],function (){
     });
 
     Route::post('/lock-subscription',[SubjectsControllerResource::class,'lock']);
-    Route::group(['prefix'=>'/stream-video','middleware'=>'auth:sanctum'],function (){
+    Route::post('/total-money-subscriptions',[SubscriptionsControllerResource::class,'total_money']);
+    Route::group(['prefix'=>'/stream-video'],function (){
         Route::get('/',[SubjectsVideosControllerResource::class,'stream']);
+        Route::get('/get-video-size',[SubjectsVideosControllerResource::class,'get_size']);
+        Route::get('/wasbi-generation',[SubjectsVideosControllerResource::class,'wasbi_generation']);
     });
+
+
+    Route::get('/cache-videos',CacheSubjectVideosController::class);
+
 
 
     // Define the remaining resource routes with middleware

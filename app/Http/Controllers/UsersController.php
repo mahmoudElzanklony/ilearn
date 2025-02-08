@@ -6,6 +6,7 @@ use App\Filters\DoctorIdFilter;
 use App\Filters\EndDateFilter;
 use App\Filters\StartDateFilter;
 use App\Filters\TypeFilter;
+use App\Filters\users\IsBlockFilter;
 use App\Filters\users\NationalityFilter;
 use App\Filters\users\UserNameFilter;
 use App\Filters\users\YearFilter;
@@ -15,6 +16,7 @@ use App\Models\bills;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Pipeline\Pipeline;
+use Illuminate\Support\Facades\DB;
 
 class UsersController extends Controller
 {
@@ -33,6 +35,9 @@ class UsersController extends Controller
                         });
                 });
             })
+            ->withCount(['students_subscriptions as unique_students' => function($query) {
+                $query->select(DB::raw('COUNT(DISTINCT subscriptions.user_id)'));
+            }])
             ->orderBy('id','DESC');
 
         $output = app(Pipeline::class)
@@ -43,7 +48,8 @@ class UsersController extends Controller
                 TypeFilter::class,
                 UserNameFilter::class,
                 YearFilter::class,
-                NationalityFilter::class
+                NationalityFilter::class,
+                IsBlockFilter::class
             ])
             ->thenReturn()
             ->paginate(request('limit') ?? 10);

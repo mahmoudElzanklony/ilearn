@@ -21,7 +21,7 @@ class VideoViewController extends Controller
     //
     public function seen()
     {
-        users_videos_views::query()->updateOrCreate([
+        users_videos_views::query()->firstOrCreate([
             'user_id'=>auth()->id(),
             'video_id'=>request('video_id')
         ],[

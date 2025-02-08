@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class userFormRequest extends FormRequest
 {
@@ -24,7 +25,12 @@ class userFormRequest extends FormRequest
         if(request()->filled('id')) {
             return [
                 'username' => 'filled',
-                'phone' => 'filled|unique:users,phone,'. request('id'),
+                'phone' => [
+                    'filled',
+                    Rule::unique('users', 'phone')
+                        ->ignore(request('id'))  // Ignore the current record by ID
+                        ->whereNull('deleted_at'),  // Add condition for soft deletes
+                ],
                 'password' => 'filled',
                 'type' => 'filled',
                 'is_block' => 'filled',
@@ -36,7 +42,12 @@ class userFormRequest extends FormRequest
         }else{
             return [
                 'username' => 'required',
-                'phone' => 'required|unique:users,phone',
+                'phone' => [
+                    'required',
+                    Rule::unique('users')->where(function ($query) {
+                        return $query->whereNull('deleted_at');
+                    }),
+                ],
                 'nationality' => 'required',
                 'year_id'=>'filled|exists:categories,id',
                 'type' => 'required',

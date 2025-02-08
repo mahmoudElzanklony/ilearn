@@ -26,8 +26,9 @@ class subjectsFormRequest extends FormRequest
             'name'=>'required',
             'category_id'=>'required|exists:categories,id',
             'semester'=>'required',
+            'support_bluetooth'=>'required',
             'price'=>'required',
-            'note'=>'nullable'
+            'note'=>'required'
         ];
     }
 }

@@ -19,20 +19,27 @@ class LoginController extends Controller
 
     public function login()
     {
-        $data = ['phone'=>request('phone'),'password'=>request('password')];
+
+        $data = ['phone'=>request('phone'),'password'=>request('password'),'deleted_at'=>null];
         if(auth()->attempt($data)){
             // check ip
             $user = User::query()->where('phone',$data['phone'])->first();
-            if($user->type == 'client'){
-                /*if(!(request()->filled('device_id'))){
+            if($user->type == 'client' && $user->phone != '+201111354352'){
+                if(request()->filled('from')){
+                    return Messages::error('غير مسموح لك بالدخول');
+                }
+                if(!(request()->filled('device_id'))){
                     return Messages::error('رقم الجهاز لم يتم ارساله');
+                }
+                if(request()->filled('device_id') && $user->type != 'client'){
+                    return Messages::error('ليس لديك صلاحيات الدخول فهذا التطبيق للطلبه فقط');
                 }
                 if($user->otp_secret == null){
                     $user->otp_secret = request('device_id');
                     $user->save();
                 }else if($user->otp_secret != request('device_id')){
                     return Messages::error('هذا الجهاز ليس الجهاز الاول الذي قمت بالدخول الي التطبيق من خلاله');
-                }*/
+                }
             }
             // check if blocked
             if($user->is_block == 1){
@@ -53,16 +60,20 @@ class LoginController extends Controller
             if ($token) {
                 [$id, $user_token] = explode('|', $token, 2);
                 $token_data = DB::table('personal_access_tokens')->where('token', hash('sha256', $user_token))->first();
-                $user_id = $token_data->tokenable_id; // !!!THIS ID WE CAN USE TO GET DATA OF YOUR USER!!!
-                $user = User::query()->find($user_id);
-                $user['token'] =  request()->header('Authorization');
+                if($token_data) {
+                    $user_id = $token_data->tokenable_id; // !!!THIS ID WE CAN USE TO GET DATA OF YOUR USER!!!
+                    $user = User::query()->find($user_id);
+                    $user['token'] = request()->header('Authorization');
 
-                return Messages::success('',UserResource::make($user));
+                    return Messages::success('', UserResource::make($user));
+                }
             }
+            return Messages::error('not valid token');
 
 
         }
     }
+
 
     public function getToken(Request $request)
     {

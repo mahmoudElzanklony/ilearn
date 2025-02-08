@@ -50,8 +50,8 @@ class BillsControllerResource extends Controller
     {
         $data = bills::query()
             ->when(auth()->user()->type == 'doctor',fn($e) => $e->where('doctor_id','=',auth()->id()))
-            ->with('doctor')
-            ->orderBy('id','DESC');
+            ->with('doctor');
+          //  ->orderBy('id','DESC');
 
         $output = app(Pipeline::class)
             ->send($data)
@@ -73,7 +73,7 @@ class BillsControllerResource extends Controller
         DB::beginTransaction();
 
         // Check for overlapping bills
-        $overlappingBill = bills::where('doctor_id', $data['doctor_id'])
+        /*$overlappingBill = bills::where('doctor_id', $data['doctor_id'])
             ->where(function ($query) use ($data) {
                 $query->whereBetween('start_date', [ $data['start_date'], $data['end_date']])
                     ->orWhereBetween('end_date', [ $data['start_date'], $data['end_date'] ])
@@ -85,9 +85,14 @@ class BillsControllerResource extends Controller
 
         if ($overlappingBill) {
             return Messages::error('الفتره الزمنيه لانشاء الفاتوره لهذا الدكتور غير صحيحه حيث انها موجوده بالفعل');
-        }
+        }*/
 
         $data['total_money'] = $this->get_money_at($data);
+
+        // Retrieve the last bill for the doctor to check the remaining balance
+
+
+
         $bill = bills::query()->updateOrCreate([
             'id'=>$data['id'] ?? null
         ],$data);
@@ -146,6 +151,20 @@ class BillsControllerResource extends Controller
             ->whereBetween('subscriptions.created_at', [$data['start_date'], $data['end_date']])
             ->select(DB::raw('SUM(subscriptions.price - subscriptions.discount) as total'))
             ->value('total');
-        return $output;
+
+        $get_stat = bills::query()
+            ->where('doctor_id',$data['doctor_id'])
+            ->whereBetween('created_at', [$data['start_date'], $data['end_date']])->get();
+        $paid = 0;
+        foreach ($get_stat as $item){
+            $paid += ($item->total_money - $item->remain);
+        }
+
+        /*$last_bill = bills::where('doctor_id', $data['doctor_id'])->latest()->first();
+        $remain = $last_bill ? $last_bill->remain : 0;*/
+
+
+        return  $output - $paid;
+
     }
 }

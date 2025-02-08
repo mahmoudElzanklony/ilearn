@@ -27,7 +27,10 @@ class ProfileController extends Controller
         if(request()->filled('year_id')){
             students_subjects_years::query()
                 ->where('user_id','=',$user->id)
-                ->update([
+                ->updateOrCreate([
+                    'year_id'=>request('year_id')
+                ],[
+                    'user_id'=>$user->id,
                     'year_id'=>request('year_id')
                 ]);
             $user->load('year');

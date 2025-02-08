@@ -99,4 +99,17 @@ class User extends Authenticatable
         return $this->hasOne(students_subjects_years::class,'user_id');
     }
 
+    public function students_subscriptions()
+    {
+        return $this->hasManyThrough(
+            subscriptions::class,
+            subjects::class,
+            'user_id',      // Foreign key on the subjects table...
+            'subject_id',   // Foreign key on the subscriptions table...
+            'id',           // Local key on the users table...
+            'id'            // Local key on the subjects table...
+        );
+    }
+
+
 }

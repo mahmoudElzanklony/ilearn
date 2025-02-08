@@ -9,7 +9,7 @@ class subjects_videos extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id','name','subject_id','video'];
+    protected $fillable = ['user_id','name','subject_id','video','wasbi_url','type'];
 
     public function subject()
     {
@@ -24,5 +24,9 @@ class subjects_videos extends Model
     public function image()
     {
         return $this->morphOne(images::class,'imageable');
+    }
+
+    public function qualities(){
+        return $this->hasMany(video_qualities::class,'subject_video_id');
     }
 }

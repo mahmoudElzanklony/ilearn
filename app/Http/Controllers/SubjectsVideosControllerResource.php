@@ -8,6 +8,7 @@ use App\Filters\NameFilter;
 use App\Filters\StartDateFilter;
 use App\Filters\SubjectIdFilter;
 use App\Filters\subjects_videos\UniversityFilter;
+use App\Filters\TypeFilter;
 use App\Filters\UniversityIdFilter;
 use App\Filters\UserIdFilter;
 use App\Http\Requests\categoriesFormRequest;
@@ -17,18 +18,23 @@ use App\Http\Resources\CategoryResource;
 use App\Http\Resources\PropertyHeadingResource;
 use App\Http\Resources\SubjectsResource;
 use App\Http\Resources\SubjectsVideosResource;
+use App\Jobs\GenerateExpiringWasabiUrls;
 use App\Models\categories;
 use App\Models\categories_properties;
+use App\Models\images;
 use App\Models\properties;
 use App\Models\properties_heading;
 use App\Models\subjects;
 use App\Models\subjects_videos;
+use App\Services\CacheSubjectVideosService;
 use App\Services\FormRequestHandleInputs;
 use App\Services\Messages;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Traits\upload_image;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -40,7 +46,7 @@ class SubjectsVideosControllerResource extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:sanctum')->except('stream');
+        $this->middleware('auth:sanctum')->except('wasbi_generation');
     }
     public function index()
     {
@@ -50,8 +56,10 @@ class SubjectsVideosControllerResource extends Controller
                     $s->where('user_id',auth()->id());
                 });
             })
-            ->with(['subject.category.university','image'])
+            ->with(['subject.category.university'])
             ->orderBy('id','DESC');
+
+
 
         $output = app(Pipeline::class)
             ->send($data)
@@ -61,10 +69,12 @@ class SubjectsVideosControllerResource extends Controller
                 SubjectIdFilter::class,
                 UserIdFilter::class,
                 NameFilter::class,
-                UniversityFilter::class
+                UniversityFilter::class,
+                TypeFilter::class
             ])
             ->thenReturn()
             ->paginate(request('limit') ?? 10);
+        request()->merge(['no_video'=>true]);
         return SubjectsVideosResource::collection($output);
     }
 
@@ -96,11 +106,21 @@ class SubjectsVideosControllerResource extends Controller
             $data['video'] =$this->upload_video($data['video']);
         }
 
-
+        if(env('WAS_STATUS') == 1) {
+            $data['wasbi_url'] = Storage::disk('wasabi')->temporaryUrl(
+                'videos/' . $data['video'], now()->addMinutes(400) // URL expires in 3 hours
+            );
+        }
 
         $subject = subjects_videos::query()->updateOrCreate([
             'id'=>$data['id'] ?? null
         ],$data);
+
+        if(isset($data['id'])){
+            $record = subjects_videos::find($data['id']);
+            $record->created_at = Carbon::now(); //
+            $record->save();
+        }
 
         // check if there is any image related to this category and save it
         if(!(array_key_exists('id',$data)) || (array_key_exists('id',$data) && $image != null)){
@@ -111,6 +131,9 @@ class SubjectsVideosControllerResource extends Controller
         // Load the category with the associated image
         $subject->load('subject.category.university');
         $subject->load('image');
+
+        // cache subject info videos
+        //CacheSubjectVideosService::set_cached($subject->subject_id);
 
         DB::commit();
         // return response
@@ -128,8 +151,43 @@ class SubjectsVideosControllerResource extends Controller
     public function show(string $id)
     {
         //
-        $data  = subjects_videos::query()->where('id', $id)->FailIfNotFound(__('errors.not_found_data'));
-        return SubjectsVideosResource::make($data);
+        $data  = subjects_videos::query()
+            ->where('id', $id)
+            ->FailIfNotFound(__('errors.not_found_data'));
+        return response()->json([
+            'data'=>SubjectsVideosResource::make($data),
+            'video_size'=>$this->get_size_video($data)
+        ]);
+    }
+
+    public function get_size()
+    {
+        $video_obj = subjects_videos::query()->find(request('video_id'));
+
+        if($video_obj == null){
+            return Messages::error('الفديو غير موجود');
+        }
+        $output = $this->get_size_video($video_obj);
+
+
+        return Messages::success('',$output);
+    }
+
+    public function get_size_video($video_obj)
+    {
+        if(env('WAS_STATUS')){
+            $filePath = 'videos/' . $video_obj->video;
+            // Use the Wasabi disk to get file metadata
+            $fileSize = Storage::disk('wasabi')->size($filePath);
+
+            // Convert size to megabytes for easier readability (optional)
+            $fileSizeInMb = round($fileSize / 1024 / 1024, 2);
+            return [
+                'size_in_bytes' => $fileSize,
+                'size_in_mb' => $fileSizeInMb
+            ];
+        }
+
     }
 
     /**
@@ -153,8 +211,9 @@ class SubjectsVideosControllerResource extends Controller
     public function stream()
     {
         $video = subjects_videos::query()->find(request('id'));
-        if ($video == null) {
-            return Messages::error('video not found');
+
+        if ($video === null) {
+            return response()->json(['error' => 'Video not found'], 404);
         }
 
         $filePath = 'videos/' . $video->video;
@@ -162,59 +221,36 @@ class SubjectsVideosControllerResource extends Controller
         if (!Storage::disk('wasabi')->exists($filePath)) {
             return response()->json(['error' => 'File not found'], 404);
         }
-
-
-
-        $videoPath = $filePath; // The path to the video file on Wasabi
-
-        // Fetching the file size from Wasabi
-        $disk = Storage::disk('wasabi');
-        $size = $disk->size($videoPath);
-
-        // Handling the range header
-        $range = request()->header('Range');
-        $start = 0;
-        $end = $size - 1;
-
-        if ($range) {
-            $range = str_replace('bytes=', '', $range);
-            [$start, $end] = explode('-', $range);
-
-            $start = (int) $start;
-            $end = $end ? (int) $end : $size - 1;
+        Log::info($video->wasbi_url);
+        if($video->wasbi_url != ''){
+            return redirect()->away($video->wasbi_url);
         }
 
-        $length = $end - $start + 1;
+        // Generate a presigned URL (valid for 1 hour)
+        $disk = Storage::disk('wasabi');
+        $expiration = now()->addMinutes(700); // Set the expiration time after 12 hour
+        $presignedUrl = $disk->temporaryUrl($filePath, $expiration);
 
-        $headers = [
-            'Content-Type' => 'video/mp4',
-            'Content-Length' => $length,
-            'Content-Range' => "bytes $start-$end/$size",
-            'Accept-Ranges' => 'bytes',
-        ];
+        // Redirect to the presigned URL
+        return redirect()->away($presignedUrl);
 
-        return new StreamedResponse(function () use ($disk, $videoPath, $start, $end) {
-            $stream = $disk->readStream($videoPath);
 
-            fseek($stream, $start);
 
-            $bufferSize = 1024;
-            while (!feof($stream) && ($pos = ftell($stream)) <= $end) {
-                if ($pos + $bufferSize > $end) {
-                    $bufferSize = $end - $pos + 1;
-                }
-                echo fread($stream, $bufferSize);
-                flush();
-            }
-
-            fclose($stream);
-        }, 206, $headers);
-/*
+        /*
         return new StreamedResponse(function () use ($stream) {
             while (ob_get_level()) {
                 ob_end_flush();
             }
             fpassthru($stream);
         }, 200, $headers);*/
+    }
+
+    public function wasbi_generation()
+    {
+        $obj = new GenerateExpiringWasabiUrls();
+        $obj->handle();
+
+        return response()->json(['message' => 'Job dispatched to update Wasabi URLs'], 200);
+
     }
 }

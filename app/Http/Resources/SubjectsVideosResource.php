@@ -18,7 +18,7 @@ class SubjectsVideosResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
+        $arr =  [
           'id'=>$this->id,
           'user_id'=>$this->user_id,
           'subject_id'=>$this->subject_id,
@@ -27,11 +27,23 @@ class SubjectsVideosResource extends JsonResource
           'image'=>ImageResource::make($this->whenLoaded('image')),
 
           //'video'=>env('cloud_storage').(env('WAS_STATUS') == 1 ? '/':'/videos/').$this->video,
-         // 'video'=>StreamImages::stream('videos/'.$this->video),
-          'video'=>StreamImages::stream('videos/'.$this->video),
+          'video'=>$this->wasbi_url,
+          'qualities'=>VideoQualitiesResource::collection($this->whenLoaded('qualities')),
+          'video_file_name'=>$this->video,
           'extension'=>pathinfo($this->video, PATHINFO_EXTENSION),
           'name'=>$this->name,
-          'created_at'=>$this->created_at->format('Y-h-m ')
+          'render'=>'url', // or stream
+          'type'=>$this->type, // or stream
+           'created_at'=>$this->created_at->format('Y-m-d'),
+          'updated_at'=>$this->created_at
         ];
+       /* if(!(request()->has('no_video'))){
+            $arr['video'] = StreamImages::stream('videos/'.$this->video);
+        }*/
+        /*if($arr['video'] == null){
+
+            $arr['video'] = StreamImages::stream('videos/'.$this->video);
+        }*/
+        return $arr;
     }
 }

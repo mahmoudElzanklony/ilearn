@@ -31,14 +31,17 @@ class CategoriesControllerResource extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:sanctum')->except('index','show');
+        $this->middleware('auth:sanctum');
     }
     public function index()
     {
         $data = categories::query()
+            ->when(auth()->user()->type == 'doctor',function ($e){
+                $e->whereHas('subjects',fn($q) => $q->where('user_id','=',auth()->id()));
+            })
             ->with('university')
             ->orderBy('id','DESC');
-
+        // DRY ==> dont repeat yourself
         $output = app(Pipeline::class)
             ->send($data)
             ->through([
@@ -75,6 +78,7 @@ class CategoriesControllerResource extends Controller
 
     public function store(categoriesFormRequest $request)
     {
+
         return $this->save($request->validated(),request()->file('image'));
     }
 

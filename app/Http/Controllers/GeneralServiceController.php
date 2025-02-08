@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\ConcreateInterfaces\subjectsConcrete;
+use App\Http\ConcreateInterfaces\categoriesConcrete;
+use App\Http\ConcreateInterfaces\universitiesConcrete;
 use App\Http\Controllers\Controller;
 
 use App\Services\Messages;
@@ -16,12 +19,22 @@ class GeneralServiceController extends Controller
         $table = request('table');
         $id = request('id');
         try{
+
             $model =  '\\App\\Models\\'.$table;
             $model = new $model();
+            if($table == 'universities' || $table == 'subjects' || $table == 'categories'){
+                $obj = new ('App\\Http\\ConcreateInterfaces\\'.$table.'Concrete')();
+                $err = $obj->check_delete($id);
+                if($err > 0){
+                    return Messages::error('لا تستطيع المسح حيث انه مرتبط بعناصر اخري');
+                }
+            }
+
             $model->whereIn('id',$id)->delete();
             return Messages::success([trans('messages.deleted_successfully')]);
         }catch (\Exception $e){
-            DB::table($table)->delete($id);
+            return Messages::error($e->getMessage());
+           // DB::table($table)->delete($id);
         }
 
     }

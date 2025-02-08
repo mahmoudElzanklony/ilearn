@@ -20,6 +20,7 @@ use App\Models\properties;
 use App\Models\properties_heading;
 use App\Models\subjects;
 use App\Models\subscriptions;
+use App\Services\CacheSubjectVideosService;
 use App\Services\FormRequestHandleInputs;
 use App\Services\Messages;
 use Illuminate\Http\Request;
@@ -35,11 +36,13 @@ class SubjectsControllerResource extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:sanctum')->except('index');
+        $this->middleware('auth:sanctum');
     }
     public function index()
     {
         $data = subjects::query()
+            ->with('user')
+            ->when(auth()->user()->type == 'doctor',fn($e) => $e->where('user_id','=',auth()->id()))
             ->with(['image','category.university'])
             ->orderBy('id','DESC');
 
@@ -95,17 +98,20 @@ class SubjectsControllerResource extends Controller
     public function show(string $id)
     {
         //
-        $data  = subjects::query()->with('videos')
+        $data  = subjects::query()->with('videos.qualities')
             ->where('id', $id)->FailIfNotFound(__('errors.not_found_data'));
+      //  $data = CacheSubjectVideosService::get_cached($id);
+
         if(auth()->user()->type == 'client'){
             $check_sub = subscriptions::query()
                 ->where('user_id','=',auth()->id())
                 ->where('subject_id','=',$id)
-                ->first();
-            if($check_sub == null){
+                ->exists();
+            if(!$check_sub){
                 return Messages::error('غير مسموح لك برؤيه محتوي الماده');
             }
         }
+
         return SubjectsResource::make($data);
     }
 
@@ -123,7 +129,9 @@ class SubjectsControllerResource extends Controller
     public function per_user()
     {
         $data = subscriptions::query()
-            ->with('subject.image')
+            ->with('subject',function ($e){
+                $e->with(['image','user']);
+            })
             ->where('user_id','=',auth()->id())
             ->where('is_locked','=',0)
             ->orderBy('id','DESC')
