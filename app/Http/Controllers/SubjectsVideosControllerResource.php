@@ -212,7 +212,7 @@ class SubjectsVideosControllerResource extends Controller
     public function stream()
     {
         $video = subjects_videos::query()->find(request('id'));
-
+        return $video;
         if ($video === null) {
             return response()->json(['error' => 'Video not found'], 404);
         }
