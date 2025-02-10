@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Actions\v2\BaseUrlForVideoAction;
 use App\Services\StreamImages;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -27,7 +28,7 @@ class SubjectsVideosResource extends JsonResource
           'image'=>ImageResource::make($this->whenLoaded('image')),
 
           //'video'=>env('cloud_storage').(env('WAS_STATUS') == 1 ? '/':'/videos/').$this->video,
-          'video'=>$this->wasbi_url,
+          'video'=>BaseUrlForVideoAction::handle($this->wasbi_url),
           'qualities'=>VideoQualitiesResource::collection($this->whenLoaded('qualities')),
           'video_file_name'=>$this->video,
           'extension'=>pathinfo($this->video, PATHINFO_EXTENSION),

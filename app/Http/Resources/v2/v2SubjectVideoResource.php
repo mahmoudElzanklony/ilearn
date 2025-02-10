@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\v2;
 
+use App\Actions\v2\BaseUrlForVideoAction;
 use App\Http\Resources\ImageResource;
 use App\Http\Resources\SubjectsResource;
 use App\Http\Resources\UserResource;
@@ -26,8 +27,8 @@ class v2SubjectVideoResource extends JsonResource
             'subject'=>SubjectsResource::make($this->whenLoaded('subject')),
             'image'=>ImageResource::make($this->whenLoaded('image')),
             'qualities'=>VideoQualitiesResource::collection($this->whenLoaded('qualities')),
-            'file'=>$this->wasbi_url,
-            'video'=>$this->wasbi_url,
+            'file'=>BaseUrlForVideoAction::handle($this->wasbi_url),
+            'video'=>BaseUrlForVideoAction::handle($this->wasbi_url),
             'type'=>$this->type,
             'extension'=>pathinfo($this->video, PATHINFO_EXTENSION),
             'name'=>$this->name,
