@@ -20,6 +20,7 @@ return new class extends Migration
             $table->float('total_money');
             $table->float('remain');
             $table->string('note')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
