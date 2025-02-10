@@ -24,6 +24,7 @@ class UserResource extends JsonResource
             'year'=>StudentResource::make($this->whenLoaded('year')),
             'nationality'=>$this->nationality,
             'unique_students'=>$this->unique_students ?? 0,
+            'support_unreal_device'=>$this->support_unreal_device,
             'created_at'=>$this->created_at->format('Y-m-d H:i:s')
         ];
         if(isset($this->token)){

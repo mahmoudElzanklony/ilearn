@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('type');
             $table->bigInteger('added_by');
             $table->tinyInteger('is_block')->default(0);
+            $table->tinyInteger('support_unreal_device')->default(0);
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();
