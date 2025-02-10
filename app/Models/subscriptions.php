@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class subscriptions extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = ['user_id','subject_id','is_locked','price','discount','note','added_by'];
 
