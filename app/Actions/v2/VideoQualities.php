@@ -116,7 +116,7 @@ class VideoQualities
         $originalFilePath = $file->getRealPath();
         $compressedFilePath = storage_path('app/tmp/');
         $filePath = $file->getRealPath();
-
+        dd($compressedFilePath);
         if($is_command){
             self::save_videos_using_commands($file,$compressedFilePath,$name);
             if(env('WAS_STATUS') == 1){
