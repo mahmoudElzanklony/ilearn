@@ -74,7 +74,7 @@ class VideoQualities
 
         foreach ($items as $item){
             $file_name = $name."-".$item['quality'].".mp4";
-
+            dd($compressedFilePath.$file_name);
             exec("ffmpeg -i $video_obj ".$item['scale']." $compressedFilePath$file_name");
             self::save_at_wasabi($file_name,$compressedFilePath.$file_name);
             array_push(self::$final_names,['quality'=>$item['quality'],'name'=>$file_name]);
@@ -116,7 +116,7 @@ class VideoQualities
         $originalFilePath = $file->getRealPath();
         $compressedFilePath = storage_path('app/tmp/');
         $filePath = $file->getRealPath();
-        dd($compressedFilePath);
+
         if($is_command){
             self::save_videos_using_commands($file,$compressedFilePath,$name);
             if(env('WAS_STATUS') == 1){
