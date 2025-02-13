@@ -24,21 +24,22 @@ class UsersController extends Controller
     public function index()
     {
         $data = User::query()
-            ->with('year',fn($q)=>$q->with(['category.university']))
+            ->with('year', fn($q) => $q->with(['category.university']))
             ->with('subscriptions')
-            ->when(auth()->user()->type == 'doctor',function ($e){
-                $e
-                    ->where('added_by','=',auth()->id())
-                    ->orWhereHas('subscriptions',function($e){
-                        $e->whereHas('subject',function ($q){
-                            $q->where('user_id','=',auth()->id());
+            ->when(auth()->user()->type == 'doctor', function ($query) {
+                $query->where(function ($q) {
+                    $q->where('added_by', auth()->id())
+                        ->orWhereHas('subscriptions', function ($e) {
+                            $e->whereHas('subject', function ($q) {
+                                $q->where('user_id', auth()->id());
+                            });
                         });
                 });
             })
             ->withCount(['students_subscriptions as unique_students' => function($query) {
                 $query->select(DB::raw('COUNT(DISTINCT subscriptions.user_id)'));
             }])
-            ->orderBy('id','DESC');
+            ->orderBy('id', 'DESC');
 
         $output = app(Pipeline::class)
             ->send($data)
@@ -53,6 +54,7 @@ class UsersController extends Controller
             ])
             ->thenReturn()
             ->paginate(request('limit') ?? 10);
+
         return UserResource::collection($output);
     }
 }
