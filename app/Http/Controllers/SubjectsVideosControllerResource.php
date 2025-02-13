@@ -178,6 +178,9 @@ class SubjectsVideosControllerResource extends Controller
 
     public function get_size_video($video_obj)
     {
+        if(isset($video_obj->quality)){
+            $video_obj->video = $video_obj->name;
+        }
         if(env('WAS_STATUS')){
             $filePath = 'videos/' . $video_obj->video;
             // Use the Wasabi disk to get file metadata
