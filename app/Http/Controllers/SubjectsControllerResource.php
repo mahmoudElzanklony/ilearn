@@ -129,7 +129,9 @@ class SubjectsControllerResource extends Controller
     public function per_user()
     {
         $data = subscriptions::query()
-
+            ->with('subject',function ($e){
+                $e->with(['image','user']);
+            })
             ->where('user_id','=',auth()->id())
             ->where('is_locked','=',0)
             ->orderBy('id','DESC')
