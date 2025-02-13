@@ -128,8 +128,12 @@ class SubjectsControllerResource extends Controller
 
     public function per_user()
     {
-        $data = subjects::query()->find(110);
-        return $data;
+        $data = subscriptions::query()
+
+            ->where('user_id','=',auth()->id())
+            ->where('is_locked','=',0)
+            ->orderBy('id','DESC')
+            ->get();
         return SubscriptionsResource::collection($data);
     }
 
