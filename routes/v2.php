@@ -89,6 +89,13 @@ Route::name('v2.')->group(function () {
         Route::group(['prefix' => '/bills-data', 'middleware' => 'auth:sanctum'], function () {
             Route::post('/check-period', [BillsControllerResource::class, 'check_period']);
         });
+
+        // Define the remaining resource routes with middleware
+        Route::group(['prefix' => '/versions', 'middleware' => 'auth:sanctum'], function () {
+            Route::get('/', [\App\Http\Controllers\VersionsController::class, 'index']);
+            Route::post('/update', [\App\Http\Controllers\VersionsController::class, 'update']);
+        });
+
         // resources
         Route::resources([
             'universities' => UniversitiesControllerResource::class,
