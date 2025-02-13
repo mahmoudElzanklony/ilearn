@@ -40,7 +40,7 @@ class UsersController extends Controller
                 $query->select(DB::raw('COUNT(DISTINCT subscriptions.user_id)'));
             }])
             ->orderBy('id', 'DESC');
-        if(request()->filled('limit')){
+        if(request()->filled('limit') && request('limit') === 999){
             $limit = 999999999999999;
         }
         $output = app(Pipeline::class)
