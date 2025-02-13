@@ -58,14 +58,18 @@ class LoginController extends Controller
         if(request()->hasHeader('Authorization')) {
             $token = request()->header('Authorization');
             if ($token) {
-                [$id, $user_token] = explode('|', $token, 2);
-                $token_data = DB::table('personal_access_tokens')->where('token', hash('sha256', $user_token))->first();
-                if($token_data) {
-                    $user_id = $token_data->tokenable_id; // !!!THIS ID WE CAN USE TO GET DATA OF YOUR USER!!!
-                    $user = User::query()->find($user_id);
-                    $user['token'] = request()->header('Authorization');
+                try{
+                    [$id, $user_token] = explode('|', $token, 2);
+                    $token_data = DB::table('personal_access_tokens')->where('token', hash('sha256', $user_token))->first();
+                    if($token_data) {
+                        $user_id = $token_data->tokenable_id; // !!!THIS ID WE CAN USE TO GET DATA OF YOUR USER!!!
+                        $user = User::query()->find($user_id);
+                        $user['token'] = request()->header('Authorization');
 
-                    return Messages::success('', UserResource::make($user));
+                        return Messages::success('', UserResource::make($user));
+                    }
+                }catch (\Exception $e){
+                    return Messages::error('not valid token');
                 }
             }
             return Messages::error('not valid token');
