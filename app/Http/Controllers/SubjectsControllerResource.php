@@ -135,7 +135,7 @@ class SubjectsControllerResource extends Controller
             ->where('user_id','=',auth()->id())
             ->orderBy('id','DESC')
             ->get();
-        return $data;
+        return auth()->user();
         return SubscriptionsResource::collection($data);
     }
 
