@@ -13,7 +13,8 @@ class subjects_videos extends Model
 
     public function subject()
     {
-        return $this->belongsTo(subjects::class,'subject_id');
+        return $this->belongsTo(subjects::class,'subject_id')
+            ->withTrashed();
     }
 
     public function watchers()

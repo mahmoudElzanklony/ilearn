@@ -61,7 +61,8 @@ class GenerateExpiringWasabiUrls implements ShouldQueue
         $perPage = 10;
 
         do {
-            $videos = subjects_videos::query()->with('qualities')->paginate($perPage, ['*'], 'page', $page);
+            $videos = subjects_videos::query()->with('qualities')
+                ->paginate($perPage, ['*'], 'page', $page);
             Log::info('start build new urls');
             foreach ($videos as $video) {
                 $expiration = Carbon::now()->addHours(11);
