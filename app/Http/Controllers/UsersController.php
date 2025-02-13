@@ -39,7 +39,7 @@ class UsersController extends Controller
                 $query->select(DB::raw('COUNT(DISTINCT subscriptions.user_id)'));
             }])
             ->orderBy('id','DESC');
-
+        return $data->toSql();
         $output = app(Pipeline::class)
             ->send($data)
             ->through([
