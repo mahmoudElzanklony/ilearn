@@ -128,14 +128,8 @@ class SubjectsControllerResource extends Controller
 
     public function per_user()
     {
-        $data = subscriptions::query()
-            ->with('subject',function ($e){
-                $e->with(['image','user']);
-            })
-            ->where('user_id','=',auth()->id())
-            ->orderBy('id','DESC')
-            ->get();
-        return auth()->user();
+        $data = subjects::query()->find(110);
+        return $data;
         return SubscriptionsResource::collection($data);
     }
 
