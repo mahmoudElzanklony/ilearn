@@ -136,6 +136,7 @@ class SubjectsControllerResource extends Controller
             ->where('is_locked','=',0)
             ->orderBy('id','DESC')
             ->get();
+        return $data;
         return SubscriptionsResource::collection($data);
     }
 
