@@ -40,7 +40,9 @@ class UsersController extends Controller
                 $query->select(DB::raw('COUNT(DISTINCT subscriptions.user_id)'));
             }])
             ->orderBy('id', 'DESC');
-
+        if(request()->filled('limit')){
+            $limit = 999999999999999;
+        }
         $output = app(Pipeline::class)
             ->send($data)
             ->through([
@@ -53,7 +55,7 @@ class UsersController extends Controller
                 IsBlockFilter::class
             ])
             ->thenReturn()
-            ->paginate(request('limit') ?? 10);
+            ->paginate($limit ?? 10);
 
         return UserResource::collection($output);
     }
