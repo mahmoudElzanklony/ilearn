@@ -133,7 +133,6 @@ class SubjectsControllerResource extends Controller
                 $e->with(['image','user']);
             })
             ->where('user_id','=',auth()->id())
-            ->where('is_locked','=',0)
             ->orderBy('id','DESC')
             ->get();
         return $data;
