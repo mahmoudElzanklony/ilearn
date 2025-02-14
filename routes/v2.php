@@ -91,7 +91,7 @@ Route::name('v2.')->group(function () {
         });
 
         // Define the remaining resource routes with middleware
-        Route::group(['prefix' => '/versions', 'middleware' => 'auth:sanctum'], function () {
+        Route::group(['prefix' => '/versions'], function () {
             Route::get('/', [\App\Http\Controllers\VersionsController::class, 'index']);
             Route::post('/update', [\App\Http\Controllers\VersionsController::class, 'update']);
         });
