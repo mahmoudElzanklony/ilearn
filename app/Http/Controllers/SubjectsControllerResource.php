@@ -132,6 +132,9 @@ class SubjectsControllerResource extends Controller
             ->with('subject',function ($e){
                 $e->with(['image','user']);
             })
+            ->whereHas('subject',function ($e){
+                $e->where('deleted_at','=',null);
+            })
             ->where('user_id','=',auth()->id())
             ->where('is_locked','=',0)
             ->orderBy('id','DESC')
