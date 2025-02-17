@@ -18,6 +18,7 @@ class RegisterSubscriptionsToStudentService
                 'price' => $subject->price,
                 'discount' => 0,
                 'added_by' => $doctor_id,
+                'created_at' => now(),
             ];
         }
         subscriptions::insert($subscriptionsData);
