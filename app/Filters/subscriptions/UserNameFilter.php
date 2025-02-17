@@ -8,9 +8,10 @@ class UserNameFilter
 {
     public function handle($request, Closure $next){
         if(request()->filled('name')){
-
-            return $next($request)->whereHas('user',function($e){
-                $e->whereRaw('(username LIKE "%'.request('name').'%") OR (phone LIKE "%'.request('name').'%")');
+            $name = request('name');
+            return $next($request)->whereHas('user', function ($e) use ($name) {
+                $e->where('username', 'LIKE', "%{$name}%")
+                    ->orWhere('phone', 'LIKE', "%{$name}%");
             });
 
         }
