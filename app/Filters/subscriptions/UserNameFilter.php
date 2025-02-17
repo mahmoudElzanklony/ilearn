@@ -10,7 +10,7 @@ class UserNameFilter
         if(request()->filled('name')){
 
             return $next($request)->whereHas('user',function($e){
-                $e->where('username','LIKE','%'.request('name').'%');
+                $e->whereRaw('(username LIKE'.'%'.request('name').'%) OR (phone LIKE'.'%'.request('name').'%)');
             });
 
         }
