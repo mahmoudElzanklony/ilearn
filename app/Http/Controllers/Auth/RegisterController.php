@@ -9,6 +9,7 @@ use App\Models\students_subjects_years;
 use App\Models\User;
 use App\Notifications\UserRegisteryNotification;
 use App\Services\Messages;
+use App\Services\RegisterSubscriptionsToStudentService;
 use App\Services\SendWhatApp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -59,7 +60,12 @@ class RegisterController extends Controller
                 'user_id'=>$user->id,
                 'year_id'=>$year_id
             ]);
+            if(request()->filled('subscriptions_status') && request('subscriptions_status') == '1' && auth()->user()->type == 'doctor'){
+                RegisterSubscriptionsToStudentService::register($user->id,auth()->id(),$year_id);
+            }
         }
+
+
 
 
         SendWhatApp::send($data['phone'],$data['password'],$data['username']);
