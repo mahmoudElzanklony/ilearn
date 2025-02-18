@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\versions;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class VersionsController extends Controller
 {
@@ -13,7 +14,9 @@ class VersionsController extends Controller
     }
     //
     public function index(){
-        return versions::query()->first();
+        return Cache::remember('versions',now()->addDays(2), function(){
+            return versions::query()->first();
+        });
     }
 
     public function update(Request $request){
