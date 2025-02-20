@@ -19,7 +19,7 @@ class VideoQualitiesResource extends JsonResource
           'id'=>$this->id,
           'file'=>BaseUrlForVideoAction::handle($this->wasbi_url),
           'quality'=>$this->quality == 'original' ? 'HD':$this->quality,
-            'file_updated_at'=>$this->updated_at->format('Y-m-d'),
+            'file_updated_at'=>$this->updated_at,
         ];
     }
 }
