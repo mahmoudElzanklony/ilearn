@@ -148,6 +148,7 @@ class BillsControllerResource extends Controller
         $output = DB::table('subscriptions')
             ->join('subjects', 'subscriptions.subject_id', '=', 'subjects.id')
             ->where('subjects.user_id', $data['doctor_id'])
+            ->where('deleted_at','=',null)
             ->whereBetween('subscriptions.created_at', [$data['start_date'], $data['end_date']])
             ->select(DB::raw('SUM(subscriptions.price - subscriptions.discount) as total'))
             ->value('total');

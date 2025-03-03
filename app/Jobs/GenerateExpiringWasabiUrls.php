@@ -43,7 +43,7 @@ class GenerateExpiringWasabiUrls implements ShouldQueue
             $images = images::query()->paginate($perPage, ['*'], 'page', $page);
             Log::info('start build new urls');
             foreach ($images as $image) {
-                $expiration = Carbon::now()->addHours(11);
+                $expiration = Carbon::now()->addMinutes(10000);
                 $temporaryUrl = Storage::disk('wasabi')
                     ->temporaryUrl($image->name, $expiration);
 
@@ -65,7 +65,7 @@ class GenerateExpiringWasabiUrls implements ShouldQueue
                 ->paginate($perPage, ['*'], 'page', $page);
             Log::info('start build new urls');
             foreach ($videos as $video) {
-                $expiration = Carbon::now()->addHours(11);
+                $expiration = Carbon::now()->addMinutes(10000);
                 $filePath = 'videos/' . $video->video;
 
                 if (Storage::disk('wasabi')->exists($filePath)) {
